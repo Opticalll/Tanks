@@ -1,14 +1,14 @@
-package cz.apo.pEngine;
+package cz.opt.pEngine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
-import cz.apo.pEngine.enums.ParType;
-import cz.apo.pEngine.enums.SpreadType;
+import cz.opt.pEngine.enums.EnumUtils;
+import cz.opt.pEngine.enums.ParType;
+import cz.opt.pEngine.enums.SpreadType;
 
 public class Pengine
 {
@@ -22,6 +22,8 @@ public class Pengine
 	public ColorTransition ct;
 	public SpreadType s_type = SpreadType.ROUND;
 	public Vector2f vec;
+	
+	public int sides;
 	
 	private ParType p_type = null;
 	
@@ -42,7 +44,6 @@ public class Pengine
 		this.range = range;
 		this.ct = ct;
 		this.vec = velVec;
-		
 		this.p_type = ParType.RANDOM;
 	}
 	
@@ -53,7 +54,21 @@ public class Pengine
 		this.count = c;
 		this.range = range;
 		this.p_type = type;
+		this.sides = EnumUtils.getInt(p_type);
 		this.s_type = s_type;
+		this.ct = ct;
+		this.vec = velVec;
+	}
+	
+	public Pengine(float x, float y, float c, float range, int sides, SpreadType s_type, ColorTransition ct, Vector2f velVec)
+	{
+		this.x = x;
+		this.y = y;
+		this.count = c;
+		this.range = range;
+		this.p_type = null;
+		this.s_type = s_type;
+		this.sides = sides;
 		this.ct = ct;
 		this.vec = velVec;
 	}
@@ -77,27 +92,13 @@ public class Pengine
 		
 		if(p_type == ParType.RANDOM) // random all types
 		{
-			ParType[] types = ParType.values();
-			Random r = new Random();
-			
 			for(int i = 0; i < count; i++)
-			{
-				int sel = r.nextInt(types.length);
-				
-				if(types[sel] == ParType.QUAD)
-					particles.add(new Quad(3.5f, 3.5f, getRandom(-2f,  2f), getRandom(-2f,  2f), this));
-				else if(types[sel] == ParType.TRIANGLE)
-					particles.add(new Triangle(5, getRandom(-2f,  2f), getRandom(-2f,  2f), this));
-			}
-		} else
+				particles.add(new Polygon(3.5f, getRandom(-2f,  2f), getRandom(-2f,  2f), getRandom(3, 15), this));
+		} 
+		else
 		{
 			for(int i = 0; i < count; i++)
-			{
-				if(p_type == ParType.QUAD)
-					particles.add(new Quad(3.5f, 3.5f, getRandom(-2f,  2f), getRandom(-2f,  2f), this));
-				else if(p_type == ParType.TRIANGLE)
-					particles.add(new Triangle(5, getRandom(-2f,  2f), getRandom(-2f,  2f), this));
-			}
+				particles.add(new Polygon(3.5f, getRandom(-2f,  2f), getRandom(-2f,  2f), sides, this));
 		}
 	}
 	

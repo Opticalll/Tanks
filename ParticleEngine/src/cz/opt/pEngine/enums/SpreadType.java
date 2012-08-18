@@ -1,4 +1,4 @@
-package cz.apo.pEngine.enums;
+package cz.opt.pEngine.enums;
 
 public enum SpreadType
 {

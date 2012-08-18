@@ -1,4 +1,4 @@
-package cz.apo.test;
+package cz.opt.test;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;

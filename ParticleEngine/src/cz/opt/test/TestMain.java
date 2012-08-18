@@ -1,4 +1,4 @@
-package cz.apo.test;
+package cz.opt.test;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
@@ -21,8 +21,8 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.vector.Vector2f;
 
-import cz.apo.pEngine.ColorTransition;
-import cz.apo.pEngine.Pengine;
+import cz.opt.pEngine.ColorTransition;
+import cz.opt.pEngine.Pengine;
 
 public class TestMain
 {	

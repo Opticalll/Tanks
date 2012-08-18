@@ -1,6 +1,6 @@
-package cz.apo.pEngine;
+package cz.opt.pEngine;
 
-import cz.apo.pEngine.enums.SpreadType;
+import cz.opt.pEngine.enums.SpreadType;
 
 public abstract class Particle
 {	

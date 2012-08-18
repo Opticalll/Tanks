@@ -1,4 +1,4 @@
-package cz.apo.test;
+package cz.opt.test;
 
 import org.lwjgl.opengl.Display;
 

@@ -1,4 +1,4 @@
-package cz.apo.pEngine;
+package cz.opt.pEngine;
 
 import java.util.Random;
 
