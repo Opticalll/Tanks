@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file alias="Load">Resources/Load.png</file>
+        <file alias="Clear">Resources/Remove.png</file>
+        <file alias="Save">Resources/Save.png</file>
+        <file>Resources/stop04.png</file>
+        <file>Resources/Add.png</file>
+    </qresource>
+</RCC>
