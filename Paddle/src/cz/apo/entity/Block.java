@@ -123,6 +123,7 @@ public class Block implements Entity, Collidable
 			
 			if(missile.intersects(block))
 			{
+				PaddleGame.entities.remove(p);
 				Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
 				eng.create();
 				PaddleGame.log("removing");

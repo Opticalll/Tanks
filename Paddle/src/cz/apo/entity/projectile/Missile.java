@@ -8,8 +8,10 @@ import cz.apo.entity.Entity;
 import cz.apo.entity.Tank;
 import cz.apo.entity.TankFacing;
 import cz.apo.paddleGame.PaddleGame;
+import cz.opt.pEngine.ColorTransition;
 import cz.opt.pEngine.PVector;
 import cz.opt.pEngine.Pengine;
+import cz.opt.pEngine.VVector;
 
 public class Missile implements Entity, Projectile
 {
@@ -140,6 +142,7 @@ public class Missile implements Entity, Projectile
 			PaddleGame.entities.remove(this);
 		
 		Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 10, 90, null);
+		eng.setVVector(new VVector(1, 1));
 		eng.create();
 	}
 	
