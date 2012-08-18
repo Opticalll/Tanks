@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import org.lwjgl.opengl.GL11;
 
 import cz.apo.entity.projectile.Projectile;
+import cz.apo.etc.Color;
 import cz.apo.paddleGame.PaddleGame;
 
 public class Wall implements Entity, Collidable
@@ -12,12 +13,15 @@ public class Wall implements Entity, Collidable
 	private float x, y;
 	private float width, height;
 	
-	public Wall(float x, float y, int width, int height)
+	private Color col;
+	
+	public Wall(float x, float y, int width, int height, Color col)
 	{
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
+		this.col = col;
 	}
 	
 	public float getX()
@@ -43,7 +47,7 @@ public class Wall implements Entity, Collidable
 	public void render()
 	{
 		// top
-		GL11.glColor3f(0, 1, 1);
+		GL11.glColor3f(col.R, col.G, col.B);
 		GL11.glBegin(GL11.GL_QUADS);
 			GL11.glVertex2f(x, y);
 			GL11.glVertex2f(x + width, y);

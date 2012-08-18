@@ -1,4 +1,4 @@
-package cz.apo.paddleGame;
+package cz.apo.etc;
 
 import org.lwjgl.opengl.Display;
 

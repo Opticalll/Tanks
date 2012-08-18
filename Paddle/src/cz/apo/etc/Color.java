@@ -1,0 +1,29 @@
+package cz.apo.etc;
+
+import java.util.Random;
+
+public class Color
+{
+	public float R, G, B;
+	
+	public Color(float r, float g, float b)
+	{
+		this.R = r;
+		this.G = g;
+		this.B = b;
+	}
+	
+	public Color(int r, int g, int b)
+	{
+		this.R = r/256f;
+		this.G = g/256f;
+		this.B = b/256f;
+	}
+	
+	public static Color getRandomColor()
+	{
+		Random r = new Random();
+		
+		return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+	}
+}

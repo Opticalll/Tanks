@@ -1,0 +1,29 @@
+package cz.apo.enums;
+
+import cz.apo.etc.Color;
+import cz.apo.utils.FileUtils;
+
+public enum BlockType
+{
+	STONE(1),
+	WALL(2);
+	
+	private Color col;
+	private int index;
+	
+	BlockType(int i)
+	{
+		col = FileUtils.readColor("config/blocks.conf", i);
+		index = i;
+	}
+	
+	public Color getColor()
+	{
+		return col;
+	}
+	
+	public int getIndex()
+	{
+		return index;
+	}
+}

@@ -12,6 +12,8 @@ import cz.apo.entity.Entity;
 import cz.apo.entity.Player;
 import cz.apo.entity.Wall;
 import cz.apo.entity.projectile.Projectile;
+import cz.apo.enums.BlockType;
+import cz.apo.etc.FpsCounter;
 import cz.apo.event.LevelChangedEvent;
 import cz.apo.listener.WorldListener;
 import cz.opt.particleEngine.ParticleEngine;
@@ -88,10 +90,10 @@ public class PaddleGame
 	{		
 		ParticleEngine.Init(25);
 		
-		Wall northWall = new Wall(0, 0, Display.getWidth(), WALL_WIDTH);
-		Wall southWall = new Wall(0, Display.getHeight() - WALL_WIDTH, Display.getWidth(), WALL_WIDTH);
-		Wall eastWall = new Wall(Display.getWidth() - WALL_WIDTH, 0, WALL_WIDTH, Display.getHeight());
-		Wall westWall = new Wall(0, 0, WALL_WIDTH, Display.getHeight());
+		Wall northWall = new Wall(0, 0, Display.getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
+		Wall southWall = new Wall(0, Display.getHeight() - WALL_WIDTH, Display.getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
+		Wall eastWall = new Wall(Display.getWidth() - WALL_WIDTH, 0, WALL_WIDTH, Display.getHeight(), BlockType.WALL.getColor());
+		Wall westWall = new Wall(0, 0, WALL_WIDTH, Display.getHeight(), BlockType.WALL.getColor());
 		
 		Grid g = new Grid();
 		g.setGrid(level);
