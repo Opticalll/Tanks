@@ -103,12 +103,12 @@ public class Pengine
 		if(p_type == ParType.RANDOM) // random all types
 		{
 			for(int i = 0; i < count; i++)
-				particles.add(new Polygon(3.5f, velocity.getRandomVx(), velocity.getRandomVy(), getRandom(3, 8), rotVec, this));
+				particles.add(new Polygon(1f, velocity.getRandomVx(), velocity.getRandomVy(), getRandom(3, 8), rotVec, this));
 		} 
 		else
 		{
 			for(int i = 0; i < count; i++)
-				particles.add(new Polygon(3.5f, velocity.getRandomVx(), velocity.getRandomVx(), sides, rotVec, this));
+				particles.add(new Polygon(1f, velocity.getRandomVx(), velocity.getRandomVx(), sides, rotVec, this));
 		}
 	}
 	

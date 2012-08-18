@@ -8,7 +8,6 @@ import cz.apo.entity.Entity;
 import cz.apo.entity.Tank;
 import cz.apo.entity.TankFacing;
 import cz.apo.paddleGame.PaddleGame;
-import cz.opt.pEngine.ColorTransition;
 import cz.opt.pEngine.PVector;
 import cz.opt.pEngine.Pengine;
 import cz.opt.pEngine.VVector;
