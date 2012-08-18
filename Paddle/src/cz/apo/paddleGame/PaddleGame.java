@@ -63,6 +63,8 @@ public class PaddleGame
 					e.render();
 				GL11.glPopMatrix();
 				
+				Pengine.update();
+				
 				if(e instanceof Projectile)
 					((Projectile) e).checkCollision();
 			}
@@ -140,7 +142,6 @@ public class PaddleGame
 				levelCleanUp();
 				initObj();
 				gameLoop();		
-				Pengine.update();
 			}
 		});
 	}
