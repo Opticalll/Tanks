@@ -15,7 +15,7 @@ public class Missile implements Entity, Projectile
 {
 	private float x, y;
 	private float width, height;
-	private float speed = 20.0f;
+	private float speed = 15.0f;
 	private float dx, dy;
 	private float angle = 0.0f;
 	

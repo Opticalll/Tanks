@@ -15,16 +15,19 @@ public class Block implements Entity, Collidable
 {	
 	private float x, y;
 	private float blockWidth, blockHeight;
+	
+	private boolean colidable;
 
 	private Color col;
 	
-	public Block(float x, float y, float blockWidth, float blockHeight, Color col)
+	public Block(float x, float y, float blockWidth, float blockHeight, Color col, boolean colidable)
 	{
 		this.x = x;
 		this.y = y;
 		this.blockWidth = blockWidth;
 		this.blockHeight = blockHeight;
-		this.col = col;			
+		this.col = col;
+		this.colidable = colidable;
 	}
 	
 	public void render()
@@ -125,8 +128,51 @@ public class Block implements Entity, Collidable
 				PaddleGame.log("removing");
 				PaddleGame.entities.remove(this);
 			}
-		}
-		
+		} else if((e instanceof Tank) && colidable)
+		{
+			Tank p = (Tank) e;
+			int pWidth = (int) p.getWidth();
+			int pHeight = (int) p.getHeight();
+			
+			Rectangle wall = new Rectangle((int) x, (int) y, (int) blockWidth, (int) blockHeight);
+			Rectangle player = new Rectangle((int) p.getX(), (int) p.getY(), pWidth, pHeight);			
+			
+			if(player.intersects(wall))
+			{
+				// step back
+				float pX = p.getX() - p.getDX();
+				float pY = p.getY() - p.getDY();
+								
+				boolean left = false;
+				if(pX + pWidth <= x)
+					left = true;
+				
+				boolean right = false;
+				if(pX >= x + blockWidth)
+					right = true;
+				
+				boolean top = false;
+				if(pY + pHeight <= y)
+					top = true;
+				
+				boolean bottom = false;
+				if(pY >= y + blockHeight)
+					bottom = true;
+				
+				if(left || right)
+				{
+					p.setDX(0);
+					p.setX(pX);
+				}
+				else if(top || bottom)
+				{
+					p.setDY(0);
+					p.setY(pY);
+				}
+				return true;
+
+			}
+		} 		
 		return false;
 	}
 }
