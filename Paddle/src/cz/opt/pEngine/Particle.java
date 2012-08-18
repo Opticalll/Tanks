@@ -53,7 +53,7 @@ public abstract class Particle
 		x += dx;
 		y += dy;
 		
-		if(System.nanoTime() >= launchTime+second*3.0)
+		if(System.nanoTime() >= launchTime+second*1.0)
 			fadeFactor = Pengine.getRandom(0.05f, 0.1f);
 		
 		angle += rotateFactor;

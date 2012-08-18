@@ -141,7 +141,7 @@ public class Missile implements Entity, Projectile
 			PaddleGame.entities.remove(this);
 		
 		Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 10, 90, null);
-		eng.setVVector(new VVector(1, 1));
+		eng.setVVector(new VVector(0.5f, 0.5f));
 		eng.create();
 	}
 	

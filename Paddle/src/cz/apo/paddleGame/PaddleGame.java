@@ -54,6 +54,8 @@ public class PaddleGame
 			Controller.static_checkInput();
 			FpsCounter.tick();
 			
+			Pengine.update();
+			
 			for(int i = 0; i < entities.size(); i++)
 			{		
 				Entity e = entities.get(i);
@@ -63,7 +65,6 @@ public class PaddleGame
 					e.render();
 				GL11.glPopMatrix();
 				
-				Pengine.update();
 				
 				if(e instanceof Projectile)
 					((Projectile) e).checkCollision();
