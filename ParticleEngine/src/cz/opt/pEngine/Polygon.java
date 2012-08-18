@@ -3,12 +3,13 @@ package cz.opt.pEngine;
 import static org.lwjgl.opengl.GL11.glColor4f;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
 
 public class Polygon extends Particle
 {
-	public Polygon(float size, float vx, float vy, int sides, Pengine peng)
+	public Polygon(float size, float vx, float vy, int sides, Vector2f maxRotateFact, Pengine peng)
 	{
-		super(vx, vy, peng);
+		super(vx, vy, Pengine.getRandom(maxRotateFact.x, maxRotateFact.y), peng);
 		this.sides = sides;
 		this.size = size;
 	}

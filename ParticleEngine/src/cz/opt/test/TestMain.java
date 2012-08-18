@@ -14,15 +14,19 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.util.vector.Vector2f;
 
 import cz.opt.pEngine.ColorTransition;
+import cz.opt.pEngine.PVector;
 import cz.opt.pEngine.Pengine;
+import cz.opt.pEngine.VVector;
 
 public class TestMain
 {	
@@ -66,8 +70,7 @@ public class TestMain
 				float mX = Mouse.getX();
 				float mY = Display.getHeight() - Mouse.getY();
 				
-				eng.setX(mX);
-				eng.setY(mY);
+				eng.setPVector(new PVector(mX, mY));
 				eng.create();
 			}
 			
@@ -81,8 +84,13 @@ public class TestMain
 	
 	private void initObj()
 	{
-		eng = new Pengine(0, 0, 10, 90, ColorTransition.getRandomTransition(), new Vector2f(1f, 2f));
-		rocket = new Rocket(0, 0);
+		eng = new Pengine(new PVector(0, 0), 10, 90, ColorTransition.getRandomTransition());
+		VVector vec = new VVector(4f, 4f, 0.5f, -0.5f);
+		VVector vec2 = new VVector(-4f, -4f, 0.5f, -0.5f);
+		List<VVector> arr = new ArrayList<VVector>();
+		arr.add(vec);
+		arr.add(vec2);
+		eng.setVVector(new VVector(arr));
 	}
 	
 	private void initGL()

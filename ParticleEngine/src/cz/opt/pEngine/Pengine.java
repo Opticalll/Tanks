@@ -14,14 +14,15 @@ public class Pengine
 {
 	public static final List<Particle> particles = new ArrayList<Particle>();	
 	
-	public float x, y;
+	public PVector pVector;
 	public float count;
 	public float range;
 	public boolean transition;
 	
 	public ColorTransition ct;
 	public SpreadType s_type = SpreadType.ROUND;
-	public Vector2f vec;
+	public VVector velocity;
+	public Vector2f rotVec;
 	
 	public int sides;
 	
@@ -36,53 +37,62 @@ public class Pengine
 	 * @param ct Color transition, pass null for no transition
 	 * @param velVec Velocity vector
 	 */
-	public Pengine(float x, float y, float c, float range, ColorTransition ct, Vector2f velVec)
+	public Pengine(PVector vec, float c, float range, ColorTransition ct)
 	{
-		this.x = x;
-		this.y = y;
+		this.pVector = vec;
 		this.count = c;
 		this.range = range;
 		this.ct = ct;
-		this.vec = velVec;
 		this.p_type = ParType.RANDOM;
+		finallConstruct();
 	}
 	
-	public Pengine(float x, float y, float c, float range, ParType type, SpreadType s_type, ColorTransition ct, Vector2f velVec)
+	public Pengine(PVector vec, float c, float range, ParType type, SpreadType s_type, ColorTransition ct)
 	{
-		this.x = x;
-		this.y = y;
+		this.pVector = vec;
 		this.count = c;
 		this.range = range;
 		this.p_type = type;
 		this.sides = EnumUtils.getInt(p_type);
 		this.s_type = s_type;
 		this.ct = ct;
-		this.vec = velVec;
+		finallConstruct();
 	}
 	
-	public Pengine(float x, float y, float c, float range, int sides, SpreadType s_type, ColorTransition ct, Vector2f velVec)
+	public Pengine(PVector vec, float c, float range, int sides, SpreadType s_type, ColorTransition ct)
 	{
-		this.x = x;
-		this.y = y;
+		this.pVector = vec;
 		this.count = c;
 		this.range = range;
 		this.p_type = null;
 		this.s_type = s_type;
 		this.sides = sides;
 		this.ct = ct;
-		this.vec = velVec;
+		finallConstruct();
 	}
 	
-	public void setX(float x)
+	private void finallConstruct()
 	{
-		this.x = x;
+		rotVec = new Vector2f(0f, 0f);
+		velocity = new VVector(-2f, 2f);
 	}
 	
-	public void setY(float y)
+	public void setPVector(PVector vec)
 	{
-		this.y = y;
+		this.pVector = vec;
 	}
 	
+	public void setVVector(VVector vec)
+	{
+		this.velocity = vec;
+	}
+	
+	public void setRotation(float min, float max)
+	{
+		rotVec.x = min;
+		rotVec.y = max;
+	}
+
 	public void create()
 	{
 		if(ct == null)
@@ -93,12 +103,12 @@ public class Pengine
 		if(p_type == ParType.RANDOM) // random all types
 		{
 			for(int i = 0; i < count; i++)
-				particles.add(new Polygon(3.5f, getRandom(-2f,  2f), getRandom(-2f,  2f), getRandom(3, 15), this));
+				particles.add(new Polygon(3.5f, velocity.getRandomVx(), velocity.getRandomVy(), getRandom(3, 10), rotVec, this));
 		} 
 		else
 		{
 			for(int i = 0; i < count; i++)
-				particles.add(new Polygon(3.5f, getRandom(-2f,  2f), getRandom(-2f,  2f), sides, this));
+				particles.add(new Polygon(3.5f, velocity.getRandomVx(), velocity.getRandomVx(), sides, rotVec, this));
 		}
 	}
 	

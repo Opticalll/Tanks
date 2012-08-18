@@ -1,5 +1,7 @@
 package cz.opt.pEngine;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import cz.opt.pEngine.enums.SpreadType;
 
 public abstract class Particle
@@ -23,19 +25,20 @@ public abstract class Particle
 	
 	private boolean r_done = false, g_done = false, b_done = false;
 	
-	public Particle(float dx, float dy, Pengine eng)
+	public Particle(float dx, float dy, float rotateFactor, Pengine eng)
 	{
-		this.x = eng.x;
-		this.y = eng.y;
+		this.eng = eng;
+		Vector2f tmp = eng.pVector.getPos();
+		this.x = tmp.x;
+		this.y = tmp.y;
 		this.dx = dx;
 		this.dy = dy;
 		this.range = eng.range;
-		this.eng = eng;
 		this.col = new Color(1f, 1f, 0f);
 		this.alpha = 1.0f;
 		this.fadeFactor = 0f;
 		this.angle = Pengine.getRandom(0, 359);
-		this.rotateFactor = Pengine.getRandom(0f, 2f);
+		this.rotateFactor = rotateFactor;
 		this.launchTime = System.nanoTime();
 		
 		this.defX = x;
