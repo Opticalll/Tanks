@@ -33,8 +33,8 @@ public class Grid
 		{
 			for(int o = 0; o < columns; o++)
 			{
-				if(layout[i][o] == BlockType.STONE.getIndex())
-					blocks.add(new Block(o * tileWidth + PaddleGame.WALL_WIDTH, i * tileHeight + PaddleGame.WALL_WIDTH, tileWidth, tileHeight, BlockType.STONE.getColor()));
+				if(layout[i][o] == BlockType.COVER.getIndex())
+					blocks.add(new Block(o * tileWidth + PaddleGame.WALL_WIDTH, i * tileHeight + PaddleGame.WALL_WIDTH, tileWidth, tileHeight, BlockType.COVER.getColor()));
 				if(layout[i][o] == BlockType.WALL.getIndex())
 					blocks.add(new Wall(o * tileWidth + PaddleGame.WALL_WIDTH, i * tileHeight + PaddleGame.WALL_WIDTH, (int) tileWidth, (int) tileHeight, BlockType.WALL.getColor()));
 			}

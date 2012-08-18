@@ -149,7 +149,7 @@ public class Controller
 //		{
 			if(Keyboard.isKeyDown(Keyboard.KEY_HOME))
 			{
-				if(level < 1)
+				if(level < 2)
 				{
 					level++;
 					levelChanged();

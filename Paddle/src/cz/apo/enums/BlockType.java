@@ -5,8 +5,9 @@ import cz.apo.utils.FileUtils;
 
 public enum BlockType
 {
-	STONE(1),
-	WALL(2);
+	COVER(1),
+	WALL(2),
+	BLOCK(3);
 	
 	private Color col;
 	private int index;
