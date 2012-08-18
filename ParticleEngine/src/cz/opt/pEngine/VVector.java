@@ -114,6 +114,97 @@ public class VVector
 		}
 		return 0;
 	}
+	
+	public void negate()
+	{
+		if(type == TypeVelocity.NORMAL)
+		{
+			this.vx = -this.vx;
+			this.vy = -this.vy;
+		}
+		if(type == TypeVelocity.SELECTED)
+		{
+			for(int i = 0; i < vxs.length; i++)
+				vxs[i] = -vxs[i];
+			for(int i = 0; i < vys.length; i++)
+				vys[i] = -vys[i];
+		}
+		if(type == TypeVelocity.RANGED)
+		{
+			this.minVy = -this.minVy;
+			this.maxVy = -this.maxVy;
+			this.maxVx = -this.maxVx;
+			this.minVx = -this.minVx;
+		}
+		if(type == TypeVelocity.SELECTED_AND_RANGED)
+		{
+			for(int i = 0; i < velocitiesList.size(); i++)
+			{
+				VVector temp = velocitiesList.get(i);
+				temp.setMinVx(-temp.getMinVx());
+				temp.setMinVy(-temp.getMinVy());
+				temp.setMaxVx(-temp.getMaxVx());
+				temp.setMaxVy(-temp.getMaxVy());
+				velocitiesList.set(i, temp);
+			}
+		}
+	}
+	
+	public void negateX()
+	{
+		if(type == TypeVelocity.NORMAL)
+		{
+			this.vx = -this.vx;
+		}
+		if(type == TypeVelocity.SELECTED)
+		{
+			for(int i = 0; i < vxs.length; i++)
+				vxs[i] = -vxs[i];
+		}
+		if(type == TypeVelocity.RANGED)
+		{
+			this.maxVx = -this.maxVx;
+			this.minVx = -this.minVx;
+		}
+		if(type == TypeVelocity.SELECTED_AND_RANGED)
+		{
+			for(int i = 0; i < velocitiesList.size(); i++)
+			{
+				VVector temp = velocitiesList.get(i);
+				temp.setMinVx(-temp.getMinVx());
+				temp.setMaxVx(-temp.getMaxVx());
+				velocitiesList.set(i, temp);
+			}
+		}
+	}
+	
+	public void negateY()
+	{
+		if(type == TypeVelocity.NORMAL)
+		{
+			this.vy = -this.vy;
+		}
+		if(type == TypeVelocity.SELECTED)
+		{
+			for(int i = 0; i < vys.length; i++)
+				vys[i] = -vys[i];
+		}
+		if(type == TypeVelocity.RANGED)
+		{
+			this.minVy = -this.minVy;
+			this.maxVy = -this.maxVy;
+		}
+		if(type == TypeVelocity.SELECTED_AND_RANGED)
+		{
+			for(int i = 0; i < velocitiesList.size(); i++)
+			{
+				VVector temp = velocitiesList.get(i);
+				temp.setMinVx(-temp.getMinVx());
+				temp.setMinVy(-temp.getMinVy());
+				velocitiesList.set(i, temp);
+			}
+		}
+	}
 
 	public TypeVelocity getType()
 	{
@@ -144,4 +235,45 @@ public class VVector
 	{
 		this.vy = vy;
 	}
+
+	public float getMinVx() 
+	{
+		return minVx;
+	}
+
+	public void setMinVx(float minVx) 
+	{
+		this.minVx = minVx;
+	}
+
+	public float getMaxVx() 
+	{
+		return maxVx;
+	}
+
+	public void setMaxVx(float maxVx) 
+	{
+		this.maxVx = maxVx;
+	}
+
+	public float getMinVy() 
+	{
+		return minVy;
+	}
+
+	public void setMinVy(float minVy)
+	{
+		this.minVy = minVy;
+	}
+
+	public float getMaxVy()
+	{
+		return maxVy;
+	}
+
+	public void setMaxVy(float maxVy) 
+	{
+		this.maxVy = maxVy;
+	}
+	
 }

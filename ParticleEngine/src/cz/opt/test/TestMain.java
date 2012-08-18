@@ -57,6 +57,7 @@ public class TestMain
 	
 	private void loop()
 	{
+		boolean test = false;
 		while(!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -69,9 +70,15 @@ public class TestMain
 			{
 				float mX = Mouse.getX();
 				float mY = Display.getHeight() - Mouse.getY();
+				VVector vec = new VVector(2f, 2f, 0.5f, 0.5f);
+				eng.setVVector(vec);
+				eng.setPVector(new PVector(mX, mY, 25, 1));
 				
-				eng.setPVector(new PVector(mX, mY));
 				eng.create();
+				
+				
+				
+				test = !test;
 			}
 			
 			Display.sync(60);
@@ -85,12 +92,7 @@ public class TestMain
 	private void initObj()
 	{
 		eng = new Pengine(new PVector(0, 0), 10, 90, ColorTransition.getRandomTransition());
-		VVector vec = new VVector(4f, 4f, 0.5f, -0.5f);
-		VVector vec2 = new VVector(-4f, -4f, 0.5f, -0.5f);
-		List<VVector> arr = new ArrayList<VVector>();
-		arr.add(vec);
-		arr.add(vec2);
-		eng.setVVector(new VVector(arr));
+		
 	}
 	
 	private void initGL()
