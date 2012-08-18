@@ -8,11 +8,8 @@ import cz.apo.entity.Entity;
 import cz.apo.entity.Tank;
 import cz.apo.entity.TankFacing;
 import cz.apo.paddleGame.PaddleGame;
-import cz.opt.particleEngine.ParticleEngine;
-import cz.opt.particleEngine.ParticleRGB;
-import cz.opt.particleEngine.ParticleVelocityVector;
-import cz.opt.particleEngine.Particles.Particle.TypePar;
-import cz.opt.particleEngine.Particles.Particle.TypeSpread;
+import cz.opt.pEngine.PVector;
+import cz.opt.pEngine.Pengine;
 
 public class Missile implements Entity, Projectile
 {
@@ -142,9 +139,8 @@ public class Missile implements Entity, Projectile
 		if(x > Display.getWidth() || x < 0 || y > Display.getHeight() || y < 0)
 			PaddleGame.entities.remove(this);
 		
-		ParticleRGB color = new ParticleRGB(253, 14, 53, 255);
-		ParticleVelocityVector vector = new ParticleVelocityVector(1, 1);
-		new ParticleEngine(x + width/2, y + height/2, 1, 3, 10, color, TypeSpread.CIRCLE, TypePar.COMBINED, vector, 600, true, 3);
+		Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 10, 90, null);
+		eng.create();
 	}
 	
 	public void checkCollision()

@@ -7,11 +7,9 @@ import org.lwjgl.opengl.GL11;
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
 import cz.apo.paddleGame.PaddleGame;
-import cz.opt.particleEngine.ParticleEngine;
-import cz.opt.particleEngine.ParticleRGB;
-import cz.opt.particleEngine.ParticleVelocityVector;
-import cz.opt.particleEngine.Particles.Particle.TypePar;
-import cz.opt.particleEngine.Particles.Particle.TypeSpread;
+import cz.opt.pEngine.ColorTransition;
+import cz.opt.pEngine.PVector;
+import cz.opt.pEngine.Pengine;
 
 public class Block implements Entity, Collidable
 {	
@@ -106,10 +104,8 @@ public class Block implements Entity, Collidable
 					b.setDY(-b.getDY());
 				}
 				
-				
-				ParticleRGB color = new ParticleRGB(col.R, col.G, col.B);
-				ParticleVelocityVector vector = new ParticleVelocityVector(1.5f, 1.5f);
-				new ParticleEngine(x + blockWidth/2, y + blockHeight/2, 2, 4, 50, color, TypeSpread.CIRCLE, TypePar.COMBINED, vector, 3000, true, 400);
+				Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
+				eng.create();
 				PaddleGame.entities.remove(this);
 				return true;
 			}
@@ -124,10 +120,8 @@ public class Block implements Entity, Collidable
 			
 			if(missile.intersects(block))
 			{
-				PaddleGame.entities.remove(p);
-				ParticleRGB color = new ParticleRGB(col.R, col.G, col.B);
-				ParticleVelocityVector vector = new ParticleVelocityVector(1.5f, 1.5f);
-				new ParticleEngine(x + blockWidth/2, y + blockHeight/2, 2, 4, 50, color, TypeSpread.CIRCLE, TypePar.COMBINED, vector, 3000, true, 400);
+				Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
+				eng.create();
 				PaddleGame.log("removing");
 				PaddleGame.entities.remove(this);
 			}

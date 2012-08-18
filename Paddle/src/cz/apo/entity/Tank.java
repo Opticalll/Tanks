@@ -1,8 +1,6 @@
 package cz.apo.entity;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,11 +9,9 @@ import cz.apo.event.WeaponChangedEvent;
 import cz.apo.listener.ControllerListener;
 import cz.apo.paddleGame.Controller;
 import cz.apo.paddleGame.PaddleGame;
-import cz.opt.particleEngine.ParticleEngine;
-import cz.opt.particleEngine.ParticleRGB;
-import cz.opt.particleEngine.ParticleVelocityVector;
-import cz.opt.particleEngine.Particles.Particle.TypePar;
-import cz.opt.particleEngine.Particles.Particle.TypeSpread;
+import cz.opt.pEngine.ColorTransition;
+import cz.opt.pEngine.PVector;
+import cz.opt.pEngine.Pengine;
 
 public class Tank implements Entity, Collidable, ControllerListener
 {
@@ -273,16 +269,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 			
 			if(missile.intersects(player))
 			{
-				List<ParticleRGB> colors = new ArrayList<ParticleRGB>();
-				   colors.add(new ParticleRGB(255, 255, 255, 255));
-				   colors.add(new ParticleRGB(0, 0, 0, 0));
-				   colors.add(new ParticleRGB(0, 0, 0, 0));   
-				   colors.add(new ParticleRGB(0, 0, 0, 0));   
-				   colors.add(new ParticleRGB(255, 0, 0, 0));
-				   colors.add(new ParticleRGB(255, 0, 0, 255));
-				   ParticleRGB color = new ParticleRGB(colors);
-				ParticleVelocityVector vector = new ParticleVelocityVector(3, 3);
-				new ParticleEngine(x + width/2, y + height/2, 2, 4, 100, color, TypeSpread.CIRCLE, TypePar.COMBINED, vector, 3000, true, 400);
+				Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
+				eng.create();
 				PaddleGame.entities.remove(e);
 				PaddleGame.entities.remove(this);
 				controller.removeControllerListener(this);
@@ -298,16 +286,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 			
 			if(ball.intersects(player))
 			{
-				List<ParticleRGB> colors = new ArrayList<ParticleRGB>();
-				   colors.add(new ParticleRGB(255, 255, 255, 255));
-				   colors.add(new ParticleRGB(0, 0, 0, 0));
-				   colors.add(new ParticleRGB(0, 0, 0, 0));   
-				   colors.add(new ParticleRGB(0, 0, 0, 0));   
-				   colors.add(new ParticleRGB(255, 0, 0, 0));
-				   colors.add(new ParticleRGB(255, 0, 0, 255));
-				   ParticleRGB color = new ParticleRGB(colors);
-				ParticleVelocityVector vector = new ParticleVelocityVector(3, 3);
-				new ParticleEngine(x + width/2, y + height/2, 2, 4, 100, color, TypeSpread.CIRCLE, TypePar.COMBINED, vector, 3000, true, 400);
+				Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
+				eng.create();
 				PaddleGame.entities.remove(this);
 				controller.removeControllerListener(this);
 				

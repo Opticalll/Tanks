@@ -16,7 +16,7 @@ import cz.apo.enums.BlockType;
 import cz.apo.etc.FpsCounter;
 import cz.apo.event.LevelChangedEvent;
 import cz.apo.listener.WorldListener;
-import cz.opt.particleEngine.ParticleEngine;
+import cz.opt.pEngine.Pengine;
 
 public class PaddleGame
 {
@@ -52,7 +52,6 @@ public class PaddleGame
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			
 			Controller.static_checkInput();
-			ParticleEngine.loopParticles();
 			FpsCounter.tick();
 			
 			for(int i = 0; i < entities.size(); i++)
@@ -88,7 +87,6 @@ public class PaddleGame
 	
 	private static void initObj()
 	{		
-		ParticleEngine.Init(25);
 		
 		Wall northWall = new Wall(0, 0, Display.getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
 		Wall southWall = new Wall(0, Display.getHeight() - WALL_WIDTH, Display.getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
@@ -141,7 +139,8 @@ public class PaddleGame
 				PaddleGame.level = e.getLevel();
 				levelCleanUp();
 				initObj();
-				gameLoop();			
+				gameLoop();		
+				Pengine.update();
 			}
 		});
 	}

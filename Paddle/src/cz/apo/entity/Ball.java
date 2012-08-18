@@ -6,11 +6,9 @@ import org.lwjgl.opengl.GL11;
 
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.paddleGame.PaddleGame;
-import cz.opt.particleEngine.ParticleEngine;
-import cz.opt.particleEngine.ParticleRGB;
-import cz.opt.particleEngine.ParticleVelocityVector;
-import cz.opt.particleEngine.Particles.Particle.TypePar;
-import cz.opt.particleEngine.Particles.Particle.TypeSpread;
+import cz.opt.pEngine.ColorTransition;
+import cz.opt.pEngine.PVector;
+import cz.opt.pEngine.Pengine;
 
 public class Ball implements Entity, Collidable
 {
@@ -118,9 +116,9 @@ public class Ball implements Entity, Collidable
 			{
 				PaddleGame.entities.remove(e);
 				
-				ParticleVelocityVector vector = new ParticleVelocityVector(3.0f, 3.0f, 3.0f, 3.0f);
-				ParticleRGB color = new ParticleRGB();
-				new ParticleEngine(m.getX(), m.getY(), 1, 3, 300, color, TypeSpread.CIRCLE, TypePar.DYNAMIC, vector, 3300, true, 1000);
+
+				Pengine eng = new Pengine(new PVector(x, y), 50, 50, ColorTransition.getRandomTransition());
+				eng.create();
 				PaddleGame.entities.remove(this);
 				
 				return true;
