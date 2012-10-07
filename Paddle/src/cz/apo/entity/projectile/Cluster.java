@@ -9,6 +9,11 @@ import cz.apo.entity.Tank;
 import cz.apo.entity.TankFacing;
 import cz.apo.paddleGame.PaddleGame;
 
+/**
+ * Cluster class
+ * 
+ * @author adam
+ */
 public class Cluster implements Entity, Projectile
 {
 	public static final long SPLIT_TIME = 500L; // 500ms after launch

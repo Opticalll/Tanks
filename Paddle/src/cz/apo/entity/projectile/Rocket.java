@@ -2,6 +2,13 @@ package cz.apo.entity.projectile;
 
 import cz.apo.entity.Entity;
 
+// TODO: Rocket
+
+/**
+ * Rocket class
+ * 
+ * @author adam
+ */
 public class Rocket implements Entity, Projectile
 {
 	private float x, y;

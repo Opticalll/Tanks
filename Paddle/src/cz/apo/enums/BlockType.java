@@ -3,6 +3,11 @@ package cz.apo.enums;
 import cz.apo.etc.Color;
 import cz.apo.utils.FileUtils;
 
+/**
+ * Block type enumeration
+ * 
+ * @author adam
+ */
 public enum BlockType
 {
 	COVER(1),

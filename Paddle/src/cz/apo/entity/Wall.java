@@ -8,6 +8,11 @@ import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
 import cz.apo.paddleGame.PaddleGame;
 
+/**
+ * Wall class
+ * 
+ * @author adam
+ */
 public class Wall implements Entity, Collidable
 {
 	private float x, y;
@@ -15,6 +20,14 @@ public class Wall implements Entity, Collidable
 	
 	private Color col;
 	
+	/**
+	 * 
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param width Width
+	 * @param height Height
+	 * @param col Color
+	 */
 	public Wall(float x, float y, int width, int height, Color col)
 	{
 		this.x = x;
@@ -24,26 +37,45 @@ public class Wall implements Entity, Collidable
 		this.col = col;
 	}
 	
+	/**
+	 * 
+	 * @return X coordinate
+	 */
 	public float getX()
 	{
 		return x;
 	}
 	
+	/**
+	 * 
+	 * @return Y coordinate
+	 */
 	public float getY()
 	{
 		return y;
 	}
 
+	/**
+	 * 
+	 * @return Wall width
+	 */
 	public float getWidth()
 	{
 		return width;
 	}
 	
+	/**
+	 * 
+	 * @return Wall height
+	 */
 	public float getHeight()
 	{
 		return height;
 	}
 	
+	/**
+	 * Wall render method
+	 */
 	public void render()
 	{
 		// top
@@ -56,11 +88,19 @@ public class Wall implements Entity, Collidable
 		GL11.glEnd();
 	}
 	
+	/**
+	 * Wall update method (empty)
+	 */
 	public void update()
 	{
 		
 	}
 	
+	/**
+	 * Method for collision check
+	 * 
+	 * @param e Entity to check collision with
+	 */
 	public boolean intersects(Entity e)
 	{
 		if(e instanceof Ball)

@@ -12,6 +12,11 @@ import cz.apo.event.WeaponChangedEvent;
 import cz.apo.listener.ControllerListener;
 import cz.apo.listener.WorldListener;
 
+/**
+ * Controller class
+ * 
+ * @author adam
+ */
 public class Controller
 {	
 	public static final int DEFAULT_LEVEL = 0, DEFAULT_WEAPON = 1;
@@ -33,6 +38,10 @@ public class Controller
 	private final List<ControllerListener> controllerListeners;
 	private static final List<WorldListener> worldListeners = new ArrayList<WorldListener>();
 	
+	/**
+	 * 
+	 * @param id Controller ID
+	 */
 	public Controller(int id)
 	{		
 		if(id == 1)
@@ -62,26 +71,49 @@ public class Controller
 		controllerListeners = new ArrayList<ControllerListener>();
 	}
 	
+	/**
+	 * Adds new ControllerListener to this class
+	 * 
+	 * @param l ControllerListener
+	 */
 	public void addControllerListener(ControllerListener l)
 	{
 		controllerListeners.add(l);
 	}
 	
+	/**
+	 * Adds new WorldListener to this class
+	 * 
+	 * @param l WorldListener
+	 */
 	public static void addWorldListener(WorldListener l)
 	{
 		worldListeners.add(l);
 	}
 	
+	/**
+	 * Removes ControllerListener if exists
+	 * 
+	 * @param l ControllerListener to remove
+	 */
 	public void removeControllerListener(ControllerListener l)
 	{
 		controllerListeners.remove(l);
 	}
 	
+	/**
+	 * Removes WorldListener if exists
+	 * 
+	 * @param l WorldListener to remove
+	 */
 	public static void removeWorldListener(WorldListener l)
 	{
 		worldListeners.remove(l);
 	}
 	
+	/**
+	 * Main check input method
+	 */
 	public void checkInput()
 	{
 		if(Keyboard.isKeyDown(UP))
@@ -142,6 +174,9 @@ public class Controller
 			PaddleGame.cleanUp();
 	}
 	
+	/**
+	 * Static check input method. Reads keys like HOME and END to change levels
+	 */
 	public static void static_checkInput()
 	{
 		Keyboard.enableRepeatEvents(false);
@@ -175,6 +210,9 @@ public class Controller
 	
 	// =============== EVENTS ============== //
 	
+	/**
+	 * Fires WeaponChangedEvent
+	 */
 	private void weaponChanged()
 	{
 		WeaponChangedEvent e = new WeaponChangedEvent(weapon);
@@ -183,6 +221,9 @@ public class Controller
 			l.onWeaponChanged(e);
 	}
 	
+	/**
+	 * Fires LevelChangedEvent
+	 */
 	private static void levelChanged()
 	{
 		LevelChangedEvent e = new LevelChangedEvent(level);

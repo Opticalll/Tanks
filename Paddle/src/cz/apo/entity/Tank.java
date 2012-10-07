@@ -13,6 +13,11 @@ import cz.opt.pEngine.ColorTransition;
 import cz.opt.pEngine.PVector;
 import cz.opt.pEngine.Pengine;
 
+/**
+ * Tank class
+ * 
+ * @author adam
+ */
 public class Tank implements Entity, Collidable, ControllerListener
 {
 	public static final float SPEED = 3.0f;
@@ -30,6 +35,12 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private TankFacing facing;
 	private final Controller controller;
 	
+	/**
+	 * 
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param controller controller
+	 */
 	public Tank(float x, float y, Controller controller)
 	{
 		this.x = x;
@@ -48,76 +59,135 @@ public class Tank implements Entity, Collidable, ControllerListener
 		PaddleGame.log("Listener added");
 	}
 	
+	/**
+	 * 
+	 * @return X coordinate
+	 */
 	public float getX()
 	{
 		return x;
 	}
 	
+	/**
+	 * 	
+	 * @param x X coordinate
+	 */
 	public void setX(float x)
 	{
 		this.x = x;
 	}
 	
+	/**
+	 * 
+	 * @return X direction
+	 */
 	public float getDX()
 	{
 		return dx;
 	}
 	
+	/**
+	 * 
+	 * @param dx X direction
+	 */
 	public void setDX(float dx)
 	{
 		this.dx = dx;
 	}
 	
+	/**
+	 * 
+	 * @return Y coordinate
+	 */
 	public float getY()
 	{
 		return y;
 	}
 	
+	/**
+	 * 
+	 * @param y Y coordinate
+	 */
 	public void setY(float y)
 	{
 		this.y = y;
 	}
 	
+	/**
+	 * 
+	 * @return Y direction
+	 */
 	public float getDY()
 	{
 		return dy;
 	}
 	
+	/**
+	 * 
+	 * @param dy Y direction
+	 */
 	public void setDY(float dy)
 	{
 		this.dy = dy;
 	}
 	
+	/**
+	 * 
+	 * @return Tank width
+	 */
 	public float getWidth()
 	{
 		return width;
 	}
 	
+	/**
+	 * 
+	 * @return Gun width
+	 */
 	public float getGunWidth()
 	{
 		return gunWidth;
 	}
 	
+	/**
+	 * 
+	 * @return Gun length
+	 */
 	public float getGunLength()
 	{
 		return gunLength;
 	}
 	
+	/**
+	 * 
+	 * @return Tank height
+	 */
 	public float getHeight()
 	{
 		return height;
 	}
 	
+	/**
+	 * 
+	 * @return Tank's facing
+	 */
 	public TankFacing getFacing()
 	{
 		return facing;
 	}
 	
+	/**
+	 * 
+	 * @return True if the tank is moving, false otherwise
+	 */
 	public boolean isMoving()
 	{
 		return moving;
 	}
 	
+	/**
+	 * Tank render method
+	 */
 	public void render()
 	{
 		GL11.glTranslatef(x + width/2, y + height/2, 0);
@@ -143,6 +213,9 @@ public class Tank implements Entity, Collidable, ControllerListener
 		GL11.glEnd();
 	}
 	
+	/**
+	 * Tank update method
+	 */
 	public void update()
 	{
 		controller.checkInput();
@@ -258,6 +331,11 @@ public class Tank implements Entity, Collidable, ControllerListener
 		y += dy;
 	}
 	
+	/**
+	 * Method for collision check
+	 * 
+	 * @param e Entity to check collision with
+	 */
 	public boolean intersects(Entity e)
 	{
 		if(e instanceof Projectile)

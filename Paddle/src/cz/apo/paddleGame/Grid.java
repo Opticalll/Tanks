@@ -12,6 +12,11 @@ import cz.apo.entity.Entity;
 import cz.apo.entity.Wall;
 import cz.apo.enums.BlockType;
 
+/**
+ * Grid class for loading levels from files
+ * 
+ * @author adam
+ */
 public class Grid
 {
 	private float tileWidth, tileHeight;
@@ -25,6 +30,10 @@ public class Grid
 		blocks = new ArrayList<Entity>();
 	}
 	
+	/**
+	 * 
+	 * @param lvl Level number
+	 */
 	public void setGrid(int lvl)
 	{
 		layout = getMapLayout(new File("res/level_" + lvl + ".lvl"));
@@ -43,6 +52,11 @@ public class Grid
 		}
 	}
 	
+	/**
+	 * 
+	 * @param f File to load from
+	 * @return Two dimensional array describing the layout
+	 */
 	private int[][] getMapLayout(File f)
 	{
 		Scanner s = null;
@@ -102,6 +116,10 @@ public class Grid
 		return layout;
 	}
 	
+	/**
+	 * 
+	 * @return All blocks from grid
+	 */
 	public List<Entity> getBlocksFromGrid()
 	{	
 		return blocks;

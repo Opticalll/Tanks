@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -16,15 +17,27 @@ import cz.apo.enums.BlockType;
 import cz.apo.etc.FpsCounter;
 import cz.apo.event.LevelChangedEvent;
 import cz.apo.listener.WorldListener;
+import cz.apo.menu.MainMenu;
 import cz.opt.pEngine.Pengine;
 
+/**
+ * 
+ * @author Apo(adam) + Optical(Particle engine)
+ * 
+ * This is the main class.
+ *
+ */
 public class PaddleGame
 {
 	public static final List<Entity> entities = new ArrayList<Entity>();
+	public static MainMenu menu;
 	public static final int WALL_WIDTH = 10;
 	
 	private static int level = Controller.DEFAULT_LEVEL;
 	
+	/**
+	 * Main game constructor
+	 */
 	public PaddleGame()
 	{
 		try
@@ -42,11 +55,17 @@ public class PaddleGame
 		initGL();
 		initObj();
 		initListeners();
+		menuLoop();
 		gameLoop();
 	}
-		
+	
+	/**
+	 * Main game loop
+	 */
 	private static void gameLoop()
 	{
+		GL11.glClearColor(0f, 0f, 0f, 1f);
+		
 		while(!Display.isCloseRequested())
 		{
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -63,8 +82,7 @@ public class PaddleGame
 				GL11.glPushMatrix();
 					e.update();
 					e.render();
-				GL11.glPopMatrix();
-				
+				GL11.glPopMatrix();				
 				
 				if(e instanceof Projectile)
 					((Projectile) e).checkCollision();
@@ -77,19 +95,48 @@ public class PaddleGame
 		cleanUp();
 	}
 	
+	/**
+	 * Loop for main menu
+	 */
+	public void menuLoop()
+	{	
+		while(!menu.gameStart())
+		{
+			if(Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+				cleanUp();
+			
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+			
+			menu.render();
+			
+			Display.sync(25);
+			Display.update();
+		}
+	}
+	
+	/**
+	 * Destroy/clean method
+	 */
 	public static void cleanUp()
 	{
 		Display.destroy();
 		System.exit(0);
 	}
 	
+	/**
+	 * Clear level
+	 */
 	private static void levelCleanUp()
 	{
 		entities.clear();
 	}
 	
+	/**
+	 * Initialize objects
+	 */
 	private static void initObj()
 	{		
+		menu = new MainMenu();
 		
 		Wall northWall = new Wall(0, 0, Display.getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
 		Wall southWall = new Wall(0, Display.getHeight() - WALL_WIDTH, Display.getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
@@ -119,6 +166,9 @@ public class PaddleGame
 		new Player(400.0f, 300.0f, 2);				
 	}
 	
+	/**
+	 * OpenGL initialization
+	 */
 	private void initGL()
 	{
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -131,7 +181,9 @@ public class PaddleGame
 		GL11.glEnable(GL11.GL_POINT_SMOOTH);
 	}
 	
-	
+	/**
+	 * Game/World listener initialization
+	 */
 	private void initListeners()
 	{
 		Controller.addWorldListener(new WorldListener()
@@ -146,12 +198,22 @@ public class PaddleGame
 			}
 		});
 	}
-		
+	
+	/**
+	 * Simple debug/log method
+	 * 
+	 * @param s Debug/log message
+	 */
 	public static void log(String s)
 	{
 		System.out.println(s);
 	}
 	
+	/**
+	 * Main method
+	 * 
+	 * @param args Program arguments
+	 */
 	public static void main(String[] args)
 	{
 		new PaddleGame();

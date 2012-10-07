@@ -11,6 +11,11 @@ import cz.opt.pEngine.ColorTransition;
 import cz.opt.pEngine.PVector;
 import cz.opt.pEngine.Pengine;
 
+/**
+ * Main block class. Can be collidable or not
+ * 
+ * @author adam
+ */
 public class Block implements Entity, Collidable
 {	
 	private float x, y;
@@ -20,6 +25,15 @@ public class Block implements Entity, Collidable
 
 	private Color col;
 	
+	/**
+	 * 
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param blockWidth width
+	 * @param blockHeight height
+	 * @param col color
+	 * @param colidable colidable
+	 */
 	public Block(float x, float y, float blockWidth, float blockHeight, Color col, boolean colidable)
 	{
 		this.x = x;
@@ -30,6 +44,9 @@ public class Block implements Entity, Collidable
 		this.colidable = colidable;
 	}
 	
+	/**
+	 * Block render method
+	 */
 	public void render()
 	{
 		GL11.glColor3f(col.R, col.G, col.B);
@@ -40,32 +57,56 @@ public class Block implements Entity, Collidable
 			GL11.glVertex2f(x, y + blockHeight);
 		GL11.glEnd();
 	}
-
+	
+	/**
+	 * Block update method
+	 */
 	public void update()
 	{
 		
 	}
 
+	/**
+	 * 
+	 * @return X coordinate of the block
+	 */
 	public float getX()
 	{	
 		return x;
 	}
 
+	/**
+	 * 
+	 * @return Y coordinate of the block
+	 */
 	public float getY()
 	{
 		return y;
 	}
 	
+	/**
+	 * 
+	 * @return Block width
+	 */
 	public float getWidth()
 	{
 		return blockWidth;
 	}
 	
+	/**
+	 * 
+	 * @return Block height
+	 */
 	public float getHeight()
 	{
 		return blockHeight;
 	}
 	
+	/**
+	 * Method for collision check
+	 * 
+	 * @param e Entity to check collision with the block
+	 */
 	public boolean intersects(Entity e)
 	{
 		if(e instanceof Ball)

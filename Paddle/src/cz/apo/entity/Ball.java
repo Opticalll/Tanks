@@ -10,6 +10,11 @@ import cz.opt.pEngine.ColorTransition;
 import cz.opt.pEngine.PVector;
 import cz.opt.pEngine.Pengine;
 
+/**
+ * Ball class. This class won't be probably used
+ * 
+ * @author adam
+ */
 public class Ball implements Entity, Collidable
 {
 	private float x, y;

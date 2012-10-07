@@ -2,6 +2,11 @@ package cz.apo.etc;
 
 import java.util.Random;
 
+/**
+ * Color class
+ * 
+ * @author adam
+ */
 public class Color
 {
 	public float R, G, B;

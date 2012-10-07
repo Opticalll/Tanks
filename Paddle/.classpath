@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="lib/jars/slick-util.jar"/>
 	<classpathentry kind="lib" path="lib/jars/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/jars/xml-apis.jar"/>
+	<classpathentry kind="lib" path="lib/jars/slick.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

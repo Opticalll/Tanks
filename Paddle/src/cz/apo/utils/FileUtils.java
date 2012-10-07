@@ -9,6 +9,11 @@ import java.util.List;
 
 import cz.apo.etc.Color;
 
+/**
+ * FileUtil class for work with files in .jar
+ * 
+ * @author adam
+ */
 public class FileUtils
 {
 	private static BufferedReader in;
@@ -25,6 +30,12 @@ public class FileUtils
 		}
 	}
 	
+	/**
+	 * 
+	 * @param path Path to file to read from
+	 * @param i Block ID
+	 * @return
+	 */
 	public static Color readColor(String path, int i)
 	{
 		openStreams(path);

@@ -1,5 +1,10 @@
 package cz.apo.entity.projectile;
 
+/**
+ * Projectile interface
+ * 
+ * @author adam
+ */
 public interface Projectile
 {
 	public float getX();
