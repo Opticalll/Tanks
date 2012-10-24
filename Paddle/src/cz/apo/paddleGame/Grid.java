@@ -1,9 +1,13 @@
 package cz.apo.paddleGame;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+
+import org.lwjgl.opengl.Display;
 
 import cz.apo.entity.Block;
 import cz.apo.entity.Entity;
@@ -31,7 +35,7 @@ public class Grid
 	 */
 	public void setGrid(int lvl)
 	{
-		Block[][] layout = loadMap("res/level_" + lvl + ".lvl");
+		Block[][] layout = loadMap("res/level_1.lvl");
 		for(int i = 0; i < lines; i++)
 			for(int z = 0; z < columns; z++)
 				blocks.add(layout[i][z]);
@@ -46,7 +50,7 @@ public class Grid
 	{
 		Scanner mfs = null;
 		Scanner cfs = null;
-		Hashtable<Integer, Block> blockConfig = new Hashtable<Integer, Block>(); 
+		Map<Integer, Block> blockConfig = new Hashtable<Integer, Block>(); 
 		Block[][] layout = null;
 		String cfp= "";		
 		
@@ -54,25 +58,26 @@ public class Grid
 
 		try
 		{
-			mfs = new Scanner(mfp);
-                if(mfs.hasNextLine())
+			mfs = new Scanner(new File(mfp));
+            if(mfs.hasNextLine())
                   	cfp = mfs.nextLine();
-			
-			cfs = new Scanner(cfp);
+            System.out.println(mfp);
+			System.out.println(cfp);
+			cfs = new Scanner(new File(cfp));
 			while(cfs.hasNextLine())
 			{
 				Block newBlock = null;
 				String cline = cfs.nextLine();
 				String[] clineparts = cline.split("~");
-				String[] sproperties = clineparts[3].split("|");
-				boolean[] bproperties = null;
+				String[] sproperties = clineparts[3].split("¨");
+				boolean[] bproperties = new boolean[2];
 				for(int i = 0; i < sproperties.length; i++)
 					bproperties[i] = Boolean.parseBoolean(sproperties[i]);
 				if(Boolean.parseBoolean(clineparts[1]))
 					newBlock = new Block(0, 0, tileWidth, tileHeight, clineparts[3], bproperties);
 				else
 				{
-					String[] rgb = clineparts[2].split("|");
+					String[] rgb = clineparts[2].split("¨");
 					Color col = new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
 					newBlock = new Block(0, 0, tileWidth, tileHeight, col, bproperties);
 				}
@@ -90,7 +95,7 @@ public class Grid
 			}
 			mfs.close();
 			
-			mfs = new Scanner(mfp);
+			mfs = new Scanner(new File(mfp));
 			
 			while(mfs.hasNextLine())
 			{
@@ -99,7 +104,7 @@ public class Grid
 			}
 			mfs.close();
 			
-			mfs = new Scanner(mfp);
+			mfs = new Scanner(new File(mfp));
 			
 			layout = new Block[lines][columns];
 			
@@ -121,8 +126,8 @@ public class Grid
 				col++;
 			}
 			
-			tileWidth = (Display.getWidth() - PaddleGame.WALL_WIDTH) / columns;
-			tileHeight = (Display.getHeight() - PaddleGame.WALL_WIDTH) / lines;
+			tileWidth = (Display.getDisplayMode().getWidth() - PaddleGame.WALL_WIDTH) / columns;
+			tileHeight = (Display.getDisplayMode().getHeight() - PaddleGame.WALL_WIDTH) / lines;
 		} catch(Exception e)
 		{
 			e.printStackTrace();

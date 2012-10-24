@@ -142,7 +142,7 @@ public class Missile implements Entity, Projectile
 		x += dx;
 		y += dy;
 		
-		if(x > Display.getWidth() || x < 0 || y > Display.getHeight() || y < 0)
+		if(x > Display.getDisplayMode().getWidth() || x < 0 || y > Display.getDisplayMode().getHeight() || y < 0)
 			PaddleGame.entities.remove(this);
 		
 		Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 5, 90, null);

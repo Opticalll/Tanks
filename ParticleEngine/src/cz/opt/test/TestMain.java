@@ -1,51 +1,29 @@
 package cz.opt.test;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.Font;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-
-import cz.opt.pEngine.ColorTransition;
-import cz.opt.pEngine.PVector;
-import cz.opt.pEngine.Pengine;
-import cz.opt.pEngine.VVector;
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.UnicodeFont;
+import org.newdawn.slick.font.effects.ColorEffect;
 
 public class TestMain
 {	
-	Rocket rocket;
-	Pengine eng;
-//	static final ColorTransition rocketFlameTrans = new ColorTransition(new Color((short)226, (short)34, (short)44), new Color((short)226, (short)88, (short)34));
-//	static final Pengine rocketFlame = new Pengine(0, 0, 10, 20, ParType.TRIANGLE, SpreadType.ROUND, rocketFlameTrans, Pengine.getRandomVector());
-	
+	UnicodeFont font;
+
 	private TestMain()
 	{
 		try
 		{
-			Display.setFullscreen(false);
-			Display.setResizable(false);
-			Display.setDisplayMode(new DisplayMode(800,	600));
+			Display.setDisplayMode(new DisplayMode(800, 600));
 			Display.setTitle("Test Particles");
-			Display.setVSyncEnabled(true);
 			Display.create();
-			
+
 			initGL();
 			initObj();
 			loop();
@@ -54,59 +32,65 @@ public class TestMain
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void loop()
 	{
-		boolean test = false;
 		while(!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
 		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			Pengine.update();						
-//			rocket.update();
-//			rocket.render();
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			FpsCounter.tick();
-			
-			if(Mouse.isButtonDown(0))
-			{
-				float mX = Mouse.getX();
-				float mY = Display.getHeight() - Mouse.getY();
-				VVector vec = new VVector(2f, 2f, 0.5f, 0.5f);
-				eng.setVVector(vec);
-				eng.setPVector(new PVector(mX, mY, 25, 1));
-				
-				eng.create();
-				
-				
-				
-				test = !test;
-			}
-			
+
+			GL11.glPushMatrix();
+
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glColor3f(0.1f, 0.55f, 0.5f);
+			GL11.glVertex2f(100, 100);
+			GL11.glVertex2f(300, 100);
+			GL11.glVertex2f(300, 300);
+			GL11.glVertex2f(100, 300);
+			GL11.glColor3f(1, 1, 1);
+			GL11.glEnd();
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			this.font.drawString(125, 125, "Hello World");
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glPopMatrix();	
+
 			Display.sync(60);
 			Display.update();
 		}
-		
+
 		Display.destroy();
 		System.exit(0);
 	}
-	
+
 	private void initObj()
 	{
-		eng = new Pengine(new PVector(0, 0), 10, 90, ColorTransition.getRandomTransition());
-		
+
 	}
-	
+
 	private void initGL()
 	{
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, Display.getWidth(), Display.getHeight(), 0, 1, -1);
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight(), 0, 1, -1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+		this.font = new UnicodeFont(new Font("Times New Roman", Font.BOLD, 15));
+		this.font.addAsciiGlyphs();
+		this.font.addGlyphs(400, 600);
+		this.font.getEffects().add(new ColorEffect(java.awt.Color.RED));
+		try {
+			this.font.loadGlyphs();
+		} catch (SlickException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	public static void main(String[] args)
 	{
 		new TestMain();

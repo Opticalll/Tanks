@@ -25,6 +25,7 @@ public class Block implements Entity, Collidable
 	private boolean texture;
 
 	private Color col;
+	@SuppressWarnings("unused")
 	private String tPath;
 	
 	/**

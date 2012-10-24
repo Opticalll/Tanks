@@ -18,13 +18,11 @@ public class MainMenu implements ButtonListener
 	private MenuButton newGame, exit;
 	
 	public MainMenu()
-	{
-		GL11.glClearColor(0.1f, 0.25f, 0.15f, 0.7f);
-		
-		newGame = new MenuButton(Display.getWidth() / 2 - 100, Display.getHeight() / 2 + 0f, 200f, 100f, "newGame");
+	{		
+		newGame = new MenuButton(Display.getDisplayMode().getWidth() / 2 - 100, Display.getDisplayMode().getHeight() / 2 + 0f, 200f, 100f, "newGame");
 		newGame.addButtonListener(this);
 		
-		exit = new MenuButton(Display.getWidth() / 2 - 100, Display.getHeight() / 2 + 150, 200f, 100f, "exit");
+		exit = new MenuButton(Display.getDisplayMode().getWidth() / 2 - 100, Display.getDisplayMode().getHeight() / 2 + 150, 200f, 100f, "exit");
 		exit.addButtonListener(this);
 	}
 	
@@ -42,6 +40,7 @@ public class MainMenu implements ButtonListener
 	 */
 	public void render()
 	{
+		GL11.glClearColor(0.1f, 0.5f, 0.15f, 0.7f);
 		newGame.render();
 		exit.render();
 	}
