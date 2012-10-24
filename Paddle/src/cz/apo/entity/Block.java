@@ -22,8 +22,10 @@ public class Block implements Entity, Collidable
 	private float blockWidth, blockHeight;
 	
 	private boolean colidable;
+	private boolean texture;
 
 	private Color col;
+	private String tPath;
 	
 	/**
 	 * 
@@ -31,17 +33,43 @@ public class Block implements Entity, Collidable
 	 * @param y Y coordinate
 	 * @param blockWidth width
 	 * @param blockHeight height
-	 * @param col color
-	 * @param colidable colidable
+	 * @param textPath path of texture
+	 * @param properties array of properties of Block (0 - Collidable)
 	 */
-	public Block(float x, float y, float blockWidth, float blockHeight, Color col, boolean colidable)
+	public Block(float x, float y, float blockWidth, float blockHeight, String textPath, boolean[] properties)
+	{
+		this.x = x;
+		this.y = y;
+		this.blockWidth = blockWidth;
+		this.blockHeight = blockHeight;
+		this.tPath = textPath;
+		this.texture = true;
+		propertiesInit(properties);
+	}
+
+	/**
+	 * 
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param blockWidth width
+	 * @param blockHeight height
+	 * @param col color
+	 * @param properties array of properties of Block (0 - Collidable)
+	 */
+	public Block(float x, float y, float blockWidth, float blockHeight, Color col, boolean[] properties)
 	{
 		this.x = x;
 		this.y = y;
 		this.blockWidth = blockWidth;
 		this.blockHeight = blockHeight;
 		this.col = col;
-		this.colidable = colidable;
+		this.texture = false;
+		propertiesInit(properties);
+	}
+	
+	private void propertiesInit(boolean[] properties)
+	{
+		this.colidable = properties[0];
 	}
 	
 	/**
@@ -49,13 +77,21 @@ public class Block implements Entity, Collidable
 	 */
 	public void render()
 	{
-		GL11.glColor3f(col.R, col.G, col.B);
-		GL11.glBegin(GL11.GL_QUADS);		
-			GL11.glVertex2f(x, y);
-			GL11.glVertex2f(x + blockWidth, y);
-			GL11.glVertex2f(x + blockWidth, y + blockHeight);
-			GL11.glVertex2f(x, y + blockHeight);
-		GL11.glEnd();
+		//if texture
+		if(!texture)
+		{
+			GL11.glColor3f(col.R, col.G, col.B);
+			GL11.glBegin(GL11.GL_QUADS);		
+				GL11.glVertex2f(x, y);
+				GL11.glVertex2f(x + blockWidth, y);
+				GL11.glVertex2f(x + blockWidth, y + blockHeight);
+				GL11.glVertex2f(x, y + blockHeight);
+			GL11.glEnd();
+		}
+		else
+		{
+			
+		}
 	}
 	
 	/**
@@ -102,6 +138,16 @@ public class Block implements Entity, Collidable
 		return blockHeight;
 	}
 	
+	public void setX(float x)
+	{
+		this.x = x;
+	}
+
+	public void setY(float y)
+	{
+		this.y = y;
+	}
+
 	/**
 	 * Method for collision check
 	 * 

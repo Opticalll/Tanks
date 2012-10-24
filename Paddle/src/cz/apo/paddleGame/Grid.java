@@ -1,16 +1,13 @@
 package cz.apo.paddleGame;
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
 
-import org.lwjgl.opengl.Display;
-
 import cz.apo.entity.Block;
 import cz.apo.entity.Entity;
-import cz.apo.entity.Wall;
-import cz.apo.enums.BlockType;
+import cz.apo.etc.Color;
 
 /**
  * Grid class for loading levels from files
@@ -21,8 +18,6 @@ public class Grid
 {
 	private float tileWidth, tileHeight;
 	private int lines, columns;
-	private int[][] layout;
-	
 	private List<Entity> blocks = new ArrayList<Entity>();
 	
 	public Grid()
@@ -36,72 +31,93 @@ public class Grid
 	 */
 	public void setGrid(int lvl)
 	{
-		layout = getMapLayout(new File("res/level_" + lvl + ".lvl"));
-		
+		Block[][] layout = loadMap("res/level_" + lvl + ".lvl");
 		for(int i = 0; i < lines; i++)
-		{
-			for(int o = 0; o < columns; o++)
-			{
-				if(layout[i][o] == BlockType.COVER.getIndex())
-					blocks.add(new Block(o * tileWidth + PaddleGame.WALL_WIDTH, i * tileHeight + PaddleGame.WALL_WIDTH, tileWidth, tileHeight, BlockType.COVER.getColor(), false));
-				else if(layout[i][o] == BlockType.WALL.getIndex())
-					blocks.add(new Wall(o * tileWidth + PaddleGame.WALL_WIDTH, i * tileHeight + PaddleGame.WALL_WIDTH, (int) tileWidth, (int) tileHeight, BlockType.WALL.getColor()));
-				else if(layout[i][o] == BlockType.BLOCK.getIndex())
-					blocks.add(new Block(o * tileWidth + PaddleGame.WALL_WIDTH, i * tileHeight + PaddleGame.WALL_WIDTH, tileWidth, tileHeight, BlockType.BLOCK.getColor(), true));
-			}
-		}
+			for(int z = 0; z < columns; z++)
+				blocks.add(layout[i][z]);
 	}
 	
 	/**
 	 * 
-	 * @param f File to load from
+	 * @param f Path to config File
 	 * @return Two dimensional array describing the layout
 	 */
-	private int[][] getMapLayout(File f)
+	private Block[][] loadMap(String mfp)
 	{
-		Scanner s = null;
-		int[][] layout = null;
+		Scanner mfs = null;
+		Scanner cfs = null;
+		Hashtable<Integer, Block> blockConfig = new Hashtable<Integer, Block>(); 
+		Block[][] layout = null;
+		String cfp= "";		
 		
+		// Config File Format:  "0-BlockId~1-Texture (boolean)~2-Texture Path or Color (RRR|GGG|BBB)~3-Properties(First|Second|Third|...)\n"
+
 		try
 		{
-			s = new Scanner(f);
-				
-			while(s.hasNextInt())
+			mfs = new Scanner(mfp);
+                if(mfs.hasNextLine())
+                  	cfp = mfs.nextLine();
+			
+			cfs = new Scanner(cfp);
+			while(cfs.hasNextLine())
 			{
-				while(s.nextInt() != 99)
+				Block newBlock = null;
+				String cline = cfs.nextLine();
+				String[] clineparts = cline.split("~");
+				String[] sproperties = clineparts[3].split("|");
+				boolean[] bproperties = null;
+				for(int i = 0; i < sproperties.length; i++)
+					bproperties[i] = Boolean.parseBoolean(sproperties[i]);
+				if(Boolean.parseBoolean(clineparts[1]))
+					newBlock = new Block(0, 0, tileWidth, tileHeight, clineparts[3], bproperties);
+				else
+				{
+					String[] rgb = clineparts[2].split("|");
+					Color col = new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+					newBlock = new Block(0, 0, tileWidth, tileHeight, col, bproperties);
+				}
+				blockConfig.put(Integer.parseInt(clineparts[0]), newBlock);
+			}
+
+				
+			while(mfs.hasNextInt())
+			{
+				while(mfs .nextInt() != -1)
 				{
 					columns++;
 				}
 				break;
 			}
-			s.close();
+			mfs.close();
 			
-			s = new Scanner(f);
+			mfs = new Scanner(mfp);
 			
-			while(s.hasNextLine())
+			while(mfs.hasNextLine())
 			{
-				s.nextLine();
+				mfs.nextLine();
 				lines++;
 			}
-			s.close();
+			mfs.close();
 			
-			s = new Scanner(f);
+			mfs = new Scanner(mfp);
 			
-			layout = new int[lines][columns];
+			layout = new Block[lines][columns];
 			
 			int line = 0;
 			int col = 0;
-			while(s.hasNextInt())
+			while(mfs.hasNextInt())
 			{
-				int num = s.nextInt();
-				if(num == 99)
+				int num = mfs.nextInt();
+				if(num == -1)
 				{
 					line++;
 					col = 0;
 					continue;
 				}
-				
-				layout[line][col] = num;
+				Block tempBlock = blockConfig.get(num);
+				tempBlock.setX(col * tileWidth);
+				tempBlock.setY(line * tileHeight);
+				layout[line][col] = tempBlock;
 				col++;
 			}
 			
@@ -111,8 +127,8 @@ public class Grid
 		{
 			e.printStackTrace();
 		}
-		
-		s.close();
+		cfs.close();
+		mfs.close();
 		return layout;
 	}
 	
