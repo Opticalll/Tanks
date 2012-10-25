@@ -25,7 +25,6 @@ public class Block implements Entity, Collidable
 	private boolean texture;
 
 	private Color col;
-	@SuppressWarnings("unused")
 	private String tPath;
 	
 	/**
@@ -66,6 +65,50 @@ public class Block implements Entity, Collidable
 		this.col = col;
 		this.texture = false;
 		propertiesInit(properties);
+	}
+	
+	public boolean isColidable() {
+		return colidable;
+	}
+
+	public void setColidable(boolean colidable) {
+		this.colidable = colidable;
+	}
+
+	public boolean isTexture() {
+		return texture;
+	}
+
+	public void setTexture(boolean texture) {
+		this.texture = texture;
+	}
+
+	public Color getCol() {
+		return col;
+	}
+
+	public void setCol(Color col) {
+		this.col = col;
+	}
+
+	public String gettPath() {
+		return tPath;
+	}
+
+	public void settPath(String tPath) {
+		this.tPath = tPath;
+	}
+
+	public Block(Block another)
+	{
+	    this.x = another.getX();
+	    this.y = another.getY();
+	    this.blockHeight = another.getHeight();
+	    this.blockWidth = another.getWidth();
+	    this.col = another.getCol();
+	    this.texture = another.isTexture();
+	    this.tPath = another.gettPath();
+	    this.colidable = another.isColidable();
 	}
 	
 	private void propertiesInit(boolean[] properties)
@@ -147,6 +190,22 @@ public class Block implements Entity, Collidable
 	public void setY(float y)
 	{
 		this.y = y;
+	}
+
+	public float getBlockWidth() {
+		return blockWidth;
+	}
+
+	public void setBlockWidth(float blockWidth) {
+		this.blockWidth = blockWidth;
+	}
+
+	public float getBlockHeight() {
+		return blockHeight;
+	}
+
+	public void setBlockHeight(float blockHeight) {
+		this.blockHeight = blockHeight;
 	}
 
 	/**

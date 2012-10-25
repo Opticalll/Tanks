@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import org.lwjgl.opengl.Display;
@@ -23,24 +22,25 @@ public class Grid
 	private float tileWidth, tileHeight;
 	private int lines, columns;
 	private List<Entity> blocks = new ArrayList<Entity>();
-	
+
 	public Grid()
 	{
 		blocks = new ArrayList<Entity>();
 	}
-	
+
 	/**
 	 * 
 	 * @param lvl Level number
 	 */
 	public void setGrid(int lvl)
 	{
-		Block[][] layout = loadMap("res/level_1.lvl");
+		Block[][] layout = loadMap("res/level_" + lvl + ".lvl");
 		for(int i = 0; i < lines; i++)
 			for(int z = 0; z < columns; z++)
-				blocks.add(layout[i][z]);
+				if(layout[i][z] != null)
+					blocks.add(layout[i][z]);
 	}
-	
+
 	/**
 	 * 
 	 * @param f Path to config File
@@ -50,18 +50,18 @@ public class Grid
 	{
 		Scanner mfs = null;
 		Scanner cfs = null;
-		Map<Integer, Block> blockConfig = new Hashtable<Integer, Block>(); 
+		Hashtable<Integer, Block> blockConfig = new Hashtable<Integer, Block>(); 
 		Block[][] layout = null;
 		String cfp= "";		
-		
+
 		// Config File Format:  "0-BlockId~1-Texture (boolean)~2-Texture Path or Color (RRR|GGG|BBB)~3-Properties(First|Second|Third|...)\n"
 
 		try
 		{
 			mfs = new Scanner(new File(mfp));
-            if(mfs.hasNextLine())
-                  	cfp = mfs.nextLine();
-            System.out.println(mfp);
+			if(mfs.hasNextLine())
+				cfp = mfs.nextLine();
+			System.out.println(mfp);
 			System.out.println(cfp);
 			cfs = new Scanner(new File(cfp));
 			while(cfs.hasNextLine())
@@ -84,32 +84,36 @@ public class Grid
 				blockConfig.put(Integer.parseInt(clineparts[0]), newBlock);
 			}
 
-				
+
 			while(mfs.hasNextInt())
 			{
-				while(mfs .nextInt() != -1)
+				while(mfs.nextInt() != -1)
 				{
 					columns++;
 				}
 				break;
 			}
+			
 			mfs.close();
-			
 			mfs = new Scanner(new File(mfp));
-			
+
 			while(mfs.hasNextLine())
 			{
 				mfs.nextLine();
 				lines++;
 			}
+
 			mfs.close();
-			
 			mfs = new Scanner(new File(mfp));
-			
+
 			layout = new Block[lines][columns];
-			
+
+			tileWidth = (Display.getDisplayMode().getWidth() - PaddleGame.WALL_WIDTH) / columns;
+			tileHeight = (Display.getDisplayMode().getHeight() - PaddleGame.WALL_WIDTH) / lines;
+
 			int line = 0;
 			int col = 0;
+			mfs.nextLine();
 			while(mfs.hasNextInt())
 			{
 				int num = mfs.nextInt();
@@ -119,15 +123,24 @@ public class Grid
 					col = 0;
 					continue;
 				}
-				Block tempBlock = blockConfig.get(num);
-				tempBlock.setX(col * tileWidth);
-				tempBlock.setY(line * tileHeight);
+				Block tempBlock = null;
+				if(num > 0)
+				{
+
+					tempBlock = new Block(blockConfig.get(num));
+					tempBlock.setX(col * tileWidth);
+					tempBlock.setY(line * tileHeight);
+					System.out.println(col);
+					System.out.println(line);
+					System.out.println(col * tileWidth);
+					System.out.println(line * tileHeight);
+
+					tempBlock.setBlockHeight(tileHeight);
+					tempBlock.setBlockWidth(tileWidth);
+				}
 				layout[line][col] = tempBlock;
 				col++;
 			}
-			
-			tileWidth = (Display.getDisplayMode().getWidth() - PaddleGame.WALL_WIDTH) / columns;
-			tileHeight = (Display.getDisplayMode().getHeight() - PaddleGame.WALL_WIDTH) / lines;
 		} catch(Exception e)
 		{
 			e.printStackTrace();
@@ -136,7 +149,7 @@ public class Grid
 		mfs.close();
 		return layout;
 	}
-	
+
 	/**
 	 * 
 	 * @return All blocks from grid
