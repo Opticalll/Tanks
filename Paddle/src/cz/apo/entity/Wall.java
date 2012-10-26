@@ -96,6 +96,11 @@ public class Wall implements Entity, Collidable
 		
 	}
 	
+	public boolean isCollidable()
+	{
+		return true;
+	}
+	
 	/**
 	 * Method for collision check
 	 * 

@@ -61,8 +61,9 @@ public class Grid
 			mfs = new Scanner(new File(mfp));
 			if(mfs.hasNextLine())
 				cfp = mfs.nextLine();
-			System.out.println(mfp);
-			System.out.println(cfp);
+			
+			PaddleGame.log("Loading map from -> " + mfp);
+			
 			cfs = new Scanner(new File(cfp));
 			while(cfs.hasNextLine())
 			{
@@ -71,10 +72,12 @@ public class Grid
 				String[] clineparts = cline.split("~");
 				String[] sproperties = clineparts[3].split("¨");
 				boolean[] bproperties = new boolean[2];
+				
 				for(int i = 0; i < sproperties.length; i++)
 					bproperties[i] = Boolean.parseBoolean(sproperties[i]);
-				if(Boolean.parseBoolean(clineparts[1]))
-					newBlock = new Block(0, 0, tileWidth, tileHeight, clineparts[3], bproperties);
+				
+				if(Boolean.parseBoolean(clineparts[1])) // if texture
+					newBlock = new Block(0, 0, tileWidth, tileHeight, clineparts[2], bproperties);
 				else
 				{
 					String[] rgb = clineparts[2].split("¨");
@@ -130,10 +133,6 @@ public class Grid
 					tempBlock = new Block(blockConfig.get(num));
 					tempBlock.setX(col * tileWidth);
 					tempBlock.setY(line * tileHeight);
-					System.out.println(col);
-					System.out.println(line);
-					System.out.println(col * tileWidth);
-					System.out.println(line * tileHeight);
 
 					tempBlock.setBlockHeight(tileHeight);
 					tempBlock.setBlockWidth(tileWidth);

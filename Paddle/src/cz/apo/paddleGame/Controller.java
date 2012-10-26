@@ -177,7 +177,7 @@ public class Controller
 	/**
 	 * Static check input method. Reads keys like HOME and END to change levels
 	 */
-	public static void static_checkInput()
+	public static void static_checkInput(PaddleGame game)
 	{
 		Keyboard.enableRepeatEvents(false);
 //		while(Keyboard.next())
@@ -203,6 +203,9 @@ public class Controller
 					if(e instanceof Tank)
 						PaddleGame.log("tank");
 				}
+			} else if(Keyboard.isKeyDown(Keyboard.KEY_P))
+			{
+				game.invokeGameMenu();
 			}
 //		}
 		Keyboard.enableRepeatEvents(true);

@@ -30,6 +30,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
+	private boolean collidable = true;
 	
 	private Weapon weapon;
 	private TankFacing facing;
@@ -183,6 +184,11 @@ public class Tank implements Entity, Collidable, ControllerListener
 	public boolean isMoving()
 	{
 		return moving;
+	}
+	
+	public boolean isCollidable()
+	{
+		return collidable;
 	}
 	
 	/**

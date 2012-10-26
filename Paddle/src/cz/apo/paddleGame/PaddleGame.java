@@ -17,41 +17,50 @@ import cz.apo.enums.BlockType;
 import cz.apo.etc.FpsCounter;
 import cz.apo.event.LevelChangedEvent;
 import cz.apo.listener.WorldListener;
+import cz.apo.menu.GameMenu;
 import cz.apo.menu.MainMenu;
 import cz.opt.pEngine.Pengine;
 
 /**
  * 
- * @author Apo(adam) + Optical(Particle engine)
+ * @author Apo(Game) + Optical(Particle engine + loading maps to objects...)
  * 
- * This is the main class.
+ * This is the main class of Tanks game.
  *
  */
-public class PaddleGame
+public class PaddleGame implements Runnable
 {
 	public static final List<Entity> entities = new ArrayList<Entity>();
 	public static MainMenu menu;
 	public static final int WALL_WIDTH = 10;
+	public static final int FPS = 25;
 	
-	private static int level = Controller.DEFAULT_LEVEL;
+	private static int level = 1;
+	
+	private final Thread gameThread;
 	
 	/**
 	 * Main game constructor
 	 */
 	public PaddleGame()
+	{		
+		gameThread = new Thread(this);
+	}
+	
+	/**
+	 * Starts the game thread
+	 */
+	public synchronized void start()
 	{
-		try
-		{
-			Display.setDisplayMode(new DisplayMode(800, 600));
-			Display.setFullscreen(false);
-			Display.setTitle("PaddleGame");
-			Display.setVSyncEnabled(true);
-			Display.create();
-		} catch(LWJGLException e)
-		{
-			e.printStackTrace();
-		}
-		
+		gameThread.start();
+	}
+	
+	/**
+	 * All the main function are here, including initialization functions, menu loop, and game loop
+	 */
+	private void startGame()
+	{
+		initDisplay();
 		initGL();
 		initObj();
 		initListeners();
@@ -60,9 +69,17 @@ public class PaddleGame
 	}
 	
 	/**
+	 * Thread's run method
+	 */
+	public void run()
+	{
+		startGame();
+	}
+	
+	/**
 	 * Main game loop
 	 */
-	private static void gameLoop()
+	private void gameLoop()
 	{
 		GL11.glClearColor(0f, 0f, 0f, 1f);
 		
@@ -70,7 +87,7 @@ public class PaddleGame
 		{
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			
-			Controller.static_checkInput();
+			Controller.static_checkInput(this);
 			FpsCounter.tick();
 			
 			Pengine.update();
@@ -88,11 +105,19 @@ public class PaddleGame
 					((Projectile) e).checkCollision();
 			}
 			
-			Display.sync(25);
+			Display.sync(FPS);
 			Display.update();
 		}
 		
 		cleanUp();
+	}
+	
+	/**
+	 * Invokes in-game menu
+	 */
+	public void invokeGameMenu()
+	{
+		new GameMenu().invoke();
 	}
 	
 	/**
@@ -131,7 +156,25 @@ public class PaddleGame
 	}
 	
 	/**
-	 * Initialize objects
+	 * Initializes display
+	 */
+	private void initDisplay()
+	{
+		try
+		{
+			Display.setDisplayMode(new DisplayMode(800, 600));
+			Display.setFullscreen(false);
+			Display.setTitle("PaddleGame");
+			Display.setVSyncEnabled(true);
+			Display.create();
+		} catch(LWJGLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Initializes objects
 	 */
 	private static void initObj()
 	{		
@@ -170,7 +213,6 @@ public class PaddleGame
 	 */
 	private void initGL()
 	{
-
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight(), 0, 1, -1);
@@ -215,6 +257,7 @@ public class PaddleGame
 	 */
 	public static void main(String[] args)
 	{
-		new PaddleGame();
+		PaddleGame game = new PaddleGame();
+		game.start();
 	}
 }

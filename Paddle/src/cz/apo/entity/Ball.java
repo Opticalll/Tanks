@@ -20,7 +20,8 @@ public class Ball implements Entity, Collidable
 	private float x, y;
 	private float radius;
 	private float dx, dy;
-
+	private boolean collidable = true;
+	
 	public Ball(float x, float y, float radius)
 	{
 		this.x = x;
@@ -81,6 +82,11 @@ public class Ball implements Entity, Collidable
 		return radius;
 	}
 
+	public boolean isCollidable()
+	{
+		return collidable;
+	}
+	
 	public void render()
 	{
 		GL11.glColor3f(1, 0, 0);

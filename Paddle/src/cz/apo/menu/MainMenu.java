@@ -19,10 +19,10 @@ public class MainMenu implements ButtonListener
 	
 	public MainMenu()
 	{		
-		newGame = new MenuButton(Display.getDisplayMode().getWidth() / 2 - 100, Display.getDisplayMode().getHeight() / 2 + 0f, 200f, 100f, "newGame");
+		newGame = new MenuButton(Display.getDisplayMode().getWidth() / 2 - 100, Display.getDisplayMode().getHeight() / 2 + 0f, 200f, 100f, "New Game");
 		newGame.addButtonListener(this);
 		
-		exit = new MenuButton(Display.getDisplayMode().getWidth() / 2 - 100, Display.getDisplayMode().getHeight() / 2 + 150, 200f, 100f, "exit");
+		exit = new MenuButton(Display.getDisplayMode().getWidth() / 2 - 100, Display.getDisplayMode().getHeight() / 2 + 150, 200f, 100f, "Exit");
 		exit.addButtonListener(this);
 	}
 	

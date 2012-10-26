@@ -40,7 +40,7 @@ public class MenuButton
 		this.w = w;
 		this.h = h;
 		this.name = name;
-		this.font = new OpFont(0f, 0f, this.name, new Font("Times New Roman", Font.BOLD, 15), java.awt.Color.RED);
+		this.font = new OpFont(0f, 0f, this.name, new Font("Arial", Font.BOLD, 15), java.awt.Color.YELLOW);
 		this.listeners = new ArrayList<ButtonListener>();
 	}
 	
@@ -79,9 +79,7 @@ public class MenuButton
 	 * Button render method
 	 */
 	public void render()
-	{
-		// TODO: Add text on button, add method setText(String str) ... 
-
+	{ 
 		//this class does not have on loop...
 		this.font.setPos(this.x + (this.w/2-this.font.getWidth()/2), this.y + (this.h/2-this.font.getHeight()));
 		

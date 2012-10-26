@@ -157,7 +157,12 @@ public class Missile implements Entity, Projectile
 			Entity e = PaddleGame.entities.get(i);
 			
 			if(e instanceof Collidable)
-				((Collidable) e).intersects(this);
+			{
+				Collidable obj = (Collidable) e;
+				
+				if(obj.isCollidable())
+					obj.intersects(this);
+			}
 		}
 	}
 }

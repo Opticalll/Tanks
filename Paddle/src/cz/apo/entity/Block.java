@@ -1,8 +1,12 @@
 package cz.apo.entity;
 
 import java.awt.Rectangle;
+import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
@@ -22,10 +26,11 @@ public class Block implements Entity, Collidable
 	private float blockWidth, blockHeight;
 	
 	private boolean colidable;
-	private boolean texture;
+	private boolean isTextured;
 
 	private Color col;
 	private String tPath;
+	private Texture texture = null;
 	
 	/**
 	 * 
@@ -43,8 +48,9 @@ public class Block implements Entity, Collidable
 		this.blockWidth = blockWidth;
 		this.blockHeight = blockHeight;
 		this.tPath = textPath;
-		this.texture = true;
-		propertiesInit(properties);
+		this.isTextured = true;
+		this.texture = loadTexture(textPath, "PNG");
+		propertiesInit(properties);		
 	}
 
 	/**
@@ -63,7 +69,7 @@ public class Block implements Entity, Collidable
 		this.blockWidth = blockWidth;
 		this.blockHeight = blockHeight;
 		this.col = col;
-		this.texture = false;
+		this.isTextured = false;
 		propertiesInit(properties);
 	}
 	
@@ -76,11 +82,11 @@ public class Block implements Entity, Collidable
 	}
 
 	public boolean isTexture() {
-		return texture;
+		return isTextured;
 	}
 
 	public void setTexture(boolean texture) {
-		this.texture = texture;
+		this.isTextured = texture;
 	}
 
 	public Color getCol() {
@@ -106,7 +112,7 @@ public class Block implements Entity, Collidable
 	    this.blockHeight = another.getHeight();
 	    this.blockWidth = another.getWidth();
 	    this.col = another.getCol();
-	    this.texture = another.isTexture();
+	    this.isTextured = another.isTexture();
 	    this.tPath = another.gettPath();
 	    this.colidable = another.isColidable();
 	}
@@ -116,13 +122,26 @@ public class Block implements Entity, Collidable
 		this.colidable = properties[0];
 	}
 	
+	private Texture loadTexture(String texturePath, String format)
+	{
+		Texture tex = null;
+		try
+		{
+			tex = TextureLoader.getTexture(format, ResourceLoader.getResourceAsStream(texturePath));
+		} catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		return tex;
+	}
+	
 	/**
 	 * Block render method
 	 */
 	public void render()
 	{
 		//if texture
-		if(!texture)
+		if(!isTextured)
 		{
 			GL11.glColor3f(col.R, col.G, col.B);
 			GL11.glBegin(GL11.GL_QUADS);		
@@ -134,7 +153,25 @@ public class Block implements Entity, Collidable
 		}
 		else
 		{
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			org.newdawn.slick.Color.white.bind();
+			if(texture == null)
+				texture = loadTexture(tPath, "PNG");
+			texture.bind();
 			
+			GL11.glBegin(GL11.GL_QUADS);
+				GL11.glTexCoord2f(0, 0);
+				GL11.glVertex2f(x, y);
+				GL11.glTexCoord2f(1, 0);
+				GL11.glVertex2f(x + blockWidth, y);
+				GL11.glTexCoord2f(1, 1);
+				GL11.glVertex2f(x + blockWidth, y + blockHeight);
+				GL11.glTexCoord2f(0, 1);
+				GL11.glVertex2f(x, y + blockHeight);
+			GL11.glEnd();
+
+			
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 	}
 	
@@ -208,6 +245,11 @@ public class Block implements Entity, Collidable
 		this.blockHeight = blockHeight;
 	}
 
+	public boolean isCollidable()
+	{
+		return colidable;
+	}
+	
 	/**
 	 * Method for collision check
 	 * 
