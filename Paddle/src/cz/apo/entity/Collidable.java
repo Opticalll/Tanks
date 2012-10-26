@@ -7,6 +7,7 @@ package cz.apo.entity;
  */
 public interface Collidable
 {
-	public boolean isCollidable();
+	public boolean isSolid();
+	public boolean isDestroyable();
 	public boolean intersects(Entity e);
 }

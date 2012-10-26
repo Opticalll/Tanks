@@ -23,6 +23,7 @@ public class Controller
 	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W;
 	
 	private static int level = DEFAULT_LEVEL;
+	private static boolean homeDown = false, endDown = false;
 	private int weapon = DEFAULT_WEAPON;
 	private long lastTime = 0;
 	
@@ -179,36 +180,38 @@ public class Controller
 	 */
 	public static void static_checkInput(PaddleGame game)
 	{
-		Keyboard.enableRepeatEvents(false);
-//		while(Keyboard.next())
-//		{
-			if(Keyboard.isKeyDown(Keyboard.KEY_HOME))
+		if(Keyboard.isKeyDown(Keyboard.KEY_HOME) && !homeDown)
+		{
+			homeDown = true;
+			if(level < 2)
 			{
-				if(level < 2)
-				{
-					level++;
-					levelChanged();
-				}
-			} else if(Keyboard.isKeyDown(Keyboard.KEY_END))
-			{
-				if(level > 0)
-				{
-					level--;
-					levelChanged();
-				}
-			} else if(Keyboard.isKeyDown(Keyboard.KEY_INSERT))
-			{
-				for(Entity e : PaddleGame.entities)
-				{
-					if(e instanceof Tank)
-						PaddleGame.log("tank");
-				}
-			} else if(Keyboard.isKeyDown(Keyboard.KEY_P))
-			{
-				game.invokeGameMenu();
+				level++;
+				levelChanged();
 			}
-//		}
-		Keyboard.enableRepeatEvents(true);
+		} else if(Keyboard.isKeyDown(Keyboard.KEY_END) && !endDown)
+		{
+			endDown = true;
+			if(level > 0)
+			{
+				level--;
+				levelChanged();
+			}
+		} else if(Keyboard.isKeyDown(Keyboard.KEY_INSERT))
+		{
+			for(Entity e : PaddleGame.entities)
+			{
+				if(e instanceof Tank)
+					PaddleGame.log("tank");
+			}
+		} else if(Keyboard.isKeyDown(Keyboard.KEY_P))
+		{
+			game.invokeGameMenu();
+		}
+		
+		if(!Keyboard.isKeyDown(Keyboard.KEY_HOME))
+			homeDown = false;
+		if(!Keyboard.isKeyDown(Keyboard.KEY_END))
+			endDown = false;
 	}
 	
 	// =============== EVENTS ============== //

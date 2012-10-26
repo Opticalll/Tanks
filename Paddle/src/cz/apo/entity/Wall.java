@@ -96,9 +96,14 @@ public class Wall implements Entity, Collidable
 		
 	}
 	
-	public boolean isCollidable()
+	public boolean isSolid()
 	{
 		return true;
+	}
+	
+	public boolean isDestroyable()
+	{
+		return false;
 	}
 	
 	/**
@@ -108,48 +113,8 @@ public class Wall implements Entity, Collidable
 	 */
 	public boolean intersects(Entity e)
 	{
-		if(e instanceof Ball)
-		{
-			Ball b = (Ball) e;
-			int oWidth = (int) b.getWidth();
-			int oHeight = (int) b.getHeight();
-			
-			Rectangle wall = new Rectangle((int) x, (int) y, (int) width, (int) height);
-			Rectangle ball = new Rectangle((int) b.getX(), (int) b.getY(), oWidth, oHeight);			
-			
-			if(ball.intersects(wall))
-			{
-				// step back
-				float pX = b.getX() - b.getDX();
-				float pY = b.getY() - b.getDY();
-								
-				boolean left = false;
-				if(pX + oWidth <= x)
-					left = true;
-				
-				boolean right = false;
-				if(pX >= x + width)
-					right = true;
-				
-				boolean top = false;
-				if(pY + oHeight <= y)
-					top = true;
-				
-				boolean bottom = false;
-				if(pY >= y + height)
-					bottom = true;
-				
-				if(left || right)
-				{
-					b.setDX(-(b.getDX()));
-				}
-				else if(top || bottom)
-				{
-					b.setDY(-b.getDY());
-				}
-				return true;
-			}
-		} else if(e instanceof Tank)
+
+		if(e instanceof Tank)
 		{
 			Tank p = (Tank) e;
 			int pWidth = (int) p.getWidth();

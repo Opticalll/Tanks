@@ -30,7 +30,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 	
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
-	private boolean collidable = true;
+	private boolean solid = true;
+	private boolean destroyable = true;
 	
 	private Weapon weapon;
 	private TankFacing facing;
@@ -48,8 +49,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 		this.y = y;
 		this.controller = controller;
 		facing = TankFacing.NORTH;
-		width = 20.0f;
-		height = 20.0f;
+		width = 15.0f;
+		height = 15.0f;
 		gunWidth = 2.0f;
 		gunLength = 20.0f;
 		
@@ -186,9 +187,14 @@ public class Tank implements Entity, Collidable, ControllerListener
 		return moving;
 	}
 	
-	public boolean isCollidable()
+	public boolean isSolid()
 	{
-		return collidable;
+		return solid;
+	}
+	
+	public boolean isDestroyable()
+	{
+		return destroyable;
 	}
 	
 	/**
@@ -361,24 +367,53 @@ public class Tank implements Entity, Collidable, ControllerListener
 				
 				return true;
 			}
-		} else if(e instanceof Ball)
+		} else if((e instanceof Tank))
 		{
-			Ball b = (Ball) e;
-			
-			Rectangle ball = new Rectangle((int) b.getX(), (int) b.getY(), (int) b.getWidth(), (int) b.getHeight());
-			Rectangle player = new Rectangle((int) x, (int) y, (int) width, (int) height);
-			
-			if(ball.intersects(player))
+			Tank p = (Tank) e;
+			if(p.isSolid())
 			{
-				Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
-				eng.create();
-				PaddleGame.entities.remove(this);
-				controller.removeControllerListener(this);
+				int pWidth = (int) p.getWidth();
+				int pHeight = (int) p.getHeight();
 				
-				return true;
+				Rectangle wall = new Rectangle((int) x, (int) y, (int) pWidth, (int) pHeight);
+				Rectangle player = new Rectangle((int) p.getX(), (int) p.getY(), pWidth, pHeight);			
+				
+				if(player.intersects(wall))
+				{
+					// step back
+					float pX = p.getX() - p.getDX();
+					float pY = p.getY() - p.getDY();
+									
+					boolean left = false;
+					if(pX + pWidth <= x)
+						left = true;
+					
+					boolean right = false;
+					if(pX >= x + width)
+						right = true;
+					
+					boolean top = false;
+					if(pY + pHeight <= y)
+						top = true;
+					
+					boolean bottom = false;
+					if(pY >= y + height)
+						bottom = true;
+					
+					if(left || right)
+					{
+						p.setDX(0);
+						p.setX(pX);
+					}
+					else if(top || bottom)
+					{
+						p.setDY(0);
+						p.setY(pY);
+					}
+					return true;
+				}
 			}
 		}
-		
 		return false;
 	}
 	

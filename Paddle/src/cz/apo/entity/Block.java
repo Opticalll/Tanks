@@ -25,7 +25,8 @@ public class Block implements Entity, Collidable
 	private float x, y;
 	private float blockWidth, blockHeight;
 	
-	private boolean colidable;
+	private boolean solid;
+	private boolean destroyable;
 	private boolean isTextured;
 
 	private Color col;
@@ -39,7 +40,7 @@ public class Block implements Entity, Collidable
 	 * @param blockWidth width
 	 * @param blockHeight height
 	 * @param textPath path of texture
-	 * @param properties array of properties of Block (0 - Collidable)
+	 * @param properties array of properties of Block (0 - Solid; 1 - Destroyable)
 	 */
 	public Block(float x, float y, float blockWidth, float blockHeight, String textPath, boolean[] properties)
 	{
@@ -73,12 +74,44 @@ public class Block implements Entity, Collidable
 		propertiesInit(properties);
 	}
 	
-	public boolean isColidable() {
-		return colidable;
+	public Block(Block another)
+	{
+		this.x = another.getX();
+		this.y = another.getY();
+		this.blockHeight = another.getHeight();
+		this.blockWidth = another.getWidth();
+		this.col = another.getCol();
+		this.isTextured = another.isTexture();
+		this.tPath = another.gettPath();
+		this.solid = another.isSolid();
+		this.destroyable = another.isDestroyable();
+	}
+	
+	public void setBlock(Block another)
+	{
+		this.col = another.getCol();
+		this.isTextured = another.isTexture();
+		this.tPath = another.gettPath();
+		this.solid = another.isSolid();
+		this.destroyable = another.isDestroyable();
+	}
+	
+	public boolean isSolid() {
+		return solid;
 	}
 
-	public void setColidable(boolean colidable) {
-		this.colidable = colidable;
+	public boolean isDestroyable()
+	{
+		return destroyable;
+	}
+	
+	public void setDestroyable(boolean destroyable)
+	{
+		this.destroyable = destroyable;
+	}
+	
+	public void setSolid(boolean solid) {
+		this.solid = solid;
 	}
 
 	public boolean isTexture() {
@@ -105,21 +138,11 @@ public class Block implements Entity, Collidable
 		this.tPath = tPath;
 	}
 
-	public Block(Block another)
-	{
-	    this.x = another.getX();
-	    this.y = another.getY();
-	    this.blockHeight = another.getHeight();
-	    this.blockWidth = another.getWidth();
-	    this.col = another.getCol();
-	    this.isTextured = another.isTexture();
-	    this.tPath = another.gettPath();
-	    this.colidable = another.isColidable();
-	}
 	
 	private void propertiesInit(boolean[] properties)
 	{
-		this.colidable = properties[0];
+		this.solid = properties[0];
+		this.destroyable = properties[1];
 	}
 	
 	private Texture loadTexture(String texturePath, String format)
@@ -244,11 +267,6 @@ public class Block implements Entity, Collidable
 	public void setBlockHeight(float blockHeight) {
 		this.blockHeight = blockHeight;
 	}
-
-	public boolean isCollidable()
-	{
-		return colidable;
-	}
 	
 	/**
 	 * Method for collision check
@@ -257,53 +275,10 @@ public class Block implements Entity, Collidable
 	 */
 	public boolean intersects(Entity e)
 	{
-		if(e instanceof Ball)
-		{
-			Ball b = (Ball) e;
-			int bRadius = (int) b.getWidth();
-			
-			Rectangle block = new Rectangle((int) x, (int) y, (int) blockWidth, (int) blockHeight);
-			Rectangle ball = new Rectangle((int) b.getX(), (int) b.getY(), bRadius, bRadius);			
-			
-			if(ball.intersects(block))
-			{
-				// step back
-				float pX = b.getX() - b.getDX();
-				float pY = b.getY() - b.getDY();
-								
-				boolean left = false;
-				if(pX + bRadius <= x)
-					left = true;
-				
-				boolean right = false;
-				if(pX >= x + blockWidth)
-					right = true;
-				
-				boolean top = false;
-				if(pY + bRadius <= y)
-					top = true;
-				
-				boolean bottom = false;
-				if(pY >= y + blockHeight)
-					bottom = true;
-				
-				if(left || right)
-				{
-					b.setDX(-(b.getDX()));
-				}
-				else if(top || bottom)
-				{
-					b.setDY(-b.getDY());
-				}
-				
-				Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
-				eng.create();
-				PaddleGame.entities.remove(this);
-				return true;
-			}
-		} else if(e instanceof Projectile)
+		if(e instanceof Projectile)
 		{
 			Projectile p = (Projectile) e;
+			
 			int mWidth = (int) p.getWidth();
 			int mHeight = (int) p.getHeight();
 			
@@ -313,12 +288,19 @@ public class Block implements Entity, Collidable
 			if(missile.intersects(block))
 			{
 				PaddleGame.entities.remove(p);
-				Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
-				eng.create();
-				PaddleGame.log("removing");
-				PaddleGame.entities.remove(this);
+				if(this.destroyable)
+				{
+					Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
+					eng.create();
+//					PaddleGame.entities.remove(this);
+
+					this.settPath("res/textures/grass.png");
+					this.setSolid(false);
+					this.setDestroyable(false);
+					this.texture = loadTexture(tPath, "PNG");
+				}
 			}
-		} else if((e instanceof Tank) && colidable)
+		} else if((e instanceof Tank) && solid)
 		{
 			Tank p = (Tank) e;
 			int pWidth = (int) p.getWidth();
@@ -360,7 +342,6 @@ public class Block implements Entity, Collidable
 					p.setY(pY);
 				}
 				return true;
-
 			}
 		} 		
 		return false;

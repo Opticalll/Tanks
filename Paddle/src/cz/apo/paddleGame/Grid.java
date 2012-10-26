@@ -126,10 +126,10 @@ public class Grid
 					col = 0;
 					continue;
 				}
+				
 				Block tempBlock = null;
 				if(num > 0)
 				{
-
 					tempBlock = new Block(blockConfig.get(num));
 					tempBlock.setX(col * tileWidth);
 					tempBlock.setY(line * tileHeight);

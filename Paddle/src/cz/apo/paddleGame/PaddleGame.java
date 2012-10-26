@@ -35,7 +35,7 @@ public class PaddleGame implements Runnable
 	public static final int WALL_WIDTH = 10;
 	public static final int FPS = 25;
 	
-	private static int level = 1;
+	private static int level = 2;
 	
 	private final Thread gameThread;
 	
@@ -90,8 +90,6 @@ public class PaddleGame implements Runnable
 			Controller.static_checkInput(this);
 			FpsCounter.tick();
 			
-			Pengine.update();
-			
 			for(int i = 0; i < entities.size(); i++)
 			{		
 				Entity e = entities.get(i);
@@ -104,6 +102,8 @@ public class PaddleGame implements Runnable
 				if(e instanceof Projectile)
 					((Projectile) e).checkCollision();
 			}
+			
+			Pengine.update();
 			
 			Display.sync(FPS);
 			Display.update();

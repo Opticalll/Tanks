@@ -145,7 +145,7 @@ public class Missile implements Entity, Projectile
 		if(x > Display.getDisplayMode().getWidth() || x < 0 || y > Display.getDisplayMode().getHeight() || y < 0)
 			PaddleGame.entities.remove(this);
 		
-		Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 5, 90, null);
+		Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 2, 90, null);
 		eng.setVVector(new VVector(0.5f, 0.5f));
 		eng.create();
 	}
@@ -160,7 +160,7 @@ public class Missile implements Entity, Projectile
 			{
 				Collidable obj = (Collidable) e;
 				
-				if(obj.isCollidable())
+				if(obj.isSolid() || obj.isDestroyable())
 					obj.intersects(this);
 			}
 		}
