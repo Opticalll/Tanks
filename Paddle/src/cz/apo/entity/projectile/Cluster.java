@@ -156,7 +156,12 @@ public class Cluster implements Entity, Projectile
 			Entity e = PaddleGame.entities.get(i);
 			
 			if(e instanceof Collidable)
-				((Collidable) e).intersects(this);
+			{
+				Collidable obj = (Collidable) e;
+				
+				if(obj.isSolid() || obj.isDestroyable())
+					obj.intersects(this);
+			}
 		}
 	}
 }

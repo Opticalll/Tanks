@@ -14,8 +14,6 @@ public class Color
 	public Color(short r, short g, short b)
 	{
 		this.R = ((float)r/256f);
-		System.out.println(r);
-		System.out.println(R);
 		this.G = ((float)g/256f);
 		this.B = ((float)b/256f);
 	}

@@ -15,6 +15,7 @@ public class Weapon
 	
 	public static final int MISSILE = 1;
 	public static final int CLUSTER = 2;
+	public static final int ROCKET = 3;
 	
 	/**
 	 * 
@@ -37,16 +38,16 @@ public class Weapon
 				switch(tank.getFacing())
 				{
 					case NORTH:
-						PaddleGame.entities.add(new Missile(tank.getX() + (tank.getWidth()/2 - tank.getGunWidth()/2), (tank.getY() + tank.getHeight()/2) - tank.getGunLength(), 2.0f, 4.0f, tank));
+						PaddleGame.entities.add(new Missile(tank.getX() + (tank.getWidth()/2 - tank.getGunWidth()/2), (tank.getY() + tank.getHeight()/2) - tank.getGunLength()/2, 2.0f, 4.0f, tank));
 						break;
 					case EAST:
-						PaddleGame.entities.add(new Missile(tank.getX() + (tank.getWidth()/2 + tank.getGunLength()), (tank.getY() + tank.getHeight()/2), 2.0f, 4.0f, tank));
+						PaddleGame.entities.add(new Missile(tank.getX() + (tank.getWidth()/2 + tank.getGunLength()/2), (tank.getY() + tank.getHeight()/2), 2.0f, 4.0f, tank));
 						break;
 					case SOUTH:
-						PaddleGame.entities.add(new Missile((tank.getX() + tank.getWidth()/2), tank.getY() + tank.getHeight()/2 + tank.getGunLength(), 2.0f, 4.0f, tank));
+						PaddleGame.entities.add(new Missile((tank.getX() + tank.getWidth()/2), tank.getY() + tank.getHeight()/2 + tank.getGunLength()/2, 2.0f, 4.0f, tank));
 						break;
 					case WEST:
-						PaddleGame.entities.add(new Missile(tank.getX() + (tank.getWidth()/2 - tank.getGunLength()), (tank.getY() + tank.getHeight()/2), 2.0f, 4.0f, tank));
+						PaddleGame.entities.add(new Missile(tank.getX() + (tank.getWidth()/2 - tank.getGunLength()/2), (tank.getY() + tank.getHeight()/2), 2.0f, 4.0f, tank));
 						break;
 				}
 				break;
@@ -54,18 +55,21 @@ public class Weapon
 				switch(tank.getFacing())
 				{
 					case NORTH:
-						PaddleGame.entities.add(new Cluster(tank.getX() + (tank.getWidth()/2 - tank.getGunWidth()/2), (tank.getY() + tank.getHeight()/2) - tank.getGunLength(), 2.0f, 4.0f, tank));
+						PaddleGame.entities.add(new Cluster(tank.getX() + (tank.getWidth()/2 - tank.getGunWidth()/2), (tank.getY() + tank.getHeight()/2) - tank.getGunLength()/2, 2.0f, 4.0f, tank));
 						break;
 					case EAST:
-						PaddleGame.entities.add(new Cluster(tank.getX() + (tank.getWidth()/2 + tank.getGunLength()), (tank.getY() + tank.getHeight()/2), 2.0f, 4.0f, tank));
+						PaddleGame.entities.add(new Cluster(tank.getX() + (tank.getWidth()/2 + tank.getGunLength()/2), (tank.getY() + tank.getHeight()/2), 2.0f, 4.0f, tank));
 						break;
 					case SOUTH:
-						PaddleGame.entities.add(new Cluster((tank.getX() + tank.getWidth()/2), tank.getY() + tank.getHeight()/2 + tank.getGunLength(), 2.0f, 4.0f, tank));
+						PaddleGame.entities.add(new Cluster((tank.getX() + tank.getWidth()/2), tank.getY() + tank.getHeight()/2 + tank.getGunLength()/2, 2.0f, 4.0f, tank));
 						break;
 					case WEST:
-						PaddleGame.entities.add(new Cluster(tank.getX() + (tank.getWidth()/2 - tank.getGunLength()), (tank.getY() + tank.getHeight()/2), 2.0f, 4.0f, tank));
+						PaddleGame.entities.add(new Cluster(tank.getX() + (tank.getWidth()/2 - tank.getGunLength()/2), (tank.getY() + tank.getHeight()/2), 2.0f, 4.0f, tank));
 						break;
 				}
+				break;
+			case ROCKET:
+				
 				break;
 		}
 	}

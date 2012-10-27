@@ -25,10 +25,17 @@ public class Color
 		this.B = b/256f;
 	}
 	
-	public static Color getRandomColor()
+	public static Color getRandomColorF()
 	{
 		Random r = new Random();
 		
 		return new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
+	}
+	
+	public static Color getRandomColorRgb()
+	{
+		Random r = new Random();
+		
+		return new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
 	}
 }

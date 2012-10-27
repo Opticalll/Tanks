@@ -32,10 +32,12 @@ public class PaddleGame implements Runnable
 {
 	public static final List<Entity> entities = new ArrayList<Entity>();
 	public static MainMenu menu;
+	
+	public static final int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 	public static final int WALL_WIDTH = 10;
 	public static final int FPS = 25;
 	
-	private static int level = 2;
+	private static int level = Controller.DEFAULT_LEVEL;
 	
 	private final Thread gameThread;
 	
@@ -43,7 +45,7 @@ public class PaddleGame implements Runnable
 	 * Main game constructor
 	 */
 	public PaddleGame()
-	{		
+	{	
 		gameThread = new Thread(this);
 	}
 	
@@ -133,7 +135,7 @@ public class PaddleGame implements Runnable
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			menu.render();
 			
-			Display.sync(25);
+			Display.sync(60);
 			Display.update();
 		}
 	}
@@ -162,7 +164,7 @@ public class PaddleGame implements Runnable
 	{
 		try
 		{
-			Display.setDisplayMode(new DisplayMode(800, 600));
+			Display.setDisplayMode(new DisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT));
 			Display.setFullscreen(false);
 			Display.setTitle("PaddleGame");
 			Display.setVSyncEnabled(true);
@@ -259,5 +261,15 @@ public class PaddleGame implements Runnable
 	{
 		PaddleGame game = new PaddleGame();
 		game.start();
+	}
+	
+	public static float getRandom(float min, float max)
+	{
+		return (min + (float)(Math.random() * ((max - min))));
+	}
+	
+	public static int getRandom(int min, int max)
+	{
+		return (min + (int)(Math.random() * ((max - min))));
 	}
 }

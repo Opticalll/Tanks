@@ -6,11 +6,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
 
-import org.lwjgl.opengl.Display;
-
 import cz.apo.entity.Block;
 import cz.apo.entity.Entity;
-import cz.apo.entity.Wall;
 import cz.apo.etc.Color;
 
 /**
@@ -112,9 +109,11 @@ public class Grid
 
 			layout = new Block[lines][columns];
 
-			tileWidth = (Display.getDisplayMode().getWidth() - PaddleGame.WALL_WIDTH) / columns;
-			tileHeight = (Display.getDisplayMode().getHeight() - PaddleGame.WALL_WIDTH) / lines;
-
+//			tileWidth = (Display.getDisplayMode().getWidth() - PaddleGame.WALL_WIDTH) / columns;
+//			tileHeight = (Display.getDisplayMode().getHeight() - PaddleGame.WALL_WIDTH) / lines;
+			tileWidth = 20.0f;
+			tileHeight = 20.0f;
+			
 			int line = 0;
 			int col = 0;
 			mfs.nextLine();

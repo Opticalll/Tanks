@@ -20,7 +20,7 @@ import cz.apo.listener.WorldListener;
 public class Controller
 {	
 	public static final int DEFAULT_LEVEL = 0, DEFAULT_WEAPON = 1;
-	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W;
+	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W, BUILD;
 	
 	private static int level = DEFAULT_LEVEL;
 	private static boolean homeDown = false, endDown = false;
@@ -31,6 +31,7 @@ public class Controller
 	public boolean right = false;
 	public boolean up = false;
 	public boolean down = false;
+	public boolean build = false;
 	public volatile boolean fire = false;
 	
 	private boolean next_p = false;
@@ -54,6 +55,7 @@ public class Controller
 			FIRE = Keyboard.KEY_RETURN;
 			NEXT_W = Keyboard.KEY_NUMPAD9;
 			PREV_W = Keyboard.KEY_NUMPAD7;
+			BUILD = Keyboard.KEY_NUMPAD0;
 		} else if(id == 2)
 		{
 			UP = Keyboard.KEY_W;
@@ -63,10 +65,10 @@ public class Controller
 			FIRE = Keyboard.KEY_SPACE;
 			NEXT_W = Keyboard.KEY_E;
 			PREV_W = Keyboard.KEY_Q;
-
+			BUILD = Keyboard.KEY_B;
 		} else
 		{
-			UP = DOWN = LEFT = RIGHT = FIRE = NEXT_W = PREV_W = 0;
+			UP = DOWN = LEFT = RIGHT = FIRE = NEXT_W = PREV_W = BUILD = 0;
 		}
 		
 		controllerListeners = new ArrayList<ControllerListener>();
@@ -133,7 +135,10 @@ public class Controller
 			right = true;
 		else
 			right = false;
-
+		if(Keyboard.isKeyDown(BUILD))
+			build = true;
+		else
+			build = false;
 		if(Keyboard.isKeyDown(FIRE))
 		{
 			if(System.nanoTime() > lastTime + 500000000L)

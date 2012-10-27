@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import org.lwjgl.opengl.GL11;
 
 import cz.apo.entity.projectile.Projectile;
+import cz.apo.etc.Color;
 import cz.apo.event.WeaponChangedEvent;
 import cz.apo.listener.ControllerListener;
 import cz.apo.paddleGame.Controller;
@@ -33,8 +34,10 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private boolean solid = true;
 	private boolean destroyable = true;
 	
+	private Player player;
 	private Weapon weapon;
 	private TankFacing facing;
+	private Color color;
 	private final Controller controller;
 	
 	/**
@@ -43,22 +46,23 @@ public class Tank implements Entity, Collidable, ControllerListener
 	 * @param y Y coordinate
 	 * @param controller controller
 	 */
-	public Tank(float x, float y, Controller controller)
+	public Tank(float x, float y, Controller controller, Player player)
 	{
 		this.x = x;
 		this.y = y;
 		this.controller = controller;
+		this.player = player;
+		this.color = Color.getRandomColorF();
 		facing = TankFacing.NORTH;
 		width = 15.0f;
 		height = 15.0f;
 		gunWidth = 2.0f;
-		gunLength = 20.0f;
+		gunLength = 15.0f;
 		
 		weapon = new Weapon(this);
 		currentWeapon = Controller.DEFAULT_WEAPON;
 		
 		controller.addControllerListener(this);
-		PaddleGame.log("Listener added");
 	}
 	
 	/**
@@ -207,7 +211,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 		GL11.glTranslatef(-(x + width/2), -(y + height/2), 0);
 		
 		// tank
-		GL11.glColor3f(1, 0, 0);
+		GL11.glColor3f(color.R, color.G, color.B);
 		GL11.glBegin(GL11.GL_QUADS);
 			GL11.glVertex2f(x, y);
 			GL11.glVertex2f(x + width, y);
@@ -359,12 +363,17 @@ public class Tank implements Entity, Collidable, ControllerListener
 			
 			if(missile.intersects(player))
 			{
-				Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
-				eng.create();
 				PaddleGame.entities.remove(e);
-				PaddleGame.entities.remove(this);
-				controller.removeControllerListener(this);
 				
+				if(destroyable)
+				{
+					Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
+					eng.create();
+					PaddleGame.entities.remove(this);
+					controller.removeControllerListener(this);
+					
+					this.player.respawn(false);
+				}
 				return true;
 			}
 		} else if((e instanceof Tank))
