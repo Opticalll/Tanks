@@ -10,6 +10,7 @@ import org.lwjgl.opengl.Display;
 
 import cz.apo.entity.Block;
 import cz.apo.entity.Entity;
+import cz.apo.entity.Wall;
 import cz.apo.etc.Color;
 
 /**
@@ -131,8 +132,8 @@ public class Grid
 				if(num > 0)
 				{
 					tempBlock = new Block(blockConfig.get(num));
-					tempBlock.setX(col * tileWidth);
-					tempBlock.setY(line * tileHeight);
+					tempBlock.setX(col * tileWidth + PaddleGame.WALL_WIDTH);
+					tempBlock.setY(line * tileHeight + PaddleGame.WALL_WIDTH);
 
 					tempBlock.setBlockHeight(tileHeight);
 					tempBlock.setBlockWidth(tileWidth);
