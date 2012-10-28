@@ -69,7 +69,7 @@ public class Grid
 				String cline = cfs.nextLine();
 				String[] clineparts = cline.split("~");
 				String[] sproperties = clineparts[3].split("¨");
-				boolean[] bproperties = new boolean[2];
+				boolean[] bproperties = new boolean[3];
 				
 				for(int i = 0; i < sproperties.length; i++)
 					bproperties[i] = Boolean.parseBoolean(sproperties[i]);

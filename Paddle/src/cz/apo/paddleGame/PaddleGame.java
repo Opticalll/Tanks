@@ -165,7 +165,6 @@ public class PaddleGame implements Runnable
 		try
 		{
 			Display.setDisplayMode(new DisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT));
-			Display.setFullscreen(false);
 			Display.setTitle("PaddleGame");
 			Display.setVSyncEnabled(true);
 			Display.create();
@@ -182,6 +181,11 @@ public class PaddleGame implements Runnable
 	{		
 		menu = new MainMenu();
 		
+//		Wall northWall = new Wall(0, 0, Display.getDisplayMode().getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
+//		Wall southWall = new Wall(0, Display.getDisplayMode().getHeight() - WALL_WIDTH, Display.getDisplayMode().getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
+//		Wall eastWall = new Wall(Display.getDisplayMode().getWidth() - WALL_WIDTH, 0, WALL_WIDTH, Display.getDisplayMode().getHeight(), BlockType.WALL.getColor());
+//		Wall westWall = new Wall(0, 0, WALL_WIDTH, Display.getDisplayMode().getHeight(), BlockType.WALL.getColor());
+
 		Wall northWall = new Wall(0, 0, Display.getDisplayMode().getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
 		Wall southWall = new Wall(0, Display.getDisplayMode().getHeight() - WALL_WIDTH, Display.getDisplayMode().getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
 		Wall eastWall = new Wall(Display.getDisplayMode().getWidth() - WALL_WIDTH, 0, WALL_WIDTH, Display.getDisplayMode().getHeight(), BlockType.WALL.getColor());

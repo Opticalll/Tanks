@@ -29,6 +29,11 @@ public class Tank implements Entity, Collidable, ControllerListener
 	
 	private int currentWeapon;
 	
+	// Ammo
+	private int missiles = 10;
+	private int clusters = 5;
+	private int rockets = 3;
+	
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
 	private boolean solid = true;
@@ -171,6 +176,43 @@ public class Tank implements Entity, Collidable, ControllerListener
 	public float getHeight()
 	{
 		return height;
+	}
+	
+	public int getMissileCount()
+	{
+		return missiles;
+	}
+	
+	public void setMissileCount(int missiles)
+	{
+		this.missiles = missiles;
+	}
+	
+	public int getClusterCount()
+	{
+		return clusters;
+	}
+	
+	public void setClusterCount(int clusters)
+	{
+		this.clusters = clusters;
+	}
+	
+	public int getRocketCount()
+	{
+		return rockets;
+	}
+	
+	public void setRocketCount(int rockets)
+	{
+		this.rockets = rockets;
+	}
+	
+	public void setFullAmmo()
+	{
+		this.missiles = 10;
+		this.clusters = 5;
+		this.rockets = 3;
 	}
 	
 	/**

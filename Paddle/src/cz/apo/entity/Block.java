@@ -24,10 +24,17 @@ public class Block implements Entity, Collidable
 {	
 	private float x, y;
 	private float blockWidth, blockHeight;
-	
+		
+	// Properties
 	private boolean solid;
 	private boolean destroyable;
+	private boolean ammoResupply;
+	
 	private boolean isTextured;
+	private boolean readyToResupply = true;
+	private boolean justResupplied = false;
+	
+	private final long resupplyWaitTime = 15L * 1000L; // Once resupplied, 15 seconds to resupply again
 
 	private Color col;
 	private String tPath;
@@ -40,7 +47,7 @@ public class Block implements Entity, Collidable
 	 * @param blockWidth width
 	 * @param blockHeight height
 	 * @param textPath path of texture
-	 * @param properties array of properties of Block (0 - Solid; 1 - Destroyable)
+	 * @param properties array of properties of Block (0 - Solid; 1 - Destroyable; 2 - AmmoResupply)
 	 */
 	public Block(float x, float y, float blockWidth, float blockHeight, String textPath, boolean[] properties)
 	{
@@ -85,6 +92,7 @@ public class Block implements Entity, Collidable
 		this.tPath = another.gettPath();
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
+		this.ammoResupply = another.isAmmoResupply();
 	}
 	
 	public void setBlock(Block another)
@@ -94,6 +102,7 @@ public class Block implements Entity, Collidable
 		this.tPath = another.gettPath();
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
+		this.ammoResupply = another.isAmmoResupply();
 	}
 	
 	public boolean isSolid() {
@@ -103,6 +112,11 @@ public class Block implements Entity, Collidable
 	public boolean isDestroyable()
 	{
 		return destroyable;
+	}
+	
+	public boolean isAmmoResupply()
+	{
+		return ammoResupply;
 	}
 	
 	public void setDestroyable(boolean destroyable)
@@ -143,6 +157,7 @@ public class Block implements Entity, Collidable
 	{
 		this.solid = properties[0];
 		this.destroyable = properties[1];
+		this.ammoResupply = properties[2];
 	}
 	
 	private Texture loadTexture(String texturePath, String format)
@@ -198,12 +213,24 @@ public class Block implements Entity, Collidable
 		}
 	}
 	
+	private long resupplyTime;
 	/**
 	 * Block update method
 	 */
 	public void update()
 	{
+		if(justResupplied)
+		{
+			resupplyTime = System.currentTimeMillis();
+			justResupplied = false;
+			readyToResupply = false;
+		}
 		
+		if(!readyToResupply)
+		{
+			if(System.currentTimeMillis() >= resupplyTime + resupplyWaitTime)
+				readyToResupply = true;
+		}
 	}
 
 	/**
@@ -300,7 +327,7 @@ public class Block implements Entity, Collidable
 					this.texture = loadTexture(tPath, "PNG");
 				}
 			}
-		} else if((e instanceof Tank) && solid)
+		} else if((e instanceof Tank))
 		{
 			Tank p = (Tank) e;
 			int pWidth = (int) p.getWidth();
@@ -309,7 +336,7 @@ public class Block implements Entity, Collidable
 			Rectangle wall = new Rectangle((int) x, (int) y, (int) blockWidth, (int) blockHeight);
 			Rectangle player = new Rectangle((int) p.getX(), (int) p.getY(), pWidth, pHeight);			
 			
-			if(player.intersects(wall))
+			if(player.intersects(wall) && solid)
 			{
 				// step back
 				float pX = p.getX() - p.getDX();
@@ -342,6 +369,11 @@ public class Block implements Entity, Collidable
 					p.setY(pY);
 				}
 				return true;
+			} else if(player.intersects(wall) && ammoResupply && readyToResupply)
+			{
+				p.setFullAmmo();
+				PaddleGame.log("Ammo resuplied!");
+				justResupplied = true;
 			}
 		} 		
 		return false;
