@@ -2,20 +2,26 @@ package cz.apo.paddleGame;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
 
+import cz.apo.entity.Block;
 import cz.apo.entity.Entity;
 import cz.apo.entity.Player;
 import cz.apo.entity.Wall;
+import cz.apo.entity.items.Item;
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.enums.BlockType;
 import cz.apo.etc.FpsCounter;
+import cz.apo.etc.Timer;
 import cz.apo.event.LevelChangedEvent;
+import cz.apo.listener.TimerListener;
 import cz.apo.listener.WorldListener;
 import cz.apo.menu.GameMenu;
 import cz.apo.menu.MainMenu;
@@ -35,7 +41,7 @@ public class PaddleGame implements Runnable
 	
 	public static final int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 	public static final int WALL_WIDTH = 10;
-	public static final int FPS = 25;
+	public static final int FPS = 35;
 	
 	private static int level = Controller.DEFAULT_LEVEL;
 	
@@ -85,6 +91,29 @@ public class PaddleGame implements Runnable
 	{
 		GL11.glClearColor(0f, 0f, 0f, 1f);
 		
+		// Timer for random item spawn
+		final Random r = new Random();
+		Timer itemSpawnTimer = new Timer(1); // TODO: EDIT :D
+		itemSpawnTimer.addTimerListener(new TimerListener()
+		{
+			public void onTime()
+			{
+				int rand = r.nextInt(100);
+				if(rand <= 100)
+					Item.spawnRandomItem();
+			}
+		});
+		
+		// TODO: REMOVE :D
+		Timer logger = new Timer(500);
+		logger.addTimerListener(new TimerListener()
+		{
+			public void onTime()
+			{
+				log("SIZE: " + entities.size());
+			}
+		});
+		
 		while(!Display.isCloseRequested())
 		{
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -106,6 +135,8 @@ public class PaddleGame implements Runnable
 			}
 			
 			Pengine.update();
+			itemSpawnTimer.update();
+			logger.update();
 			
 			Display.sync(FPS);
 			Display.update();
@@ -205,13 +236,9 @@ public class PaddleGame implements Runnable
 		entities.add(southWall);
 		// west
 		entities.add(westWall);
-		
-		// balls
-//		entities.add(new Ball(157.0f, 650.0f, 10));
-//		entities.add(new Ball(200.0f, 300.0f, 10));
-		
-		new Player(120.0f, 300.0f, 1);
-		new Player(400.0f, 300.0f, 2);				
+				
+		new Player(1);
+		new Player(2);
 	}
 	
 	/**
@@ -275,5 +302,34 @@ public class PaddleGame implements Runnable
 	public static int getRandom(int min, int max)
 	{
 		return (min + (int)(Math.random() * ((max - min))));
+	}
+	
+	public static Vector2f getRandomSpawnPoint()
+	{
+		Vector2f spawnPoint = null;
+		List<Block> potSpawns = new ArrayList<Block>();
+
+		for (int i = 0; i < PaddleGame.entities.size(); i++)
+		{
+			Entity e = PaddleGame.entities.get(i);
+
+			if (e instanceof Block)
+			{
+				Block b = (Block) e;
+				if (!b.isSolid())
+					potSpawns.add(b);
+			}
+		}
+		
+		if(potSpawns.size() > 1)
+		{
+			int rand = PaddleGame.getRandom(0, potSpawns.size() - 1);
+			Block spawn = potSpawns.get(rand);
+			spawnPoint = new Vector2f(spawn.getX(), spawn.getY());
+		} else if(potSpawns.size() == 1)
+			spawnPoint = new Vector2f(potSpawns.get(0).getX(), potSpawns.get(0).getY());
+		else
+			spawnPoint = new Vector2f(PaddleGame.getRandom(50f, 750f), PaddleGame.getRandom(50f, 550f));
+		return spawnPoint;
 	}
 }

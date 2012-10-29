@@ -21,21 +21,27 @@ import cz.opt.pEngine.Pengine;
  */
 public class Tank implements Entity, Collidable, ControllerListener
 {
-	public static final float SPEED = 3.0f;
+	public static final float DEF_SPEED = 2.0f;
+	public static float SPEED = DEF_SPEED;
+	public static final int MAX_MISSILES = 15, MAX_CLUSTERS = 7;;
+	
 	private float x, y, width, height;
 	private float gunWidth, gunLength;
 	private float dx = 0.0f, dy = 0.0f;
 	private float angle = 0.0f;
+	private long timeBoosted = 0;
+	private long boostDuration = 0;
 	
 	private int currentWeapon;
 	
 	// Ammo
-	private int missiles = 10;
-	private int clusters = 5;
+	private int missiles = MAX_MISSILES;
+	private int clusters = MAX_CLUSTERS;
 	private int rockets = 3;
 	
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
+	private boolean boosted = false;
 	private boolean solid = true;
 	private boolean destroyable = true;
 	
@@ -210,9 +216,19 @@ public class Tank implements Entity, Collidable, ControllerListener
 	
 	public void setFullAmmo()
 	{
-		this.missiles = 10;
-		this.clusters = 5;
+		this.missiles = MAX_MISSILES;
+		this.clusters = MAX_CLUSTERS;
 		this.rockets = 3;
+		
+		PaddleGame.log("Player " + player.getId() + " refilled ammo!");
+	}
+	
+	public void setSpeedBoost(int dur)
+	{
+		boostDuration = dur;
+		timeBoosted = System.currentTimeMillis();
+		boosted = true;
+		SPEED = DEF_SPEED * 2;
 	}
 	
 	/**
@@ -276,6 +292,15 @@ public class Tank implements Entity, Collidable, ControllerListener
 	 */
 	public void update()
 	{
+		if(boosted)
+		{
+			if(System.currentTimeMillis() >= timeBoosted + boostDuration)
+			{
+				boosted = false;
+				SPEED = DEF_SPEED;
+			}
+		}
+		
 		controller.checkInput();
 		
 		if(controller.up && !controller.down && !controller.left && !controller.right)

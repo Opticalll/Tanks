@@ -28,14 +28,9 @@ public class Block implements Entity, Collidable
 	// Properties
 	private boolean solid;
 	private boolean destroyable;
-	private boolean ammoResupply;
 	
 	private boolean isTextured;
-	private boolean readyToResupply = true;
-	private boolean justResupplied = false;
 	
-	private final long resupplyWaitTime = 15L * 1000L; // Once resupplied, 15 seconds to resupply again
-
 	private Color col;
 	private String tPath;
 	private Texture texture = null;
@@ -92,7 +87,7 @@ public class Block implements Entity, Collidable
 		this.tPath = another.gettPath();
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
-		this.ammoResupply = another.isAmmoResupply();
+		this.texture = another.getTexture();
 	}
 	
 	public void setBlock(Block another)
@@ -102,7 +97,6 @@ public class Block implements Entity, Collidable
 		this.tPath = another.gettPath();
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
-		this.ammoResupply = another.isAmmoResupply();
 	}
 	
 	public boolean isSolid() {
@@ -114,11 +108,6 @@ public class Block implements Entity, Collidable
 		return destroyable;
 	}
 	
-	public boolean isAmmoResupply()
-	{
-		return ammoResupply;
-	}
-	
 	public void setDestroyable(boolean destroyable)
 	{
 		this.destroyable = destroyable;
@@ -128,6 +117,11 @@ public class Block implements Entity, Collidable
 		this.solid = solid;
 	}
 
+	public Texture getTexture()
+	{
+		return texture;
+	}
+	
 	public boolean isTexture() {
 		return isTextured;
 	}
@@ -157,7 +151,6 @@ public class Block implements Entity, Collidable
 	{
 		this.solid = properties[0];
 		this.destroyable = properties[1];
-		this.ammoResupply = properties[2];
 	}
 	
 	private Texture loadTexture(String texturePath, String format)
@@ -193,8 +186,6 @@ public class Block implements Entity, Collidable
 		{
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			org.newdawn.slick.Color.white.bind();
-			if(texture == null)
-				texture = loadTexture(tPath, "PNG");
 			texture.bind();
 			
 			GL11.glBegin(GL11.GL_QUADS);
@@ -207,30 +198,17 @@ public class Block implements Entity, Collidable
 				GL11.glTexCoord2f(0, 1);
 				GL11.glVertex2f(x, y + blockHeight);
 			GL11.glEnd();
-
 			
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 	}
 	
-	private long resupplyTime;
 	/**
 	 * Block update method
 	 */
 	public void update()
 	{
-		if(justResupplied)
-		{
-			resupplyTime = System.currentTimeMillis();
-			justResupplied = false;
-			readyToResupply = false;
-		}
-		
-		if(!readyToResupply)
-		{
-			if(System.currentTimeMillis() >= resupplyTime + resupplyWaitTime)
-				readyToResupply = true;
-		}
+
 	}
 
 	/**
@@ -321,7 +299,7 @@ public class Block implements Entity, Collidable
 					eng.create();
 //					PaddleGame.entities.remove(this);
 
-					this.settPath("res/textures/grass.png");
+					this.settPath("res/textures/blocks/grass.png");
 					this.setSolid(false);
 					this.setDestroyable(false);
 					this.texture = loadTexture(tPath, "PNG");
@@ -369,11 +347,6 @@ public class Block implements Entity, Collidable
 					p.setY(pY);
 				}
 				return true;
-			} else if(player.intersects(wall) && ammoResupply && readyToResupply)
-			{
-				p.setFullAmmo();
-				PaddleGame.log("Ammo resuplied!");
-				justResupplied = true;
 			}
 		} 		
 		return false;
