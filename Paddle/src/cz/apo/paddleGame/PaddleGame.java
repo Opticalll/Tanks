@@ -41,7 +41,7 @@ public class PaddleGame implements Runnable
 	
 	public static final int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 	public static final int WALL_WIDTH = 10;
-	public static final int FPS = 35;
+	public static final int FPS = 40;
 	
 	private static int level = Controller.DEFAULT_LEVEL;
 	
@@ -93,7 +93,7 @@ public class PaddleGame implements Runnable
 		
 		// Timer for random item spawn
 		final Random r = new Random();
-		Timer itemSpawnTimer = new Timer(1); // TODO: EDIT :D
+		Timer itemSpawnTimer = new Timer(3000);
 		itemSpawnTimer.addTimerListener(new TimerListener()
 		{
 			public void onTime()
@@ -104,15 +104,6 @@ public class PaddleGame implements Runnable
 			}
 		});
 		
-		// TODO: REMOVE :D
-		Timer logger = new Timer(500);
-		logger.addTimerListener(new TimerListener()
-		{
-			public void onTime()
-			{
-				log("SIZE: " + entities.size());
-			}
-		});
 		
 		while(!Display.isCloseRequested())
 		{
@@ -136,7 +127,6 @@ public class PaddleGame implements Runnable
 			
 			Pengine.update();
 			itemSpawnTimer.update();
-			logger.update();
 			
 			Display.sync(FPS);
 			Display.update();
@@ -166,7 +156,7 @@ public class PaddleGame implements Runnable
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			menu.render();
 			
-			Display.sync(60);
+			Display.sync(FPS);
 			Display.update();
 		}
 	}
@@ -194,10 +184,24 @@ public class PaddleGame implements Runnable
 	private void initDisplay()
 	{
 		try
-		{
-			Display.setDisplayMode(new DisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT));
+		{   
+			DisplayMode displayMode = null;
+			DisplayMode[] modes = Display.getAvailableDisplayModes();
+			
+			for (int i = 0; i < modes.length; i++)
+			{
+				if (modes[i].getWidth() == WINDOW_WIDTH
+						&& modes[i].getHeight() == WINDOW_HEIGHT
+						&& modes[i].isFullscreenCapable())
+				{
+					displayMode = modes[i];
+				}
+			}
+			   
+			Display.setDisplayMode(displayMode);
 			Display.setTitle("PaddleGame");
 			Display.setVSyncEnabled(true);
+			Display.setFullscreen(true);
 			Display.create();
 		} catch(LWJGLException e)
 		{
