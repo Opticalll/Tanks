@@ -41,6 +41,11 @@ public class Player
 		return id;
 	}
 	
+	public String getName()
+	{
+		return new String("Player " + id);
+	}
+	
 	/**
 	 * 
 	 * @return Player's tank
@@ -64,7 +69,7 @@ public class Player
 		if(!firstSpawn) 
 		{
 			lives--;
-			PaddleGame.log("Respawn. Lives: " + lives);
+			PaddleGame.log(getName() + " respawns. Lives: " + lives);
 		}
 		
 		if(lives <= 0)
@@ -74,7 +79,6 @@ public class Player
 		}
 		
 		Vector2f spawnPoint = PaddleGame.getRandomSpawnPoint();
-		PaddleGame.log("SpawnX: " + spawnPoint.x + " | SpawnY: " + spawnPoint.y);
 		tank = new Tank(spawnPoint.x, spawnPoint.y, controller, this);
 		PaddleGame.entities.add(tank);
 	}

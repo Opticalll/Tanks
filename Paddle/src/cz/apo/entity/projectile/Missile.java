@@ -25,8 +25,6 @@ public class Missile implements Entity, Projectile
 	private float dx, dy;
 	private float angle = 0.0f;
 	
-	private boolean addSpeed = false;
-	
 	private TankFacing facing;
 	
 	public Missile(float x, float y, float width, float height, Tank tank)
@@ -36,9 +34,6 @@ public class Missile implements Entity, Projectile
 		this.width = width;
 		this.height = height;
 		this.facing = tank.getFacing();
-		
-		if(tank.isMoving())
-			addSpeed = true;
 	}
 	
 	public Missile(float x, float y, float width, float height, float dx, float dy)
@@ -104,34 +99,26 @@ public class Missile implements Entity, Projectile
 			{
 				case NORTH:
 					angle = 0.0f;
+					
 					dx = 0;
-					if(addSpeed)
-						dy = -speed - Tank.SPEED;
-					else
-						dy = -speed;
+					dy = -speed;
 					break;
 				case SOUTH:
 					angle = 180.0f;
+					
 					dx = 0;
-					if(addSpeed)
-						dy = speed + Tank.SPEED;
-					else
-						dy = speed;
+					dy = speed;
 					break;
 				case EAST:
 					angle = 90.0f;
-					if(addSpeed)
-						dx = speed + Tank.SPEED;
-					else
-						dx = speed;
+
+					dx = speed;
 					dy = 0;
 					break;
 				case WEST:
 					angle = 270.0f;
-					if(addSpeed)
-						dx = -speed - Tank.SPEED;
-					else
-						dx = -speed;
+
+					dx = -speed;
 					dy = 0;
 					break;
 			}

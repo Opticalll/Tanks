@@ -93,7 +93,7 @@ public class PaddleGame implements Runnable
 		
 		// Timer for random item spawn
 		final Random r = new Random();
-		Timer itemSpawnTimer = new Timer(3000);
+		Timer itemSpawnTimer = new Timer(1000);
 		itemSpawnTimer.addTimerListener(new TimerListener()
 		{
 			public void onTime()
@@ -103,7 +103,6 @@ public class PaddleGame implements Runnable
 					Item.spawnRandomItem();
 			}
 		});
-		
 		
 		while(!Display.isCloseRequested())
 		{
@@ -200,8 +199,8 @@ public class PaddleGame implements Runnable
 			   
 			Display.setDisplayMode(displayMode);
 			Display.setTitle("PaddleGame");
-			Display.setVSyncEnabled(true);
-			Display.setFullscreen(true);
+			Display.setVSyncEnabled(false);
+			Display.setFullscreen(false);
 			Display.create();
 		} catch(LWJGLException e)
 		{

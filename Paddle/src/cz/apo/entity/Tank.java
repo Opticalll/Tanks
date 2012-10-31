@@ -1,11 +1,15 @@
 package cz.apo.entity;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import cz.apo.entity.items.Item;
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
+import cz.apo.event.ItemChangedEvent;
 import cz.apo.event.WeaponChangedEvent;
 import cz.apo.listener.ControllerListener;
 import cz.apo.paddleGame.Controller;
@@ -22,17 +26,18 @@ import cz.opt.pEngine.Pengine;
 public class Tank implements Entity, Collidable, ControllerListener
 {
 	public static final float DEF_SPEED = 2.0f;
-	public static float SPEED = DEF_SPEED;
-	public static final int MAX_MISSILES = 15, MAX_CLUSTERS = 7;;
+	public static final int MAX_MISSILES = 15, MAX_CLUSTERS = 7;
 	
 	private float x, y, width, height;
 	private float gunWidth, gunLength;
 	private float dx = 0.0f, dy = 0.0f;
+	public float speed = DEF_SPEED;
 	private float angle = 0.0f;
 	private long timeBoosted = 0;
 	private long boostDuration = 0;
 	
 	private int currentWeapon;
+	private Item currentItem = null;
 	
 	// Ammo
 	private int missiles = MAX_MISSILES;
@@ -44,6 +49,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private boolean boosted = false;
 	private boolean solid = true;
 	private boolean destroyable = true;
+	
+	private List<Item> items;
 	
 	private Player player;
 	private Weapon weapon;
@@ -64,6 +71,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 		this.controller = controller;
 		this.player = player;
 		this.color = Color.getRandomColorF();
+		this.items = new ArrayList<Item>();
+		
 		facing = TankFacing.NORTH;
 		width = 15.0f;
 		height = 15.0f;
@@ -72,6 +81,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 		
 		weapon = new Weapon(this);
 		currentWeapon = Controller.DEFAULT_WEAPON;
+		if(!items.isEmpty())
+			currentItem = items.get(0);
 		
 		controller.addControllerListener(this);
 	}
@@ -214,6 +225,11 @@ public class Tank implements Entity, Collidable, ControllerListener
 		this.rockets = rockets;
 	}
 	
+	public void setCurrentItem(Item i)
+	{
+		this.currentItem = i;
+	}
+	
 	public void setFullAmmo()
 	{
 		this.missiles = MAX_MISSILES;
@@ -228,7 +244,23 @@ public class Tank implements Entity, Collidable, ControllerListener
 		boostDuration = dur;
 		timeBoosted = System.currentTimeMillis();
 		boosted = true;
-		SPEED = DEF_SPEED * 2;
+		speed = DEF_SPEED * 2;
+		updateSpeed();
+	}
+	
+	public List<Item> getItems()
+	{
+		return items;
+	}
+	
+	public Player getPlayer()
+	{
+		return player;
+	}
+	
+	public void addItem(Item item)
+	{
+		this.items.add(item);
 	}
 	
 	/**
@@ -287,6 +319,18 @@ public class Tank implements Entity, Collidable, ControllerListener
 		GL11.glEnd();
 	}
 	
+	private void updateSpeed()
+	{
+		if(up)
+			dy = -speed;
+		else if(down)
+			dy = speed;
+		else if(left)
+			dx = -speed;
+		else if(right)
+			dx = speed;
+	}
+	
 	/**
 	 * Tank update method
 	 */
@@ -297,7 +341,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 			if(System.currentTimeMillis() >= timeBoosted + boostDuration)
 			{
 				boosted = false;
-				SPEED = DEF_SPEED;
+				speed = DEF_SPEED;
 			}
 		}
 		
@@ -313,7 +357,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 				left = false;
 				moving = true;
 				facing = TankFacing.NORTH;
-				dy = -SPEED;
+				dy = -speed;
 			}
 		} else if(!controller.up && !controller.down)
 		{
@@ -331,7 +375,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 				left = false;
 				moving = true;
 				facing = TankFacing.SOUTH;
-				dy = SPEED;
+				dy = speed;
 			}
 		} else if(!controller.down && !controller.up)
 		{
@@ -349,7 +393,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 				right = false;
 				moving = true;
 				facing = TankFacing.WEST;
-				dx = -SPEED;
+				dx = -speed;
 			}
 		} else if(!controller.left && !controller.right)
 		{
@@ -367,7 +411,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 				up = false;
 				moving = true;
 				facing = TankFacing.EAST;
-				dx = SPEED;
+				dx = speed;
 			}
 		} else if(!controller.right && !controller.left)
 		{
@@ -382,6 +426,17 @@ public class Tank implements Entity, Collidable, ControllerListener
 		{
 			controller.fire = false;
 			weapon.fire(currentWeapon);
+		}
+		
+		if(controller.useItem)
+		{
+			if(currentItem != null)
+			{
+				currentItem.use();
+				Class<? extends Item> type = currentItem.getClass();
+				items.remove(currentItem);
+				currentItem = getNextSameTypeItem(type);
+			}
 		}
 		
 		switch(facing)
@@ -491,13 +546,128 @@ public class Tank implements Entity, Collidable, ControllerListener
 			}
 		}
 		return false;
+	}	
+	
+	/**
+	 * 
+	 * @param next If true, search for next type of item in itemList. If false, search for previous.
+	 * @return
+	 */
+	private Item getItem(boolean next)
+	{
+		Item item = currentItem;
+		
+		if(items.isEmpty())
+		{
+			PaddleGame.log("You don't have any items");
+			return item;
+		}
+		
+		Item first = items.get(0);
+		boolean same = true;
+		for(Item itm : items)
+		{
+			if(!first.getClass().equals(itm.getClass()))
+			{
+				same = false;
+				break;
+			}
+		}
+		
+		if(same)
+			return item;
+		
+		int startIndex = 0;
+		for(int i = 0; i < items.size(); i++)
+		{
+			if(items.get(i).equals(currentItem))
+			{
+				startIndex = i;
+				break;
+			}
+		}
+		
+		if(next)
+		{
+			for(int i = startIndex; i < items.size(); i++)
+			{
+				Item it = items.get(i);
+				
+				if(it.getClass().equals(currentItem.getClass()))
+				{
+					if(i == items.size() - 1)
+						i = 0;
+					continue;
+				} else
+				{
+					item = it;
+					break;
+				}
+			}
+		} else
+		{
+			for(int i = startIndex; i >= 0; i--)
+			{
+				Item prevItem = items.get(i);
+				if(prevItem.getClass().equals(currentItem.getClass()))
+				{
+					if(i == 0)
+						i = items.size() - 1;
+					continue;
+				} else
+				{
+					item = prevItem;
+					break;
+				}
+			}
+		}
+		
+		return item;
 	}
 	
+	private Item getNextSameTypeItem(Class<? extends Item> type)
+	{
+		Item item = null;
+		
+		if(items.isEmpty())
+		{
+			PaddleGame.log("No more items");
+			return item;
+		}
+		
+		for(Item i : items)
+		{
+			if(i.getClass().equals(type.getClass()))
+			{
+				item = i;
+				return item;
+			}
+		}
+		
+		item = items.get(0);
+		return item;
+	}
 	
 	@Override
 	public void onWeaponChanged(WeaponChangedEvent e)
 	{
 		currentWeapon = e.getWeaponType();
 		PaddleGame.log("Weapon changed! " + e.getWeaponType());
+	}
+	
+	@Override
+	public void onItemChanged(ItemChangedEvent e)
+	{
+		if(e.getChangeEvent() == ItemChangedEvent.NEXT)
+		{
+			currentItem = getItem(true);
+			
+		} else if(e.getChangeEvent() == ItemChangedEvent.PREVIOUS)
+		{
+			currentItem = getItem(false);
+		}
+		
+		if(currentItem != null)
+			PaddleGame.log("Current item is: " + currentItem.getClass().getCanonicalName());
 	}
 }

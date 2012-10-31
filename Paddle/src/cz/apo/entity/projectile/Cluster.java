@@ -22,7 +22,6 @@ public class Cluster implements Entity, Projectile
 	private float dx, dy;
 	private float angle = 0.0f;
 	private float speed = 10.0f;
-	private boolean addSpeed = false;
 	private long timeFired;
 	
 //	private Tank tank;
@@ -36,9 +35,6 @@ public class Cluster implements Entity, Projectile
 		this.height = height;
 //		this.tank = tank;
 		this.facing = tank.getFacing();
-		
-		if(tank.isMoving())
-			addSpeed = true;
 		
 		timeFired = Sys.getTime();
 	}
@@ -92,10 +88,8 @@ public class Cluster implements Entity, Projectile
 				f_dx = 0; f_dy = -speed;
 				s_dx = -speed; s_dy = 0;
 				t_dx = speed; t_dy = 0;
-				if(addSpeed)
-					dy = -speed - Tank.SPEED;
-				else
-					dy = -speed;
+				dy = -speed;
+				
 				break;
 			case SOUTH:
 				f_dx = 0; f_dy = speed;
@@ -103,32 +97,26 @@ public class Cluster implements Entity, Projectile
 				t_dx = speed; t_dy = 0;
 				angle = 180.0f;
 				dx = 0;
-				if(addSpeed)
-					dy = speed + Tank.SPEED;
-				else
-					dy = speed;
+				dy = speed;
+				
 				break;
 			case EAST:
 				f_dx = speed; f_dy = 0;
 				s_dx = 0; s_dy = -speed;
 				t_dx = 0; t_dy = speed;
 				angle = 90.0f;
-				if(addSpeed)
-					dx = speed + Tank.SPEED;
-				else
-					dx = speed;
+				dx = speed;
 				dy = 0;
+				
 				break;
 			case WEST:
 				f_dx = -speed; f_dy = 0;
 				s_dx = 0; s_dy = -speed;
 				t_dx = 0; t_dy = speed;
 				angle = 270.0f;
-				if(addSpeed)
-					dx = -speed - Tank.SPEED;
-				else
-					dx = -speed;
+				dx = -speed;
 				dy = 0;
+				
 				break;
 		}
 	

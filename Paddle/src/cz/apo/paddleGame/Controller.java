@@ -7,6 +7,7 @@ import org.lwjgl.input.Keyboard;
 
 import cz.apo.entity.Entity;
 import cz.apo.entity.Tank;
+import cz.apo.event.ItemChangedEvent;
 import cz.apo.event.LevelChangedEvent;
 import cz.apo.event.WeaponChangedEvent;
 import cz.apo.listener.ControllerListener;
@@ -20,7 +21,7 @@ import cz.apo.listener.WorldListener;
 public class Controller
 {	
 	public static final int DEFAULT_LEVEL = 0, DEFAULT_WEAPON = 1;
-	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W, BUILD;
+	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W, BUILD, PREV_I, NEXT_I, USE_I;
 	
 	private static int level = DEFAULT_LEVEL;
 	private static boolean homeDown = false, endDown = false;
@@ -32,10 +33,14 @@ public class Controller
 	public boolean up = false;
 	public boolean down = false;
 	public boolean build = false;
+	public boolean useItem = false;
 	public volatile boolean fire = false;
 	
 	private boolean next_p = false;
 	private boolean prev_p = false;
+	private boolean next_i = false;
+	private boolean prev_i = false;
+	private boolean use_down = false;
 	
 	private final List<ControllerListener> controllerListeners;
 	private static final List<WorldListener> worldListeners = new ArrayList<WorldListener>();
@@ -56,6 +61,9 @@ public class Controller
 			NEXT_W = Keyboard.KEY_NUMPAD9;
 			PREV_W = Keyboard.KEY_NUMPAD7;
 			BUILD = Keyboard.KEY_NUMPAD0;
+			PREV_I = Keyboard.KEY_NUMPAD1;
+			NEXT_I = Keyboard.KEY_NUMPAD3;
+			USE_I = Keyboard.KEY_NUMPAD5;
 		} else if(id == 2)
 		{
 			UP = Keyboard.KEY_W;
@@ -66,9 +74,12 @@ public class Controller
 			NEXT_W = Keyboard.KEY_E;
 			PREV_W = Keyboard.KEY_Q;
 			BUILD = Keyboard.KEY_B;
+			PREV_I = Keyboard.KEY_LCONTROL;
+			NEXT_I = Keyboard.KEY_LMENU;
+			USE_I = Keyboard.KEY_X;
 		} else
 		{
-			UP = DOWN = LEFT = RIGHT = FIRE = NEXT_W = PREV_W = BUILD = 0;
+			UP = DOWN = LEFT = RIGHT = FIRE = NEXT_W = PREV_W = BUILD = PREV_I = NEXT_I = USE_I = 0;
 		}
 		
 		controllerListeners = new ArrayList<ControllerListener>();
@@ -148,6 +159,7 @@ public class Controller
 			}
 		}
 		
+		// Weapon change
 		if(Keyboard.isKeyDown(NEXT_W))
 		{
 			if(!next_p)
@@ -175,6 +187,39 @@ public class Controller
 			}
 		} else if(!Keyboard.isKeyDown(PREV_W))
 			prev_p = false;
+		
+		// Item change
+		if(Keyboard.isKeyDown(NEXT_I))
+		{
+			if(!next_i)
+			{
+				next_i = true;
+				itemChanged(ItemChangedEvent.NEXT);
+			}
+		} else if(!Keyboard.isKeyDown(NEXT_I))
+			next_i = false;
+		
+		if(Keyboard.isKeyDown(PREV_I))
+		{
+			if(!prev_i)
+			{
+				prev_i = true;
+				itemChanged(ItemChangedEvent.PREVIOUS);
+			}
+		} else if(!Keyboard.isKeyDown(PREV_I))
+			prev_i = false;
+		
+		// Use item
+		if(Keyboard.isKeyDown(USE_I))
+		{
+			if(!use_down)
+			{
+				use_down = true;
+				useItem = true;
+			} else
+				useItem = false;
+		} else if(!Keyboard.isKeyDown(USE_I))
+			use_down = false;
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
 			PaddleGame.cleanUp();
@@ -232,18 +277,22 @@ public class Controller
 			l.onWeaponChanged(e);
 	}
 	
+	private void itemChanged(int event)
+	{
+		ItemChangedEvent e = new ItemChangedEvent(event);
+		
+		for(ControllerListener l : controllerListeners)
+			l.onItemChanged(e);
+	}
+	
 	/**
 	 * Fires LevelChangedEvent
 	 */
 	private static void levelChanged()
 	{
 		LevelChangedEvent e = new LevelChangedEvent(level);
-		
-		PaddleGame.log("should change " + worldListeners.size());
+
 		for(WorldListener l : worldListeners)
-		{
-			PaddleGame.log("change it");
 			l.onLevelChanged(e);
-		}
 	}
 }
