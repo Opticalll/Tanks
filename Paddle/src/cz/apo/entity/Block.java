@@ -2,6 +2,7 @@ package cz.apo.entity;
 
 import java.awt.Rectangle;
 import java.io.IOException;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
@@ -90,6 +91,18 @@ public class Block implements Entity, Collidable
 		this.texture = another.getTexture();
 	}
 	
+	public Block(Map<String, String> conf)
+	{
+		String[] rgb = conf.get("color").split(" ");
+		this.col = new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+		this.isTextured = Boolean.parseBoolean(conf.get("isTexture"));
+		this.destroyable = Boolean.parseBoolean(conf.get("destroyable"));
+		this.tPath = conf.get("texture");
+		this.solid = Boolean.parseBoolean(conf.get("solid"));
+		if(this.isTextured)
+			this.texture = loadTexture(this.tPath, "PNG");
+	}
+	
 	public void setBlock(Block another)
 	{
 		this.col = another.getCol();
@@ -158,6 +171,7 @@ public class Block implements Entity, Collidable
 		Texture tex = null;
 		try
 		{
+			PaddleGame.log(texturePath);
 			tex = TextureLoader.getTexture(format, ResourceLoader.getResourceAsStream(texturePath));
 		} catch(IOException e)
 		{

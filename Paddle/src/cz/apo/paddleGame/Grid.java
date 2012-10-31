@@ -2,13 +2,14 @@ package cz.apo.paddleGame;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import cz.apo.entity.Block;
 import cz.apo.entity.Entity;
-import cz.apo.etc.Color;
 
 /**
  * Grid class for loading levels from files
@@ -39,6 +40,36 @@ public class Grid
 					blocks.add(layout[i][z]);
 	}
 
+	private List<Map<String, String>> getMapFromString(String input)
+	{
+		String[] stringChunks = input.split("~");
+		stringChunks[0] = stringChunks[0].substring(stringChunks[0].lastIndexOf(">") + 1);
+		List<Map<String, String>> mapList = new ArrayList<Map<String, String>>();
+		for(int i = 0; i < stringChunks.length; i++)
+		{
+			stringChunks[i] = stringChunks[i].substring(1);
+			String[] lines = stringChunks[i].split("\n");
+			Map<String, String> variableMap = new HashMap<String, String>();
+			for(int z = 0; z < lines.length; z++)
+			{
+				if(z == 0)
+				{
+					lines[z] = lines[z].substring(1);
+					lines[z] = lines[z].substring(0, lines[z].lastIndexOf("]"));
+					variableMap.put("name/id", lines[z]); 
+				}
+				else
+				{
+					// Warning no spaces between variable and value.
+					String[] record = lines[z].split("=");
+					variableMap.put(record[0], record[1]);
+				}
+			}
+			mapList.add(variableMap);
+		}
+		return mapList;
+	}
+	
 	/**
 	 * 
 	 * @param f Path to config File
@@ -52,7 +83,6 @@ public class Grid
 		Block[][] layout = null;
 		String cfp= "";		
 
-		// Config File Format:  "0-BlockId~1-Texture (boolean)~2-Texture Path or Color (RRR|GGG|BBB)~3-Properties(First|Second|Third|...)\n"
 
 		try
 		{
@@ -63,27 +93,54 @@ public class Grid
 			PaddleGame.log("Loading map from -> " + mfp);
 			
 			cfs = new Scanner(new File(cfp));
+			
+			
+			String blockString = "";
 			while(cfs.hasNextLine())
 			{
-				Block newBlock = null;
-				String cline = cfs.nextLine();
-				String[] clineparts = cline.split("~");
-				String[] sproperties = clineparts[3].split("¨");
-				boolean[] bproperties = new boolean[3];
-				
-				for(int i = 0; i < sproperties.length; i++)
-					bproperties[i] = Boolean.parseBoolean(sproperties[i]);
-				
-				if(Boolean.parseBoolean(clineparts[1])) // if texture
-					newBlock = new Block(0, 0, tileWidth, tileHeight, clineparts[2], bproperties);
-				else
+				String in = cfs.nextLine();
+				in += "\n";
+				if(in.equals("</Blocks>\n"))
 				{
-					String[] rgb = clineparts[2].split("¨");
-					Color col = new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
-					newBlock = new Block(0, 0, tileWidth, tileHeight, col, bproperties);
+					List<Map<String, String>> mapList = getMapFromString(blockString);
+					for(int i = 0; i < mapList.size(); i++)
+						blockConfig.put(Integer.parseInt(mapList.get(i).get("name/id")), new Block(mapList.get(i)));
+					blockString = "";
 				}
-				blockConfig.put(Integer.parseInt(clineparts[0]), newBlock);
+				else if(in.equals("</Placeable>\n"))
+				{
+						blockString = "";
+				}
+				else if(in.equals("</Guns>\n"))
+				{
+						blockString = "";
+				}
+				else
+					blockString += in;
 			}
+
+//			
+//			while(cfs.hasNextLine())
+//			{
+//				Block newBlock = null;
+//				String cline = cfs.nextLine();
+//				String[] clineparts = cline.split("~");
+//				String[] sproperties = clineparts[3].split("¨");
+//				boolean[] bproperties = new boolean[3];
+//				
+//				for(int i = 0; i < sproperties.length; i++)
+//					bproperties[i] = Boolean.parseBoolean(sproperties[i]);
+//				
+//				if(Boolean.parseBoolean(clineparts[1])) // if texture
+//					newBlock = new Block(0, 0, tileWidth, tileHeight, clineparts[2], bproperties);
+//				else
+//				{
+//					String[] rgb = clineparts[2].split("¨");
+//					Color col = new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+//					newBlock = new Block(0, 0, tileWidth, tileHeight, col, bproperties);
+//				}
+//				blockConfig.put(Integer.parseInt(clineparts[0]), newBlock);
+//			}
 
 
 			while(mfs.hasNextInt())
@@ -131,8 +188,8 @@ public class Grid
 				if(num > 0)
 				{
 					tempBlock = new Block(blockConfig.get(num));
-					tempBlock.setX(col * tileWidth + PaddleGame.WALL_WIDTH);
-					tempBlock.setY(line * tileHeight + PaddleGame.WALL_WIDTH);
+					tempBlock.setX(col * tileWidth);
+					tempBlock.setY(line * tileHeight);
 
 					tempBlock.setBlockHeight(tileHeight);
 					tempBlock.setBlockWidth(tileWidth);
