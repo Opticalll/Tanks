@@ -134,6 +134,9 @@ public class Missile implements Entity, Projectile
 		
 		Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 2, 90, null);
 		eng.setVVector(new VVector(0.5f, 0.5f));
+		eng.setTime(0.05f);
+		eng.setMinFade(0.005f);
+		eng.setMaxFade(0.5f);
 		eng.create();
 	}
 	

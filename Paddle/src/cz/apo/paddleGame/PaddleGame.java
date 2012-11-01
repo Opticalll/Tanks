@@ -137,6 +137,7 @@ public class PaddleGame implements Runnable
 			
 			for(int i = 0; i < ui.size(); i++)
 			{
+				ui.get(i).update();
 				ui.get(i).render();
 			}
 			

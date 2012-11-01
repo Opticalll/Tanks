@@ -18,6 +18,9 @@ public class Pengine
 	public float count;
 	public float range;
 	public boolean transition;
+	public float time;
+	public float maxFade;
+	public float minFade;
 	
 	public ColorTransition ct;
 	public SpreadType s_type = SpreadType.ROUND;
@@ -71,10 +74,28 @@ public class Pengine
 		finallConstruct();
 	}
 	
+	
+	
+	public void setMaxFade(float maxFade) {
+		this.maxFade = maxFade;
+	}
+
+	public void setMinFade(float minFade) {
+		this.minFade = minFade;
+	}
+
+	public void setTime(float time) 
+	{
+		this.time = time;
+	}
+
 	private void finallConstruct()
 	{
 		rotVec = new Vector2f(0f, 0f);
 		velocity = new VVector(-2f, 2f);
+		time = 1.0f;
+		minFade = 0.05f;
+		maxFade = 0.1f;
 	}
 	
 	public void setPVector(PVector vec)

@@ -29,6 +29,11 @@ public class Block implements Entity, Collidable
 	// Properties
 	private boolean solid;
 	private boolean destroyable;
+	private boolean slow_boost;
+	private float slow_boostFactor;
+	private boolean damageDealing;
+	private float dps;
+	private boolean deadly;
 	
 	private boolean isTextured;
 	
@@ -45,7 +50,7 @@ public class Block implements Entity, Collidable
 	 * @param textPath path of texture
 	 * @param properties array of properties of Block (0 - Solid; 1 - Destroyable; 2 - AmmoResupply)
 	 */
-	public Block(float x, float y, float blockWidth, float blockHeight, String textPath, boolean[] properties)
+	public Block(float x, float y, float blockWidth, float blockHeight, String textPath)
 	{
 		this.x = x;
 		this.y = y;
@@ -54,7 +59,6 @@ public class Block implements Entity, Collidable
 		this.tPath = textPath;
 		this.isTextured = true;
 		this.texture = loadTexture(textPath, "PNG");
-		propertiesInit(properties);		
 	}
 
 	/**
@@ -66,7 +70,7 @@ public class Block implements Entity, Collidable
 	 * @param col color
 	 * @param properties array of properties of Block (0 - Collidable)
 	 */
-	public Block(float x, float y, float blockWidth, float blockHeight, Color col, boolean[] properties)
+	public Block(float x, float y, float blockWidth, float blockHeight, Color col)
 	{
 		this.x = x;
 		this.y = y;
@@ -74,7 +78,6 @@ public class Block implements Entity, Collidable
 		this.blockHeight = blockHeight;
 		this.col = col;
 		this.isTextured = false;
-		propertiesInit(properties);
 	}
 	
 	public Block(Block another)
@@ -89,6 +92,8 @@ public class Block implements Entity, Collidable
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
 		this.texture = another.getTexture();
+		this.slow_boost = another.isSlow_boost();
+		this.slow_boostFactor = another.getSlow_boostFactor();
 	}
 	
 	public Block(Map<String, String> conf)
@@ -99,6 +104,11 @@ public class Block implements Entity, Collidable
 		this.destroyable = Boolean.parseBoolean(conf.get("destroyable"));
 		this.tPath = conf.get("texture");
 		this.solid = Boolean.parseBoolean(conf.get("solid"));
+		this.slow_boost = Boolean.parseBoolean(conf.get("slow_boost"));
+		this.slow_boostFactor = Float.parseFloat(conf.get("slow_boostFactor"));
+		this.damageDealing = Boolean.parseBoolean(conf.get("damageDealing"));
+		this.dps = Float.parseFloat(conf.get("dps"));
+		this.deadly = Boolean.parseBoolean(conf.get("deadly"));
 		if(this.isTextured)
 			this.texture = loadTexture(this.tPath, "PNG");
 	}
@@ -110,8 +120,60 @@ public class Block implements Entity, Collidable
 		this.tPath = another.gettPath();
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
+		this.deadly = another.isDeadly();
+		this.damageDealing = another.isDamageDealing();
+		this.dps = another.getDps();
 	}
 	
+	public boolean isDamageDealing() {
+		return damageDealing;
+	}
+
+	public void setDamageDealing(boolean damageDealing) {
+		this.damageDealing = damageDealing;
+	}
+
+	public float getDamagePerFrame()
+	{
+		return dps/PaddleGame.FPS;
+	}
+	
+	public float getDps() {
+		return dps;
+	}
+
+	public void setDps(float dps) {
+		this.dps = dps;
+	}
+
+	public boolean isDeadly() {
+		return deadly;
+	}
+
+	public void setDeadly(boolean deadly) {
+		this.deadly = deadly;
+	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
+
+	public boolean isSlow_boost() {
+		return slow_boost;
+	}
+
+	public void setSlow_boost(boolean slow_boost) {
+		this.slow_boost = slow_boost;
+	}
+
+	public float getSlow_boostFactor() {
+		return slow_boostFactor;
+	}
+
+	public void setSlow_boostFactor(float slow_boostFactor) {
+		this.slow_boostFactor = slow_boostFactor;
+	}
+
 	public boolean isSolid() {
 		return solid;
 	}
@@ -157,13 +219,6 @@ public class Block implements Entity, Collidable
 
 	public void settPath(String tPath) {
 		this.tPath = tPath;
-	}
-
-	
-	private void propertiesInit(boolean[] properties)
-	{
-		this.solid = properties[0];
-		this.destroyable = properties[1];
 	}
 	
 	private Texture loadTexture(String texturePath, String format)
@@ -324,42 +379,56 @@ public class Block implements Entity, Collidable
 			int pWidth = (int) p.getWidth();
 			int pHeight = (int) p.getHeight();
 			
-			Rectangle wall = new Rectangle((int) x, (int) y, (int) blockWidth, (int) blockHeight);
 			Rectangle player = new Rectangle((int) p.getX(), (int) p.getY(), pWidth, pHeight);			
 			
-			if(player.intersects(wall) && solid)
+			if(player.intersects(new Rectangle((int) x, (int) y, (int) blockWidth, (int) blockHeight)))
 			{
-				// step back
-				float pX = p.getX() - p.getDX();
-				float pY = p.getY() - p.getDY();
-								
-				boolean left = false;
-				if(pX + pWidth <= x)
-					left = true;
-				
-				boolean right = false;
-				if(pX >= x + blockWidth)
-					right = true;
-				
-				boolean top = false;
-				if(pY + pHeight <= y)
-					top = true;
-				
-				boolean bottom = false;
-				if(pY >= y + blockHeight)
-					bottom = true;
-				
-				if(left || right)
+				if(solid)
 				{
-					p.setDX(0);
-					p.setX(pX);
+					// step back
+					float pX = p.getX() - p.getDX();
+					float pY = p.getY() - p.getDY();
+
+					boolean left = false;
+					if(pX + pWidth <= x)
+						left = true;
+
+					boolean right = false;
+					if(pX >= x + blockWidth)
+						right = true;
+
+					boolean top = false;
+					if(pY + pHeight <= y)
+						top = true;
+
+					boolean bottom = false;
+					if(pY >= y + blockHeight)
+						bottom = true;
+
+					if(left || right)
+					{
+						p.setDX(0);
+						p.setX(pX);
+					}
+					else if(top || bottom)
+					{
+						p.setDY(0);
+						p.setY(pY);
+					}
+					return true;
 				}
-				else if(top || bottom)
+				else if(slow_boost)
 				{
-					p.setDY(0);
-					p.setY(pY);
+					//set speed on MaxSpeed*slow_boostFactor
 				}
-				return true;
+				else if(damageDealing)
+				{
+					
+				}
+				else if(deadly)
+				{
+					
+				}
 			}
 		} 		
 		return false;

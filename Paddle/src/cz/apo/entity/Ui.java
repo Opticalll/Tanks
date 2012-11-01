@@ -11,7 +11,9 @@ import cz.apo.etc.OpFont;
 
 /* TODO: Getting vsech hodnot z tanku a od playera by nemelo byt podle mne pokazdy kdyz je render.
  * Update hodnot v UI by mel byt v metode update(), a ta by mela byt volana jen po urcitym case - pouzili bysme ten samej Timer
- * jako na spawn itemu. Takze update by byl treba 1x za 200 - 500ms ... whatever
+ * jako na spawn itemu. Takze update by byl treba 1x za 200 - 500ms ... whatever 
+ * Bullshit data musi byt aktualni a je to jen 5-6 hodnot opravdu to nic nezpomali, kdyz bys udelal timer tak ten by spis sam o sobe narocnejsi
+ * na vykon.
  */
 public class Ui 
 {
@@ -35,35 +37,25 @@ public class Ui
 	
 	private void render_PlayerPart()
 	{
-		//Lives
+		lives.render();
+	}
+	
+	private void pos_init()
+	{
 		playerPartX = x;
 		playerPartY = y;
+		tankPartX = x;
+		tankPartY = y + 17;
 		
 		lives.setPos(playerPartX, playerPartY);
-		lives.setText("Lives: " + uiPlayer.lives);
-		lives.render();
+		weapon.setPos(tankPartX, tankPartY);
+		ammo.setPos(tankPartX, tankPartY + 12);
+		currentItem.setPos(tankPartX, tankPartY + 24);
+		count.setPos(tankPartX, tankPartY + 36);
 	}
 	
 	private void render_TankPart()
 	{
-		Item curItem = uiPlayer.getTank().getCurrentItem();
-		boolean itemNull = false;
-		
-		if(curItem == null) itemNull = true;
-		
-		//Ammo + Weapon
-		tankPartX = x;
-		tankPartY = y + 17;
-		
-		weapon.setText("Weapon: " + uiPlayer.getTank().getClusterCount());
-		weapon.setPos(tankPartX, tankPartY);
-		ammo.setText("Ammo: " + uiPlayer.getTank().getMissileCount());
-		ammo.setPos(tankPartX, tankPartY + 12);
-		currentItem.setText("Current item: " + (itemNull ? "NONE" : uiPlayer.getTank().getCurrentItem().getName()));
-		currentItem.setPos(tankPartX, tankPartY + 24);
-		count.setText("Count: " + (itemNull ? "-" : uiPlayer.getTank().getCurrentItemCount()));
-		count.setPos(tankPartX, tankPartY + 36);
-		
 		weapon.render();
 		ammo.render();
 		currentItem.render();
@@ -85,7 +77,17 @@ public class Ui
 
 	public void update() 
 	{
-				
+		Item curItem = uiPlayer.getTank().getCurrentItem();
+		boolean itemNull = false;	
+		
+		if(curItem == null) 
+			itemNull = true;
+		
+		lives.setText("Lives: " + uiPlayer.lives);
+		count.setText("Count: " + (itemNull ? "-" : uiPlayer.getTank().getCurrentItemCount()));
+		currentItem.setText("Current item: " + (itemNull ? "NONE" : uiPlayer.getTank().getCurrentItem().getName()));
+		weapon.setText("Weapon: " + uiPlayer.getTank().getClusterCount());
+		ammo.setText("Ammo: " + uiPlayer.getTank().getMissileCount());
 	}
 
 	public float getX() {
@@ -94,6 +96,7 @@ public class Ui
 
 	public void setX(float x) {
 		this.x = x;
+		pos_init();
 	}
 
 	public float getY() 
@@ -104,6 +107,7 @@ public class Ui
 	public void setY(float y) 
 	{
 		this.y = y;
+		pos_init();
 	}
 
 	public float getWidth()
