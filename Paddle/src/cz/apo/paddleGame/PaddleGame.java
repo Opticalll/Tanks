@@ -14,10 +14,9 @@ import org.lwjgl.util.vector.Vector2f;
 import cz.apo.entity.Block;
 import cz.apo.entity.Entity;
 import cz.apo.entity.Player;
-import cz.apo.entity.Wall;
+import cz.apo.entity.Ui;
 import cz.apo.entity.items.Item;
 import cz.apo.entity.projectile.Projectile;
-import cz.apo.enums.BlockType;
 import cz.apo.etc.FpsCounter;
 import cz.apo.etc.Timer;
 import cz.apo.event.LevelChangedEvent;
@@ -29,7 +28,7 @@ import cz.opt.pEngine.Pengine;
 
 /**
  * 
- * @author Apo(Game) + Optical(Particle engine + loading maps to objects...)
+ * @author Apo(Game) + Optical(Particle engine + loading maps to objects + most of game logic system designs...)
  * 
  * This is the main class of Tanks game.
  *
@@ -215,32 +214,20 @@ public class PaddleGame implements Runnable
 	{		
 		menu = new MainMenu();
 		
-//		Wall northWall = new Wall(0, 0, Display.getDisplayMode().getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
-//		Wall southWall = new Wall(0, Display.getDisplayMode().getHeight() - WALL_WIDTH, Display.getDisplayMode().getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
-//		Wall eastWall = new Wall(Display.getDisplayMode().getWidth() - WALL_WIDTH, 0, WALL_WIDTH, Display.getDisplayMode().getHeight(), BlockType.WALL.getColor());
-//		Wall westWall = new Wall(0, 0, WALL_WIDTH, Display.getDisplayMode().getHeight(), BlockType.WALL.getColor());
-
-		Wall northWall = new Wall(0, 0, Display.getDisplayMode().getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
-		Wall southWall = new Wall(0, Display.getDisplayMode().getHeight() - WALL_WIDTH, Display.getDisplayMode().getWidth(), WALL_WIDTH, BlockType.WALL.getColor());
-		Wall eastWall = new Wall(Display.getDisplayMode().getWidth() - WALL_WIDTH, 0, WALL_WIDTH, Display.getDisplayMode().getHeight(), BlockType.WALL.getColor());
-		Wall westWall = new Wall(0, 0, WALL_WIDTH, Display.getDisplayMode().getHeight(), BlockType.WALL.getColor());
-		
 		Grid g = new Grid();
 		g.setGrid(level);
 		List<Entity> blocks = g.getBlocksFromGrid();
 		
 		for(Entity e : blocks)
 			entities.add(e);
-		// north
-		entities.add(northWall);
-		// east
-		entities.add(eastWall);
-		// south
-		entities.add(southWall);
-		// west
-		entities.add(westWall);
-				
-		new Player(1);
+
+		Player pl = new Player(1);
+		Ui ui = new Ui(pl);
+		ui.setX(0);
+		ui.setWidth(250);
+		ui.setHeight(75);
+		ui.setY(WINDOW_HEIGHT - ui.getHeight());
+		entities.add(ui);
 		new Player(2);
 	}
 	

@@ -171,7 +171,6 @@ public class Block implements Entity, Collidable
 		Texture tex = null;
 		try
 		{
-			PaddleGame.log(texturePath);
 			tex = TextureLoader.getTexture(format, ResourceLoader.getResourceAsStream(texturePath));
 		} catch(IOException e)
 		{
