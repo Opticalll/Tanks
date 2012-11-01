@@ -11,8 +11,7 @@ import cz.apo.etc.OpFont;
 public class Ui implements Entity {
 
 	private Player uiPlayer;
-	private float x,y,width,height;
-	float playerPartX, playerPartY, tankPartX, tankPartY;
+	private float x,y,width,height,playerPartX,playerPartY,tankPartX,tankPartY;
 	private Texture back_Texture;
 	private Font font;
 	private OpFont lives, weapon, ammo;
@@ -54,7 +53,7 @@ public class Ui implements Entity {
 	{
 		// TODO Auto-generated method stub
 		Color col = new Color(0,125,0);
-		GL11.glColor3f(col.R, col.G, col.B);
+		GL11.glColor4f(col.R, col.G, col.B, 0.2f);
 		GL11.glBegin(GL11.GL_QUADS);		
 			GL11.glVertex2f(x, y);
 			GL11.glVertex2f(x + width, y);
