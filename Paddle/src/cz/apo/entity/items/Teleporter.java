@@ -37,7 +37,7 @@ public class Teleporter extends Item
 		if(tank.getItems().isEmpty())
 		{
 			tank.addItem(this);
-			tank.setCurrentItem(tank.getItems().get(0));
+			tank.setCurrentItem(tank.getItems().get(0).getItem());
 		} else
 		{
 			tank.addItem(this);

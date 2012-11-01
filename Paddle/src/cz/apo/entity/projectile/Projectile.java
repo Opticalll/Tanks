@@ -1,5 +1,6 @@
 package cz.apo.entity.projectile;
 
+
 /**
  * Projectile interface
  * 

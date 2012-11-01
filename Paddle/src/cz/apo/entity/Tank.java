@@ -6,7 +6,10 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import cz.apo.entity.items.AmmoPack;
 import cz.apo.entity.items.Item;
+import cz.apo.entity.items.ItemStack;
+import cz.apo.entity.items.SpeedBoost;
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
 import cz.apo.event.ItemChangedEvent;
@@ -50,7 +53,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private boolean solid = true;
 	private boolean destroyable = true;
 	
-	private List<Item> items;
+	private List<ItemStack> items;
 	
 	private Player player;
 	private Weapon weapon;
@@ -71,7 +74,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 		this.controller = controller;
 		this.player = player;
 		this.color = Color.getRandomColorF();
-		this.items = new ArrayList<Item>();
+		this.items = new ArrayList<ItemStack>();
 		
 		facing = TankFacing.NORTH;
 		width = 15.0f;
@@ -81,10 +84,13 @@ public class Tank implements Entity, Collidable, ControllerListener
 		
 		weapon = new Weapon(this);
 		currentWeapon = Controller.DEFAULT_WEAPON;
-		if(!items.isEmpty())
-			currentItem = items.get(0);
 		
+		addItem(new SpeedBoost(0, 0));
+		addItem(new AmmoPack(0, 0));
 		controller.addControllerListener(this);
+		
+		if(!items.isEmpty())
+			currentItem = items.get(0).getItem();
 	}
 	
 	/**
@@ -248,7 +254,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 		updateSpeed();
 	}
 	
-	public List<Item> getItems()
+	public List<ItemStack> getItems()
 	{
 		return items;
 	}
@@ -260,7 +266,16 @@ public class Tank implements Entity, Collidable, ControllerListener
 	
 	public void addItem(Item item)
 	{
-		this.items.add(item);
+		for(ItemStack itemStack : items)
+		{
+			if(itemStack.getItemType().equals(item.getClass()))
+			{
+				itemStack.addItem();
+				return;
+			}
+		}
+		
+		items.add(new ItemStack(item));
 	}
 	
 	/**
@@ -433,9 +448,41 @@ public class Tank implements Entity, Collidable, ControllerListener
 			if(currentItem != null)
 			{
 				currentItem.use();
-				Class<? extends Item> type = currentItem.getClass();
-				items.remove(currentItem);
-				currentItem = getNextSameTypeItem(type);
+			
+				for(int i = 0; i < items.size(); i++)
+				{
+					ItemStack itemStack = items.get(i);
+					
+					if(itemStack.getItemType().equals(currentItem.getClass()))
+					{
+						itemStack.removeItem();
+						if(itemStack.getCount() == 0)
+						{
+							if(items.size() == 1)
+							{
+								items.remove(itemStack);
+								currentItem = null;
+								PaddleGame.log("No more items");
+								break;
+							} else
+							{
+								if(i == items.size() - 1)
+								{
+									currentItem = items.get(0).getItem();
+									items.remove(itemStack);
+								} else
+								{
+									currentItem = items.get(i+1).getItem();
+									items.remove(itemStack);
+								}
+							}
+						} else
+						{
+							currentItem = itemStack.getItem();
+						}
+						break;
+					}
+				}
 			}
 		}
 		
@@ -546,106 +593,37 @@ public class Tank implements Entity, Collidable, ControllerListener
 			}
 		}
 		return false;
-	}	
+	}		
 	
-	/**
-	 * 
-	 * @param next If true, search for next type of item in itemList. If false, search for previous.
-	 * @return
-	 */
-	private Item getItem(boolean next)
+	private ItemStack getItemStack(boolean next)
 	{
-		Item item = currentItem;
-		
 		if(items.isEmpty())
-		{
-			PaddleGame.log("You don't have any items");
-			return item;
-		}
-		
-		Item first = items.get(0);
-		boolean same = true;
-		for(Item itm : items)
-		{
-			if(!first.getClass().equals(itm.getClass()))
-			{
-				same = false;
-				break;
-			}
-		}
-		
-		if(same)
-			return item;
-		
-		int startIndex = 0;
+			return null;
+		else if(items.size() == 1)
+			return items.get(0);
+
 		for(int i = 0; i < items.size(); i++)
 		{
-			if(items.get(i).equals(currentItem))
+			ItemStack itemStack = items.get(i);
+			if(itemStack.getItemType().equals(currentItem.getClass()))
 			{
-				startIndex = i;
-				break;
-			}
-		}
-		
-		if(next)
-		{
-			for(int i = startIndex; i < items.size(); i++)
-			{
-				Item it = items.get(i);
-				
-				if(it.getClass().equals(currentItem.getClass()))
+				if(next)
 				{
 					if(i == items.size() - 1)
-						i = 0;
-					continue;
+						return items.get(0);
+					else
+						return items.get(i+1);
 				} else
-				{
-					item = it;
-					break;
-				}
-			}
-		} else
-		{
-			for(int i = startIndex; i >= 0; i--)
-			{
-				Item prevItem = items.get(i);
-				if(prevItem.getClass().equals(currentItem.getClass()))
 				{
 					if(i == 0)
-						i = items.size() - 1;
-					continue;
-				} else
-				{
-					item = prevItem;
-					break;
+						return items.get(items.size()-1);
+					else
+						return items.get(i-1);
 				}
 			}
 		}
-		
-		return item;
-	}
-	
-	private Item getNextSameTypeItem(Class<? extends Item> type)
-	{
-		Item item = null;
-		
-		if(items.isEmpty())
-		{
-			PaddleGame.log("No more items");
-			return item;
-		}
-		
-		for(Item i : items)
-		{
-			if(i.getClass().equals(type.getClass()))
-			{
-				item = i;
-				return item;
-			}
-		}
-		
-		item = items.get(0);
-		return item;
+
+		return null;
 	}
 	
 	@Override
@@ -658,16 +636,23 @@ public class Tank implements Entity, Collidable, ControllerListener
 	@Override
 	public void onItemChanged(ItemChangedEvent e)
 	{
+		ItemStack newItemStack = null;
+		
 		if(e.getChangeEvent() == ItemChangedEvent.NEXT)
 		{
-			currentItem = getItem(true);
+			newItemStack = getItemStack(true);
 			
+			if(newItemStack != null)
+				currentItem = newItemStack.getItem();		
 		} else if(e.getChangeEvent() == ItemChangedEvent.PREVIOUS)
 		{
-			currentItem = getItem(false);
+			newItemStack = getItemStack(false);
+			
+			if(newItemStack != null)
+				currentItem = newItemStack.getItem();
 		}
 		
 		if(currentItem != null)
-			PaddleGame.log("Current item is: " + currentItem.getClass().getCanonicalName());
+			PaddleGame.log("Current item is: " + currentItem.getClass().getCanonicalName() + " C: " + newItemStack.getCount());
 	}
 }
