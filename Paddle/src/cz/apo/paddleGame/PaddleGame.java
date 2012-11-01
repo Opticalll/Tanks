@@ -36,6 +36,7 @@ import cz.opt.pEngine.Pengine;
 public class PaddleGame implements Runnable
 {
 	public static final List<Entity> entities = new ArrayList<Entity>();
+	public static final List<Ui> ui = new ArrayList<Ui>();
 	public static MainMenu menu;
 	
 	public static final int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
@@ -102,7 +103,7 @@ public class PaddleGame implements Runnable
 					Item.spawnRandomItem();
 			}
 		});
-		
+
 		while(!Display.isCloseRequested())
 		{
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -121,6 +122,11 @@ public class PaddleGame implements Runnable
 				
 				if(e instanceof Projectile)
 					((Projectile) e).checkCollision();
+			}
+			
+			for(int i = 0; i < ui.size(); i++)
+			{
+				ui.get(i).render();
 			}
 			
 			Pengine.update();
@@ -227,8 +233,15 @@ public class PaddleGame implements Runnable
 		ui.setWidth(250);
 		ui.setHeight(75);
 		ui.setY(WINDOW_HEIGHT - ui.getHeight());
-		entities.add(ui);
-		new Player(2);
+		PaddleGame.ui.add(ui);
+		
+		Player ppl = new Player(2);
+		Ui uii = new Ui(ppl);
+		uii.setWidth(250);
+		uii.setHeight(75);
+		uii.setX(WINDOW_WIDTH - uii.getWidth());
+		uii.setY(WINDOW_HEIGHT - uii.getHeight());
+		PaddleGame.ui.add(uii);
 	}
 	
 	/**

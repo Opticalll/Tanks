@@ -8,13 +8,14 @@ import org.newdawn.slick.opengl.Texture;
 import cz.apo.etc.Color;
 import cz.apo.etc.OpFont;
 
-public class Ui implements Entity {
-
+public class Ui 
+{
 	private Player uiPlayer;
 	private float x,y,width,height,playerPartX,playerPartY,tankPartX,tankPartY;
 	private Texture back_Texture;
 	private Font font;
 	private OpFont lives, weapon, ammo;
+	private Color col = new Color(0, 40, 100);
 	
 	public Ui(Player player)
 	{
@@ -48,11 +49,8 @@ public class Ui implements Entity {
 		ammo.render();
 	}
 	
-	@Override
 	public void render() 
 	{
-		// TODO Auto-generated method stub
-		Color col = new Color(0,125,0);
 		GL11.glColor4f(col.R, col.G, col.B, 0.2f);
 		GL11.glBegin(GL11.GL_QUADS);		
 			GL11.glVertex2f(x, y);
@@ -64,11 +62,9 @@ public class Ui implements Entity {
 		render_TankPart();
 	}
 
-	@Override
 	public void update() 
 	{
-		// TODO Auto-generated method stub
-		
+				
 	}
 
 	public float getX() {
