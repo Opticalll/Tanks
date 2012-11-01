@@ -7,8 +7,10 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
+import cz.apo.entity.items.AmmoPack;
 import cz.apo.entity.items.Item;
 import cz.apo.entity.items.ItemStack;
+import cz.apo.entity.items.SpeedBoost;
 import cz.apo.entity.items.Teleporter;
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
@@ -92,6 +94,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 		currentWeapon = Controller.DEFAULT_WEAPON;
 		
 		addItemStack(new ItemStack(new Teleporter(this), 5));
+		addItemStack(new ItemStack(new SpeedBoost(0, 0), 10));
+		addItemStack(new ItemStack(new AmmoPack(0, 0), 13));
 		controller.addControllerListener(this);
 		
 		if(!items.isEmpty())
@@ -295,6 +299,25 @@ public class Tank implements Entity, Collidable, ControllerListener
 		}
 		
 		items.add(stack);
+	}
+	
+	public Item getCurrentItem()
+	{
+		return currentItem;
+	}
+	
+	public int getCurrentItemCount()
+	{
+		if(currentItem != null)
+		{
+			for(ItemStack itemStack : items)
+			{
+				if(itemStack.getItemType().equals(currentItem.getClass()))
+					return itemStack.getCount();
+			}
+		}
+		
+		return -1;
 	}
 	
 	/**
@@ -515,7 +538,6 @@ public class Tank implements Entity, Collidable, ControllerListener
 							{
 								items.remove(itemStack);
 								currentItem = null;
-								PaddleGame.log("No more items");
 								break;
 							} else
 							{
@@ -704,8 +726,5 @@ public class Tank implements Entity, Collidable, ControllerListener
 			if(newItemStack != null)
 				currentItem = newItemStack.getItem();
 		}
-		
-		if(currentItem != null)
-			PaddleGame.log("Current item is: " + currentItem.getClass().getCanonicalName() + " C: " + newItemStack.getCount());
 	}
 }

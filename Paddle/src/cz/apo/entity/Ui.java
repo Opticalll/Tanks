@@ -5,16 +5,21 @@ import java.awt.Font;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import cz.apo.entity.items.Item;
 import cz.apo.etc.Color;
 import cz.apo.etc.OpFont;
 
+/* TODO: Getting vsech hodnot z tanku a od playera by nemelo byt podle mne pokazdy kdyz je render.
+ * Update hodnot v UI by mel byt v metode update(), a ta by mela byt volana jen po urcitym case - pouzili bysme ten samej Timer
+ * jako na spawn itemu. Takze update by byl treba 1x za 200 - 500ms ... whatever
+ */
 public class Ui 
 {
 	private Player uiPlayer;
 	private float x,y,width,height,playerPartX,playerPartY,tankPartX,tankPartY;
 	private Texture back_Texture;
 	private Font font;
-	private OpFont lives, weapon, ammo;
+	private OpFont lives, weapon, ammo, currentItem, count;
 	private Color col = new Color(0, 40, 100);
 	
 	public Ui(Player player)
@@ -23,6 +28,8 @@ public class Ui
 		font = new Font("Arial", Font.BOLD, 12);
 		weapon = new OpFont(tankPartX, tankPartY, "Weapon: ", font, java.awt.Color.WHITE);
 		ammo = new OpFont(tankPartX, tankPartY + 12, "Ammo: ", font, java.awt.Color.WHITE);
+		currentItem = new OpFont(tankPartX, tankPartY + 24, "Current item: ", font, java.awt.Color.WHITE);
+		count = new OpFont(tankPartX, tankPartY + 36, "Count: ", font, java.awt.Color.WHITE);
 		lives = new OpFont(playerPartX, playerPartY, "Lives: " + uiPlayer.lives, font, java.awt.Color.WHITE);
 	}
 	
@@ -31,6 +38,7 @@ public class Ui
 		//Lives
 		playerPartX = x;
 		playerPartY = y;
+		
 		lives.setPos(playerPartX, playerPartY);
 		lives.setText("Lives: " + uiPlayer.lives);
 		lives.render();
@@ -38,19 +46,32 @@ public class Ui
 	
 	private void render_TankPart()
 	{
+		Item curItem = uiPlayer.getTank().getCurrentItem();
+		boolean itemNull = false;
+		
+		if(curItem == null) itemNull = true;
+		
 		//Ammo + Weapon
 		tankPartX = x;
 		tankPartY = y + 17;
-		weapon.setPos(tankPartX, tankPartY);
+		
 		weapon.setText("Weapon: " + uiPlayer.getTank().getClusterCount());
+		weapon.setPos(tankPartX, tankPartY);
 		ammo.setText("Ammo: " + uiPlayer.getTank().getMissileCount());
 		ammo.setPos(tankPartX, tankPartY + 12);
+		currentItem.setText("Current item: " + (itemNull ? "NONE" : uiPlayer.getTank().getCurrentItem().getName()));
+		currentItem.setPos(tankPartX, tankPartY + 24);
+		count.setText("Count: " + (itemNull ? "-" : uiPlayer.getTank().getCurrentItemCount()));
+		count.setPos(tankPartX, tankPartY + 36);
+		
 		weapon.render();
 		ammo.render();
+		currentItem.render();
+		count.render();
 	}
 	
 	public void render() 
-	{
+	{	
 		GL11.glColor4f(col.R, col.G, col.B, 0.2f);
 		GL11.glBegin(GL11.GL_QUADS);		
 			GL11.glVertex2f(x, y);

@@ -9,6 +9,7 @@ import cz.apo.paddleGame.PaddleGame;
 public class Teleporter extends Item
 {
 	private static final Texture texture = loadTexture("res/textures/items/Teleport.png");
+	private static final String NAME = "Teleporter";
 	private Tank owner = null;
 	
 	public Teleporter(float x, float y)
@@ -24,6 +25,11 @@ public class Teleporter extends Item
 		super();
 		super.texture = Teleporter.texture;
 		this.owner = tank;
+	}
+	
+	public String getName()
+	{
+		return NAME;
 	}
 	
 	@Override

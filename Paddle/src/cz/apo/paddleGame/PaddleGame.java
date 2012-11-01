@@ -69,10 +69,21 @@ public class PaddleGame implements Runnable
 	private void startGame()
 	{
 		initDisplay();
+		log("DISPLAY INITIALIZED");
+		
 		initGL();
+		log("OPENGL INITIALIZED");
+		
 		initObj();
+		log("OBJECTS INITIALIZED");
+		
 		initListeners();
+		log("LISTENERS INITIALIZED");
+		
+		log("Entering menu loop");
 		menuLoop();
+		
+		log("Entering game loop");
 		gameLoop();
 	}
 	
@@ -93,7 +104,7 @@ public class PaddleGame implements Runnable
 		
 		// Timer for random item spawn
 		final Random r = new Random();
-		Timer itemSpawnTimer = new Timer(1000);
+		Timer itemSpawnTimer = new Timer(2000);
 		itemSpawnTimer.addTimerListener(new TimerListener()
 		{
 			public void onTime()
@@ -227,7 +238,7 @@ public class PaddleGame implements Runnable
 		for(Entity e : blocks)
 			entities.add(e);
 
-		Player pl = new Player(1);
+		Player pl = new Player(2);
 		Ui ui = new Ui(pl);
 		ui.setX(0);
 		ui.setWidth(250);
@@ -235,7 +246,7 @@ public class PaddleGame implements Runnable
 		ui.setY(WINDOW_HEIGHT - ui.getHeight());
 		PaddleGame.ui.add(ui);
 		
-		Player ppl = new Player(2);
+		Player ppl = new Player(1);
 		Ui uii = new Ui(ppl);
 		uii.setWidth(250);
 		uii.setHeight(75);

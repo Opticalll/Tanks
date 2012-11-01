@@ -29,6 +29,7 @@ public abstract class Item implements Entity, Collidable
 	
 	public abstract void onPick(Tank tank);
 	public abstract void use();
+	public abstract String getName();
 	
 	Item()
 	{

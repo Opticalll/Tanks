@@ -33,7 +33,7 @@ public class Grid
 	 */
 	public void setGrid(int lvl)
 	{
-		Block[][] layout = loadMap("res/level_" + lvl + ".lvl");
+		Block[][] layout = loadMap("res/levels/level_" + lvl + ".lvl");
 		for(int i = 0; i < lines; i++)
 			for(int z = 0; z < columns; z++)
 				if(layout[i][z] != null)

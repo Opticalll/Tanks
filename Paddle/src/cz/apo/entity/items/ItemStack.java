@@ -39,7 +39,7 @@ public class ItemStack
 	
 	public void setCount(int count)
 	{
-		
+		this.count = count;
 	}
 		
 	public Class<? extends Item> getItemType()
