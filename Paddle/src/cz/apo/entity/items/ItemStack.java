@@ -11,9 +11,20 @@ public class ItemStack
 		this.count = 1;
 	}
 	
+	public ItemStack(Item item, int count)
+	{
+		this.item = item;
+		this.count = count;
+	}
+	
 	public void addItem()
 	{
 		count++;
+	}
+	
+	public void addItem(int count)
+	{
+		this.count += count;
 	}
 	
 	public void removeItem()
@@ -26,6 +37,11 @@ public class ItemStack
 		return count;
 	}
 	
+	public void setCount(int count)
+	{
+		
+	}
+		
 	public Class<? extends Item> getItemType()
 	{
 		return item.getClass();

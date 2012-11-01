@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
 
-import cz.apo.entity.items.AmmoPack;
 import cz.apo.entity.items.Item;
 import cz.apo.entity.items.ItemStack;
-import cz.apo.entity.items.SpeedBoost;
+import cz.apo.entity.items.Teleporter;
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
 import cz.apo.event.ItemChangedEvent;
@@ -29,9 +29,13 @@ import cz.opt.pEngine.Pengine;
 public class Tank implements Entity, Collidable, ControllerListener
 {
 	public static final float DEF_SPEED = 2.0f;
+	public static final float DEF_WIDTH = 15.0f, DEF_HEIGHT = 15.0f;
+	public static final float DEF_GUN_LEN = 15.0f, DEF_GUN_W = 2.0f;
+	
 	public static final int MAX_MISSILES = 15, MAX_CLUSTERS = 7;
 	
 	private float x, y, width, height;
+	private float scale = 1.0f;
 	private float gunWidth, gunLength;
 	private float dx = 0.0f, dy = 0.0f;
 	public float speed = DEF_SPEED;
@@ -49,6 +53,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
+	private boolean teleporting = false;
 	private boolean boosted = false;
 	private boolean solid = true;
 	private boolean destroyable = true;
@@ -60,6 +65,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private TankFacing facing;
 	private Color color;
 	private final Controller controller;
+	private Vector2f locToPort;
 	
 	/**
 	 * 
@@ -85,8 +91,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 		weapon = new Weapon(this);
 		currentWeapon = Controller.DEFAULT_WEAPON;
 		
-		addItem(new SpeedBoost(0, 0));
-		addItem(new AmmoPack(0, 0));
+		addItemStack(new ItemStack(new Teleporter(this), 5));
 		controller.addControllerListener(this);
 		
 		if(!items.isEmpty())
@@ -278,6 +283,20 @@ public class Tank implements Entity, Collidable, ControllerListener
 		items.add(new ItemStack(item));
 	}
 	
+	public void addItemStack(ItemStack stack)
+	{
+		for(ItemStack itemStack : items)
+		{
+			if(itemStack.getItemType().equals(stack.getItemType()))
+			{
+				itemStack.addItem(stack.getCount());
+				return;
+			}
+		}
+		
+		items.add(stack);
+	}
+	
 	/**
 	 * 
 	 * @return Tank's facing
@@ -346,11 +365,43 @@ public class Tank implements Entity, Collidable, ControllerListener
 			dx = speed;
 	}
 	
+	public void teleport(Vector2f location)
+	{
+		teleporting = true;
+		setDX(0);
+		setDY(0);
+		this.locToPort = location;
+	}
+	
 	/**
 	 * Tank update method
 	 */
 	public void update()
 	{
+		if(teleporting)
+		{
+			if(scale <= 0.0f)
+			{
+				teleporting = false;
+				setX(locToPort.x);
+				setY(locToPort.y);
+			}
+			scale -= 0.05f;
+			
+			width *= scale;
+			height *= scale;
+			gunWidth *= scale;
+			gunLength *= scale;
+		} else if(!teleporting && (scale < 1.0f))
+		{
+			scale += 0.05f;
+			
+			width = DEF_WIDTH * scale;
+			height = DEF_HEIGHT * scale;
+			gunWidth = DEF_GUN_W * scale;
+			gunLength = DEF_GUN_LEN * scale;
+		}
+		
 		if(boosted)
 		{
 			if(System.currentTimeMillis() >= timeBoosted + boostDuration)
@@ -362,78 +413,80 @@ public class Tank implements Entity, Collidable, ControllerListener
 		
 		controller.checkInput();
 		
-		if(controller.up && !controller.down && !controller.left && !controller.right)
+		if(!teleporting)
 		{
-			if(!up)
+			if(controller.up && !controller.down && !controller.left && !controller.right)
 			{
-				up = true;
-				down = false;
-				right = false;
-				left = false;
-				moving = true;
-				facing = TankFacing.NORTH;
-				dy = -speed;
-			}
-		} else if(!controller.up && !controller.down)
-		{
-			up = false;
-			dy = 0;
-		}
-		
-		if(controller.down && !controller.up && !controller.left && !controller.right)
-		{
-			if(!down)
+				if(!up)
+				{
+					up = true;
+					down = false;
+					right = false;
+					left = false;
+					moving = true;
+					facing = TankFacing.NORTH;
+					dy = -speed;
+				}
+			} else if(!controller.up && !controller.down)
 			{
-				down = true;
 				up = false;
-				right = false;
-				left = false;
-				moving = true;
-				facing = TankFacing.SOUTH;
-				dy = speed;
+				dy = 0;
 			}
-		} else if(!controller.down && !controller.up)
-		{
-			down = false;
-			dy = 0;
-		}
-		
-		if(controller.left && !controller.right && !controller.up && !controller.down)
-		{
-			if(!left)
+			
+			if(controller.down && !controller.up && !controller.left && !controller.right)
 			{
-				left = true;
-				down = false;
-				up = false;
-				right = false;
-				moving = true;
-				facing = TankFacing.WEST;
-				dx = -speed;
-			}
-		} else if(!controller.left && !controller.right)
-		{
-			left = false;
-			dx = 0;
-		}
-		
-		if(controller.right && !controller.left && !controller.up && !controller.down)
-		{
-			if(!right)
+				if(!down)
+				{
+					down = true;
+					up = false;
+					right = false;
+					left = false;
+					moving = true;
+					facing = TankFacing.SOUTH;
+					dy = speed;
+				}
+			} else if(!controller.down && !controller.up)
 			{
-				right = true;
-				left = false;
 				down = false;
-				up = false;
-				moving = true;
-				facing = TankFacing.EAST;
-				dx = speed;
+				dy = 0;
 			}
-		} else if(!controller.right && !controller.left)
-		{
-			right = false;
-			dx = 0;
+			
+			if(controller.left && !controller.right && !controller.up && !controller.down)
+			{
+				if(!left)
+				{
+					left = true;
+					down = false;
+					up = false;
+					right = false;
+					moving = true;
+					facing = TankFacing.WEST;
+					dx = -speed;
+				}
+			} else if(!controller.left && !controller.right)
+			{
+				left = false;
+				dx = 0;
+			}
+			
+			if(controller.right && !controller.left && !controller.up && !controller.down)
+			{
+				if(!right)
+				{
+					right = true;
+					left = false;
+					down = false;
+					up = false;
+					moving = true;
+					facing = TankFacing.EAST;
+					dx = speed;
+				}
+			} else if(!controller.right && !controller.left)
+			{
+				right = false;
+				dx = 0;
+			}
 		}
-		
 		if(!controller.up && !controller.down &&  !controller.left && !controller.right)
 			moving = false;
 		

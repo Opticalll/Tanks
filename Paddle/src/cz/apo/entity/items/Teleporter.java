@@ -19,6 +19,13 @@ public class Teleporter extends Item
 		super.texture = Teleporter.texture;
 	}
 
+	public Teleporter(Tank tank)
+	{
+		super();
+		super.texture = Teleporter.texture;
+		this.owner = tank;
+	}
+	
 	@Override
 	public boolean isSolid()
 	{
@@ -53,8 +60,7 @@ public class Teleporter extends Item
 		if(owner != null)
 		{
 			Vector2f teleportLoc = PaddleGame.getRandomSpawnPoint();
-			owner.setX(teleportLoc.x);
-			owner.setY(teleportLoc.y);
+			owner.teleport(teleportLoc);
 		}
 	}
 	
