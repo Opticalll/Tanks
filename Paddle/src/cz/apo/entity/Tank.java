@@ -352,28 +352,34 @@ public class Tank implements Entity, Collidable, ControllerListener
 	 * Tank render method
 	 */
 	public void render()
-	{
-		GL11.glTranslatef(x + width/2, y + height/2, 0);
-		GL11.glRotatef(angle, 0, 0, 1);
-		GL11.glTranslatef(-(x + width/2), -(y + height/2), 0);
+	{	
+		if(teleporting || (!teleporting && scale < 1.0f))
+			GL11.glTranslatef((DEF_WIDTH - width)/2, (DEF_HEIGHT - height)/2, 0);
 		
 		// tank
 		GL11.glColor3f(color.R, color.G, color.B);
 		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glVertex2f(x + (DEF_WIDTH - width)/2, y + (DEF_HEIGHT - height)/2);
-			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + width, y + (DEF_HEIGHT - height)/2);
-			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + width, y + (DEF_HEIGHT - height)/2 + height);
-			GL11.glVertex2f(x + (DEF_WIDTH - width)/2, y + (DEF_HEIGHT - height)/2 + height);
+			GL11.glVertex2f(x, y);
+			GL11.glVertex2f(x + width, y);
+			GL11.glVertex2f(x + width, y + height);
+			GL11.glVertex2f(x, y + height);
 		GL11.glEnd();
-	
+
+		GL11.glTranslatef(x + width/2, y + height/2, 0);
+		GL11.glRotatef(angle, 0, 0, 1);
+		GL11.glTranslatef(-(x + width/2), -(y + height/2), 0);
+		
 		// gun
 		GL11.glColor3f(0, 0, 1);
 		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + (width/2 - gunWidth/2), (y + (DEF_HEIGHT - height)/2 + height/2) - gunLength);
-			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + (width/2 + gunWidth/2), (y + (DEF_HEIGHT - height)/2 + height/2) - gunLength);
-			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + (width/2 + gunWidth/2), (y + (DEF_HEIGHT - height)/2 + height/2));
-			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + (width/2 - gunWidth/2), (y + (DEF_HEIGHT - height)/2 + height/2));
+			GL11.glVertex2f(x + (width/2 - gunWidth/2), (y + height/2) - gunLength);
+			GL11.glVertex2f(x + (width/2 + gunWidth/2), (y + height/2) - gunLength);
+			GL11.glVertex2f(x + (width/2 + gunWidth/2), (y + height/2));
+			GL11.glVertex2f(x + (width/2 - gunWidth/2), (y + height/2));
 		GL11.glEnd();
+		
+		if(teleporting  || (!teleporting && scale < 1.0f))
+			GL11.glTranslatef(-(DEF_WIDTH - width)/2, -(DEF_HEIGHT - height)/2, 0);
 		
 	}
 	
