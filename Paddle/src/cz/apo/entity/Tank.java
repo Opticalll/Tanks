@@ -87,7 +87,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 		facing = TankFacing.NORTH;
 		width = 15.0f;
 		height = 15.0f;
-		gunWidth = 2.0f;
+		gunWidth = 3.0f;
 		gunLength = 15.0f;
 		
 		weapon = new Weapon(this);
@@ -360,20 +360,21 @@ public class Tank implements Entity, Collidable, ControllerListener
 		// tank
 		GL11.glColor3f(color.R, color.G, color.B);
 		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glVertex2f(x, y);
-			GL11.glVertex2f(x + width, y);
-			GL11.glVertex2f(x + width, y + height);
-			GL11.glVertex2f(x, y + height);
+			GL11.glVertex2f(x + (DEF_WIDTH - width)/2, y + (DEF_HEIGHT - height)/2);
+			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + width, y + (DEF_HEIGHT - height)/2);
+			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + width, y + (DEF_HEIGHT - height)/2 + height);
+			GL11.glVertex2f(x + (DEF_WIDTH - width)/2, y + (DEF_HEIGHT - height)/2 + height);
 		GL11.glEnd();
 	
 		// gun
 		GL11.glColor3f(0, 0, 1);
 		GL11.glBegin(GL11.GL_QUADS);
-			GL11.glVertex2f(x + (width/2 - gunWidth/2), (y + height/2) - gunLength);
-			GL11.glVertex2f(x + (width/2 + gunWidth/2), (y + height/2) - gunLength);
-			GL11.glVertex2f(x + (width/2 + gunWidth/2), (y + height/2));
-			GL11.glVertex2f(x + (width/2 - gunWidth/2), (y + height/2));
+			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + (width/2 - gunWidth/2), (y + (DEF_HEIGHT - height)/2 + height/2) - gunLength);
+			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + (width/2 + gunWidth/2), (y + (DEF_HEIGHT - height)/2 + height/2) - gunLength);
+			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + (width/2 + gunWidth/2), (y + (DEF_HEIGHT - height)/2 + height/2));
+			GL11.glVertex2f(x + (DEF_WIDTH - width)/2 + (width/2 - gunWidth/2), (y + (DEF_HEIGHT - height)/2 + height/2));
 		GL11.glEnd();
+		
 	}
 	
 	private void updateSpeed()
