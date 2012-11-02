@@ -1,6 +1,5 @@
 package cz.apo.paddleGame;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -33,7 +32,7 @@ public class Grid
 	 */
 	public void setGrid(int lvl)
 	{
-		Block[][] layout = loadMap("res/levels/level_" + lvl + ".lvl");
+		Block[][] layout = loadMap("/levels/level_" + lvl + ".lvl");
 		for(int i = 0; i < lines; i++)
 			for(int z = 0; z < columns; z++)
 				if(layout[i][z] != null)
@@ -86,13 +85,13 @@ public class Grid
 
 		try
 		{
-			mfs = new Scanner(new File(mfp));
+			mfs = new Scanner(this.getClass().getResourceAsStream(mfp));
 			if(mfs.hasNextLine())
 				cfp = mfs.nextLine();
 			
 			PaddleGame.log("Loading map from -> " + mfp);
 			
-			cfs = new Scanner(new File(cfp));
+			cfs = new Scanner(this.getClass().getResourceAsStream(cfp));
 			
 			
 			String blockString = "";
@@ -153,7 +152,7 @@ public class Grid
 			}
 			
 			mfs.close();
-			mfs = new Scanner(new File(mfp));
+			mfs = new Scanner(this.getClass().getResourceAsStream(mfp));
 
 			while(mfs.hasNextLine())
 			{
@@ -162,7 +161,7 @@ public class Grid
 			}
 
 			mfs.close();
-			mfs = new Scanner(new File(mfp));
+			mfs = new Scanner(this.getClass().getResourceAsStream(mfp));
 
 			layout = new Block[lines][columns];
 
@@ -199,6 +198,7 @@ public class Grid
 			}
 		} catch(Exception e)
 		{
+			System.err.println("FAIL " + e.getMessage());
 			e.printStackTrace();
 		}
 		cfs.close();

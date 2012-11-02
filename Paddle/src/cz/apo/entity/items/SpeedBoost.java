@@ -7,7 +7,7 @@ import cz.apo.entity.Tank;
 
 public class SpeedBoost extends Item
 {
-	private static final Texture texture = loadTexture("res/textures/items/SpeedBooster.png");
+	private static final Texture texture = loadTexture("/textures/items/SpeedBooster.png");
 	private static final String NAME = "SpeedBoost";
 	private static final int BOOST_DURATION = 6000;
 	

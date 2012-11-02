@@ -7,11 +7,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
-import org.newdawn.slick.util.ResourceLoader;
 
 import cz.apo.entity.Collidable;
 import cz.apo.entity.Entity;
 import cz.apo.entity.Tank;
+import cz.apo.etc.OpSound;
 import cz.apo.paddleGame.PaddleGame;
 
 public abstract class Item implements Entity, Collidable
@@ -121,7 +121,7 @@ public abstract class Item implements Entity, Collidable
 		
 		try
 		{
-			tex = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream(path));
+			tex = TextureLoader.getTexture("PNG", Item.class.getResourceAsStream(path));
 		} catch(IOException e)
 		{
 			e.printStackTrace();
@@ -141,7 +141,8 @@ public abstract class Item implements Entity, Collidable
 			
 			if(item.intersects(tank))
 			{
-				onPick(t);	
+				onPick(t);
+				OpSound.soundMap.get("PICK").getSound().play(1.0f, 0.6f);
 				PaddleGame.entities.remove(this);
 				return true;
 			}

@@ -7,10 +7,10 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
-import org.newdawn.slick.util.ResourceLoader;
 
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
+import cz.apo.etc.OpSound;
 import cz.apo.paddleGame.PaddleGame;
 import cz.opt.pEngine.ColorTransition;
 import cz.opt.pEngine.PVector;
@@ -226,7 +226,7 @@ public class Block implements Entity, Collidable
 		Texture tex = null;
 		try
 		{
-			tex = TextureLoader.getTexture(format, ResourceLoader.getResourceAsStream(texturePath));
+			tex = TextureLoader.getTexture(format, this.getClass().getResourceAsStream(texturePath));
 		} catch(IOException e)
 		{
 			e.printStackTrace();
@@ -365,9 +365,10 @@ public class Block implements Entity, Collidable
 				{
 					Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
 					eng.create();
+					OpSound.soundMap.get("EXPLOS").getSound().play(1.0f, 0.6f);
 //					PaddleGame.entities.remove(this);
 
-					this.settPath("res/textures/blocks/grass.png");
+					this.settPath("/textures/blocks/grass.png");
 					this.setSolid(false);
 					this.setDestroyable(false);
 					this.texture = loadTexture(tPath, "PNG");

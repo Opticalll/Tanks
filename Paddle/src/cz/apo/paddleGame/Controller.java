@@ -1,12 +1,9 @@
 package cz.apo.paddleGame;
 
-import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
-import org.newdawn.slick.util.ResourceLoader;
 
 import cz.apo.entity.Entity;
 import cz.apo.entity.Tank;
@@ -23,10 +20,10 @@ import cz.apo.listener.WorldListener;
  */
 public class Controller
 {	
-	public static final int DEFAULT_LEVEL = 0, DEFAULT_WEAPON = 1;
+	public static final int DEFAULT_LEVEL = 1, DEFAULT_WEAPON = 1;
 	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W, BUILD, PREV_I, NEXT_I, USE_I;
 	
-	private static final int MAX_LEVEL = getMaxLevel();
+	private static final int MAX_LEVEL = 1;
 	private static int level = DEFAULT_LEVEL;
 	private static boolean homeDown = false, endDown = false;
 	private int weapon = DEFAULT_WEAPON;
@@ -163,6 +160,7 @@ public class Controller
 			}
 		}
 		
+		Keyboard.enableRepeatEvents(false);
 		// Weapon change
 		if(Keyboard.isKeyDown(NEXT_W))
 		{
@@ -227,6 +225,8 @@ public class Controller
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
 			PaddleGame.cleanUp();
+		
+//		Keyboard.enableRepeatEvents(true);
 	}
 	
 	/**
@@ -268,25 +268,23 @@ public class Controller
 			endDown = false;
 	}
 	
-	private static int getMaxLevel()
-	{
-		int count = 0;
-		try
-		{
-			File dir = new File(ResourceLoader.getResource("res/levels").toURI());
-			for(String str : dir.list())
-			{
-				if(str.endsWith(".lvl"))
-					count++;
-			}
-		} catch (URISyntaxException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return count - 1;
-	}
+//	private static int getMaxLevel()
+//	{
+//		int count = 0;
+//		try
+//		{
+//			for(String str : dir.list())
+//			{
+//				if(str.endsWith(".lvl"))
+//					count++;
+//			}
+//		} catch (Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//		
+//		return count - 1;
+//	}
 	
 	// =============== EVENTS ============== //
 	

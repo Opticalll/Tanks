@@ -7,7 +7,7 @@ import cz.apo.entity.Tank;
 
 public class AmmoPack extends Item
 {
-	private static final Texture texture = loadTexture("res/textures/items/AmmoPack.png");
+	private static final Texture texture = loadTexture("/textures/items/AmmoPack.png");
 	private static final String NAME = "AmmoPack";
 	
 	public AmmoPack(float x, float y)

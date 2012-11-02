@@ -4,11 +4,12 @@ import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.opengl.Texture;
 
 import cz.apo.entity.Tank;
+import cz.apo.etc.OpSound;
 import cz.apo.paddleGame.PaddleGame;
 
 public class Teleporter extends Item
 {
-	private static final Texture texture = loadTexture("res/textures/items/Teleport.png");
+	private static final Texture texture = loadTexture("/textures/items/Teleport.png");
 	private static final String NAME = "Teleporter";
 	private Tank owner = null;
 	
@@ -67,6 +68,7 @@ public class Teleporter extends Item
 		{
 			Vector2f teleportLoc = PaddleGame.getRandomSpawnPoint();
 			owner.teleport(teleportLoc);
+			OpSound.soundMap.get("PORT").getSound().play(1.0f, 0.6f);
 		}
 	}
 	

@@ -7,13 +7,11 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
-import cz.apo.entity.items.AmmoPack;
 import cz.apo.entity.items.Item;
 import cz.apo.entity.items.ItemStack;
-import cz.apo.entity.items.SpeedBoost;
-import cz.apo.entity.items.Teleporter;
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.Color;
+import cz.apo.etc.OpSound;
 import cz.apo.event.ItemChangedEvent;
 import cz.apo.event.WeaponChangedEvent;
 import cz.apo.listener.ControllerListener;
@@ -42,6 +40,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private float dx = 0.0f, dy = 0.0f;
 	public float speed = DEF_SPEED;
 	private float angle = 0.0f;
+	private float tpAngle = 0.0f;
 	private long timeBoosted = 0;
 	private long boostDuration = 0;
 	
@@ -93,9 +92,6 @@ public class Tank implements Entity, Collidable, ControllerListener
 		weapon = new Weapon(this);
 		currentWeapon = Controller.DEFAULT_WEAPON;
 		
-		addItemStack(new ItemStack(new Teleporter(this), 5));
-		addItemStack(new ItemStack(new SpeedBoost(0, 0), 10));
-		addItemStack(new ItemStack(new AmmoPack(0, 0), 13));
 		controller.addControllerListener(this);
 		
 		if(!items.isEmpty())
@@ -356,6 +352,12 @@ public class Tank implements Entity, Collidable, ControllerListener
 		if(teleporting || (!teleporting && scale < 1.0f))
 			GL11.glTranslatef((DEF_WIDTH - width)/2, (DEF_HEIGHT - height)/2, 0);
 		
+		GL11.glTranslatef(x + width/2, y + height/2, 0);
+		GL11.glRotatef(angle, 0, 0, 1);
+		if(teleporting)
+			GL11.glRotatef(tpAngle, 0, 0, 1);
+		GL11.glTranslatef(-(x + width/2), -(y + height/2), 0);
+		
 		// tank
 		GL11.glColor3f(color.R, color.G, color.B);
 		GL11.glBegin(GL11.GL_QUADS);
@@ -365,9 +367,6 @@ public class Tank implements Entity, Collidable, ControllerListener
 			GL11.glVertex2f(x, y + height);
 		GL11.glEnd();
 
-		GL11.glTranslatef(x + width/2, y + height/2, 0);
-		GL11.glRotatef(angle, 0, 0, 1);
-		GL11.glTranslatef(-(x + width/2), -(y + height/2), 0);
 		
 		// gun
 		GL11.glColor3f(0, 0, 1);
@@ -417,6 +416,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 				setY(locToPort.y);
 			}
 			scale -= 0.05f;
+			tpAngle += 15.0f;
 			
 			width *= scale;
 			height *= scale;
@@ -620,6 +620,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 				{
 					Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
 					eng.create();
+					OpSound.soundMap.get("KILL").getSound().play(1.0f, 0.6f);
 					PaddleGame.entities.remove(this);
 					controller.removeControllerListener(this);
 					

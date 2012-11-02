@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -18,6 +19,7 @@ import cz.apo.entity.Ui;
 import cz.apo.entity.items.Item;
 import cz.apo.entity.projectile.Projectile;
 import cz.apo.etc.FpsCounter;
+import cz.apo.etc.OpSound;
 import cz.apo.etc.Timer;
 import cz.apo.event.LevelChangedEvent;
 import cz.apo.listener.TimerListener;
@@ -76,6 +78,9 @@ public class PaddleGame implements Runnable
 		
 		initObj();
 		log("OBJECTS INITIALIZED");
+		
+		loadSounds();
+		log("SOUNDS LOADED");
 		
 		initListeners();
 		log("LISTENERS INITIALIZED");
@@ -163,7 +168,9 @@ public class PaddleGame implements Runnable
 	 * Loop for main menu
 	 */
 	public void menuLoop()
-	{	
+	{
+		OpSound.soundMap.get("MENU").getSound().play(1.0f, 0.35f);
+		
 		while(!menu.gameStart())
 		{
 			if(Display.isCloseRequested() || Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
@@ -175,6 +182,8 @@ public class PaddleGame implements Runnable
 			Display.sync(FPS);
 			Display.update();
 		}
+		
+		OpSound.soundMap.get("MENU").stop();
 	}
 	
 	/**
@@ -183,6 +192,7 @@ public class PaddleGame implements Runnable
 	public static void cleanUp()
 	{
 		Display.destroy();
+		AL.destroy();
 		System.exit(0);
 	}
 	
@@ -268,6 +278,16 @@ public class PaddleGame implements Runnable
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	}
+	
+	private void loadSounds()
+	{
+		OpSound.addNewSound("MENU", "/sounds/MenuSong.ogg", 5);
+		OpSound.addNewSound("SHOT", "/sounds/Shot.ogg", 5);
+		OpSound.addNewSound("PORT", "/sounds/Teleport.ogg", 5);
+		OpSound.addNewSound("PICK", "/sounds/PickUp.ogg", 5);
+		OpSound.addNewSound("EXPLOS", "/sounds/Explosion.ogg", 5);
+		OpSound.addNewSound("KILL", "/sounds/TankKilled.ogg", 5);
 	}
 	
 	/**

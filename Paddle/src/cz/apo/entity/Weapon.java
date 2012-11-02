@@ -2,6 +2,7 @@ package cz.apo.entity;
 
 import cz.apo.entity.projectile.Cluster;
 import cz.apo.entity.projectile.Missile;
+import cz.apo.etc.OpSound;
 import cz.apo.paddleGame.PaddleGame;
 
 /**
@@ -34,10 +35,16 @@ public class Weapon
 	 */
 	public void fire(int weaponType)
 	{
+		boolean playSound = true;
+		
 		switch(weaponType)
 		{
 			case MISSILE:
-				if(tank.getMissileCount() <= 0) break;
+				if(tank.getMissileCount() <= 0) 
+				{
+					playSound = false;
+					break;
+				}
 				tank.setMissileCount(tank.getMissileCount()-1);
 				switch(tank.getFacing())
 				{
@@ -56,7 +63,11 @@ public class Weapon
 				}
 				break;
 			case CLUSTER:
-				if(tank.getClusterCount() <= 0) break;
+				if(tank.getClusterCount() <= 0) 
+				{
+					playSound = false;
+					break;
+				}
 				tank.setClusterCount(tank.getClusterCount()-1);
 				switch(tank.getFacing())
 				{
@@ -78,5 +89,8 @@ public class Weapon
 				
 				break;
 		}
+		
+		if(playSound)
+			OpSound.soundMap.get("SHOT").getSound().play(1.0f, 0.6f);
 	}
 }
