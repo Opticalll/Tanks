@@ -64,7 +64,7 @@ public class Ui
 	
 	public void render() 
 	{	
-		GL11.glColor4f(col.R, col.G, col.B, 0.2f);
+		GL11.glColor4f(col.R, col.G, col.B, 1f);
 		GL11.glBegin(GL11.GL_QUADS);		
 			GL11.glVertex2f(x, y);
 			GL11.glVertex2f(x + width, y);

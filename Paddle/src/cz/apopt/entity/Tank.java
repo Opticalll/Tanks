@@ -30,13 +30,13 @@ public class Tank implements Entity, Collidable, ControllerListener
 {
 	public static final float DEF_SPEED = 2.0f;
 	public static final float DEF_WIDTH = 15.0f, DEF_HEIGHT = 15.0f;
-	public static final float DEF_GUN_LEN = 15.0f, DEF_GUN_W = 2.0f;
+	public static final float DEF_GUN_LEN = 15.0f, DEF_GUN_W = 3.0f;
 	
 	public static final int MAX_MISSILES = 15, MAX_CLUSTERS = 7;
 	
-	private float x, y, width, height;
+	private float x, y, width = DEF_WIDTH, height = DEF_HEIGHT;
 	private float scale = 1.0f;
-	private float gunWidth, gunLength;
+	private float gunWidth = DEF_GUN_W, gunLength = DEF_GUN_W;
 	private float dx = 0.0f, dy = 0.0f;
 	public float speed = DEF_SPEED;
 	private float angle = 0.0f;
@@ -84,10 +84,6 @@ public class Tank implements Entity, Collidable, ControllerListener
 		this.items = new ArrayList<ItemStack>();
 		
 		facing = TankFacing.NORTH;
-		width = 15.0f;
-		height = 15.0f;
-		gunWidth = 3.0f;
-		gunLength = 15.0f;
 		
 		weapon = new Weapon(this);
 		currentWeapon = Controller.DEFAULT_WEAPON;
