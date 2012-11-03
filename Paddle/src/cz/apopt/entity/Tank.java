@@ -36,7 +36,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	
 	private float x, y, width = DEF_WIDTH, height = DEF_HEIGHT;
 	private float scale = 1.0f;
-	private float gunWidth = DEF_GUN_W, gunLength = DEF_GUN_W;
+	private float gunWidth = DEF_GUN_W, gunLength = DEF_GUN_LEN;
 	private float dx = 0.0f, dy = 0.0f;
 	public float speed = DEF_SPEED;
 	private float angle = 0.0f;

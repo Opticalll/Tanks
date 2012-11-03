@@ -202,6 +202,8 @@ public class PaddleGame implements Runnable
 	private static void levelCleanUp()
 	{
 		entities.clear();
+		//vole a pak se divis ze je na tom ui neco divnyho
+		PaddleGame.ui.clear();
 	}
 	
 	/**
