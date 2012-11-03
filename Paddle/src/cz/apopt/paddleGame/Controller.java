@@ -20,13 +20,12 @@ import cz.apopt.listener.WorldListener;
  */
 public class Controller
 {	
-	public static final int DEFAULT_LEVEL = 1, DEFAULT_WEAPON = 1;
+	public static final int DEFAULT_LEVEL = 1;
 	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W, BUILD, PREV_I, NEXT_I, USE_I;
 	
 	private static final int MAX_LEVEL = 1;
 	private static int level = DEFAULT_LEVEL;
 	private static boolean homeDown = false, endDown = false;
-	private int weapon = DEFAULT_WEAPON;
 	private long lastTime = 0;
 	
 	public boolean left = false;
@@ -167,11 +166,8 @@ public class Controller
 			if(!next_p)
 			{
 				next_p = true;
-				if(weapon < 6)
-				{
-					weapon++;
-					weaponChanged();
-				}
+				
+				weaponChanged(WeaponChangedEvent.NEXT);
 			}
 		} else if(!Keyboard.isKeyDown(NEXT_W))
 			next_p = false;
@@ -181,11 +177,8 @@ public class Controller
 			if(!prev_p)
 			{
 				prev_p = true;
-				if(weapon > 1)
-				{
-					weapon--;
-					weaponChanged();
-				}
+				
+				weaponChanged(WeaponChangedEvent.PREVIOUS);
 			}
 		} else if(!Keyboard.isKeyDown(PREV_W))
 			prev_p = false;
@@ -291,9 +284,9 @@ public class Controller
 	/**
 	 * Fires WeaponChangedEvent
 	 */
-	private void weaponChanged()
+	private void weaponChanged(int event)
 	{
-		WeaponChangedEvent e = new WeaponChangedEvent(weapon);
+		WeaponChangedEvent e = new WeaponChangedEvent(event);
 		
 		for(ControllerListener l : controllerListeners)
 			l.onWeaponChanged(e);

@@ -7,6 +7,8 @@ package cz.apopt.event;
  */
 public class WeaponChangedEvent
 {
+	public static final int NEXT = 0, PREVIOUS = 1;
+	
 	private int weaponType;
 	
 	/**

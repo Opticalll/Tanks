@@ -9,7 +9,10 @@ import org.lwjgl.util.vector.Vector2f;
 
 import cz.apopt.entity.items.Item;
 import cz.apopt.entity.items.ItemStack;
+import cz.apopt.entity.projectile.Missile;
 import cz.apopt.entity.projectile.Projectile;
+import cz.apopt.entity.weapons.Cannon;
+import cz.apopt.entity.weapons.Weapon;
 import cz.apopt.etc.Color;
 import cz.apopt.etc.OpSound;
 import cz.apopt.event.ItemChangedEvent;
@@ -32,8 +35,6 @@ public class Tank implements Entity, Collidable, ControllerListener
 	public static final float DEF_WIDTH = 15.0f, DEF_HEIGHT = 15.0f;
 	public static final float DEF_GUN_LEN = 15.0f, DEF_GUN_W = 3.0f;
 	
-	public static final int MAX_MISSILES = 15, MAX_CLUSTERS = 7;
-	
 	private float x, y, width = DEF_WIDTH, height = DEF_HEIGHT;
 	private float scale = 1.0f;
 	private float gunWidth = DEF_GUN_W, gunLength = DEF_GUN_LEN;
@@ -44,13 +45,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private long timeBoosted = 0;
 	private long boostDuration = 0;
 	
-	private int currentWeapon;
 	private Item currentItem = null;
-	
-	// Ammo
-	private int missiles = MAX_MISSILES;
-	private int clusters = MAX_CLUSTERS;
-	private int rockets = 3;
 	
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
@@ -85,8 +80,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 		
 		facing = TankFacing.NORTH;
 		
-		weapon = new Weapon(this);
-		currentWeapon = Controller.DEFAULT_WEAPON;
+		weapon = new Cannon(this);
 		
 		controller.addControllerListener(this);
 		
@@ -202,47 +196,13 @@ public class Tank implements Entity, Collidable, ControllerListener
 		return height;
 	}
 	
-	public int getMissileCount()
-	{
-		return missiles;
-	}
-	
-	public void setMissileCount(int missiles)
-	{
-		this.missiles = missiles;
-	}
-	
-	public int getClusterCount()
-	{
-		return clusters;
-	}
-	
-	public void setClusterCount(int clusters)
-	{
-		this.clusters = clusters;
-	}
-	
-	public int getRocketCount()
-	{
-		return rockets;
-	}
-	
-	public void setRocketCount(int rockets)
-	{
-		this.rockets = rockets;
-	}
-	
 	public void setCurrentItem(Item i)
 	{
 		this.currentItem = i;
 	}
 	
 	public void setFullAmmo()
-	{
-		this.missiles = MAX_MISSILES;
-		this.clusters = MAX_CLUSTERS;
-		this.rockets = 3;
-		
+	{		
 		PaddleGame.log("Player " + player.getId() + " refilled ammo!");
 	}
 	
@@ -519,7 +479,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 		if(controller.fire)
 		{
 			controller.fire = false;
-			weapon.fire(currentWeapon);
+			weapon.fire(new Missile(this));
 		}
 		
 		if(controller.useItem)
@@ -708,7 +668,6 @@ public class Tank implements Entity, Collidable, ControllerListener
 	@Override
 	public void onWeaponChanged(WeaponChangedEvent e)
 	{
-		currentWeapon = e.getWeaponType();
 		PaddleGame.log("Weapon changed! " + e.getWeaponType());
 	}
 	

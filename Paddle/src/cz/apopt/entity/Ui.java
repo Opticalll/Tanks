@@ -86,8 +86,8 @@ public class Ui
 		lives.setText("Lives: " + uiPlayer.lives);
 		count.setText("Count: " + (itemNull ? "-" : uiPlayer.getTank().getCurrentItemCount()));
 		currentItem.setText("Current item: " + (itemNull ? "NONE" : uiPlayer.getTank().getCurrentItem().getName()));
-		weapon.setText("Weapon: " + uiPlayer.getTank().getClusterCount());
-		ammo.setText("Ammo: " + uiPlayer.getTank().getMissileCount());
+		weapon.setText("Weapon: " + "HOVNO");
+		ammo.setText("Ammo: " + "TAKY HOVNO");
 	}
 
 	public float getX() {

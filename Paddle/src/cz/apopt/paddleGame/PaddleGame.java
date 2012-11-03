@@ -203,6 +203,7 @@ public class PaddleGame implements Runnable
 	{
 		entities.clear();
 		//vole a pak se divis ze je na tom ui neco divnyho
+		// - ja jsem vul :D
 		PaddleGame.ui.clear();
 	}
 	
@@ -227,7 +228,7 @@ public class PaddleGame implements Runnable
 			}
 			   
 			Display.setDisplayMode(displayMode);
-			Display.setTitle("PaddleGame");
+			Display.setTitle("Tanks");
 			Display.setVSyncEnabled(false);
 			Display.setFullscreen(false);
 			Display.create();
