@@ -52,6 +52,9 @@ public class OpFont
 		}
 	}
 	
+	/**
+	 * Render method
+	 */
 	public void render()
 	{
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -59,16 +62,27 @@ public class OpFont
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 	}
 	
+	/**
+	 * 
+	 * @return Width
+	 */
 	public float getWidth()
 	{
 		return (float)font.getWidth(this.text);
 	}
 	
+	/**
+	 * 
+	 * @return Height
+	 */
 	public float getHeight()
 	{
 		return (float)font.getHeight(this.text);
 	}
 	
+	/**
+	 * Re-initialization method.
+	 */
 	@SuppressWarnings("unchecked")
 	private void reInit()
 	{
@@ -83,68 +97,128 @@ public class OpFont
 		}
 	}
 
+	/**
+	 * 
+	 * @return The font.
+	 */
 	public UnicodeFont getFont() 
 	{
 		return font;
 	}
 
+	/**
+	 * Sets the current font to another.
+	 * 
+	 * @param font New font.
+	 */
 	public void setFont(UnicodeFont font) 
 	{
 		this.font = font;
 	}
 
+	/**
+	 * 
+	 * @return Y coordinate.
+	 */
 	public float getY() 
 	{
 		return y;
 	}
 
+	/**
+	 * Sets Y coordinate.
+	 * 
+	 * @param y New Y coordinate.
+	 */
 	public void setY(float y) 
 	{
 		this.y = y;
 	}
 
+	/**
+	 * 
+	 * @return X coordinate.
+	 */
 	public float getX()
 	{
 		return x;
 	}
 
+	/**
+	 * Sets X coordinate.
+	 * 
+	 * @param x New X coordinate.
+	 */
 	public void setX(float x) 
 	{
 		this.x = x;
 	}
 	
+	/**
+	 * Sets position.
+	 * 
+	 * @param x New X coordinate.
+	 * @param y New Y coordinate.
+	 */
 	public void setPos(float x, float y)
 	{
 		this.x = x;
 		this.y = y;
 	}
 
+	/**
+	 * 
+	 * @return Text
+	 */
 	public String getText() 
 	{
 		return text;
 	}
 
+	/**
+	 * Sets text.
+	 * 
+	 * @param text New text.
+	 */
 	public void setText(String text) 
 	{
 		this.text = text;
 	}
 
+	/**
+	 * 
+	 * @return Color.
+	 */
 	public Color getCol() 
 	{
 		return col;
 	}
 
+	/**
+	 * Sets color.
+	 * 
+	 * @param col New color.
+	 */
 	public void setCol(Color col)
 	{
 		this.col = col;
 		reInit();
 	}
 
+	/**
+	 * 
+	 * @return AWT font.
+	 */
 	public Font getbFont()
 	{
 		return bFont;
 	}
 
+	/**
+	 * Sets AWT font
+	 * 
+	 * @param bFont New AWT font.
+	 */
 	public void setbFont(Font bFont) 
 	{
 		this.bFont = bFont;

@@ -3,7 +3,7 @@ package cz.apopt.etc;
 import org.lwjgl.opengl.Display;
 
 /**
- * Fps counter
+ * FPS counter
  * 
  * @author Adam & Optical
  */
@@ -13,7 +13,7 @@ public class FpsCounter
 	private static int fps = 0;
 	
 	/**
-	 * Tick. Call everytime in main loop
+	 * Tick. Call every time in main loop
 	 */
 	public static void tick()
 	{

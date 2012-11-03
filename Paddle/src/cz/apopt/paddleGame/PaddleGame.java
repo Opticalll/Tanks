@@ -30,7 +30,7 @@ import cz.apopt.pEngine.Pengine;
 
 /**
  * 
- * @author Apo(Game) + Optical(Particle engine + loading maps to objects + most of game logic system designs...)
+ * @author Apo(Game) + Optical(Particle engine + loading maps to objects + some of game logic system designs...)
  * 
  * This is the main class of Tanks game.
  *
@@ -282,6 +282,9 @@ public class PaddleGame implements Runnable
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
+	/**
+	 * Sound loading
+	 */
 	private void loadSounds()
 	{
 		OpSound.addNewSound("MENU", "/sounds/MenuSong.ogg", 5);
@@ -331,16 +334,35 @@ public class PaddleGame implements Runnable
 		game.start();
 	}
 	
+	/**
+	 * Get a random float number.
+	 * 
+	 * @param min Bottom number of range.
+	 * @param max Top number of range.
+	 * @return Random float number
+	 */
 	public static float getRandom(float min, float max)
 	{
 		return (min + (float)(Math.random() * ((max - min))));
 	}
 	
+	/**
+	 * Get a random integer number.
+	 * 
+	 * @param min Bottom number of range.
+	 * @param max Top number of range.
+	 * @return Random integer number
+	 */
 	public static int getRandom(int min, int max)
 	{
 		return (min + (int)(Math.random() * ((max - min))));
 	}
 	
+	/**
+	 * Method for getting random spawn point.
+	 * 
+	 * @return Random spawn point.
+	 */
 	public static Vector2f getRandomSpawnPoint()
 	{
 		Vector2f spawnPoint = null;

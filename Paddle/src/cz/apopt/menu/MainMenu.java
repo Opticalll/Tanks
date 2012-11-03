@@ -17,6 +17,9 @@ public class MainMenu implements ButtonListener
 	private boolean gameStart = false;
 	private MenuButton newGame, exit;
 	
+	/**
+	 * Constructor
+	 */
 	public MainMenu()
 	{		
 		newGame = new MenuButton(Display.getDisplayMode().getWidth() / 2 - 100, Display.getDisplayMode().getHeight() / 2 + 0f, 200f, 100f, "New Game");

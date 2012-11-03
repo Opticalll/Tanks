@@ -54,7 +54,6 @@ public class MenuButton
 	 * @param font Button text font
 	 * @param col Text color
 	 */
-
 	public MenuButton(float x, float y, float w, float h, String name, Font font, Color col)
 	{
 		this.x = x;

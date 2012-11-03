@@ -39,6 +39,11 @@ public class Grid
 					blocks.add(layout[i][z]);
 	}
 
+	/**
+	 * 
+	 * @param input String input
+	 * @return List of Maps
+	 */
 	private List<Map<String, String>> getMapFromString(String input)
 	{
 		String[] stringChunks = input.split("~");

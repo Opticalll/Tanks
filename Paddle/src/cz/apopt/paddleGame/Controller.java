@@ -299,6 +299,11 @@ public class Controller
 			l.onWeaponChanged(e);
 	}
 	
+	/**
+	 * Fires ItemChangedEvent
+	 * 
+	 * @param event Event - Use ItemChangedEvent.NEXT or ItemChangedEvent.PREVIOUS
+	 */
 	private void itemChanged(int event)
 	{
 		ItemChangedEvent e = new ItemChangedEvent(event);
