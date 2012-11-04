@@ -4,7 +4,6 @@ import cz.apopt.entity.Tank;
 import cz.apopt.entity.projectile.CannonProjectile;
 import cz.apopt.entity.projectile.Projectile;
 import cz.apopt.etc.OpSound;
-import cz.apopt.paddleGame.PaddleGame;
 
 public class Cannon extends Weapon
 {	
@@ -19,9 +18,7 @@ public class Cannon extends Weapon
 	{
 		Projectile projectile = super.currentAmmo;
 		if(projectile instanceof CannonProjectile)
-		{
-			PaddleGame.log(projectile.getClass().getCanonicalName());
-
+		{	
 			projectile.fire();
 			super.removeAmmo(projectile);
 			

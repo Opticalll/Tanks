@@ -35,8 +35,12 @@ public class AmmoPack extends Item
 	}
 	
 	public void onPick(Tank tank)
-	{
+	{	
+		boolean wasNoAmmo = tank.getWeapon().isNoAmmo();
+		
 		tank.getWeapon().setFullAmmo();
+		if(wasNoAmmo)
+			tank.getWeapon().setAmmo(true);
 	}
 	
 	public void use()

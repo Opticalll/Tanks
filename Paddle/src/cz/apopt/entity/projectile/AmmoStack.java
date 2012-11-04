@@ -18,6 +18,26 @@ public class AmmoStack
 		this.count = count;
 	}
 	
+	public AmmoStack(AmmoStack another)
+	{
+		this.count = another.getCount();
+		this.projectile = another.getAmmo();
+	}
+
+	public AmmoStack clone()
+	{
+		try
+		{
+			AmmoStack obj = (AmmoStack) super.clone();
+			return obj;
+		} catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	public void addItem()
 	{
 		count++;

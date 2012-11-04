@@ -24,6 +24,7 @@ public class Controller
 	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W, BUILD, PREV_I, NEXT_I, USE_I;
 	
 	private static final int MAX_LEVEL = 1;
+	private static final long FIRE_DELAY = 1000 * 1000000;
 	private static int level = DEFAULT_LEVEL;
 	private static boolean homeDown = false, endDown = false;
 	private long lastTime = 0;
@@ -152,7 +153,7 @@ public class Controller
 			build = false;
 		if(Keyboard.isKeyDown(FIRE))
 		{
-			if(System.nanoTime() > lastTime + 500000000L)
+			if(System.nanoTime() > lastTime + FIRE_DELAY)
 			{
 				lastTime = System.nanoTime();
 				fire = true;		

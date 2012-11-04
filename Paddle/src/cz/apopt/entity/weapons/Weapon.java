@@ -16,14 +16,19 @@ public abstract class Weapon
 	protected List<AmmoStack> ammo;
 	protected Projectile currentAmmo;
 	protected Tank owner;
+	private List<AmmoStack> def_ammo;
 	
 	protected Weapon(Tank owner, String name)
 	{
 		this.NAME = name;
 		this.owner = owner;
-		this.ammo = new ArrayList<AmmoStack>();
+		this.ammo = new ArrayList<AmmoStack>();				
 		this.ammo.add(new AmmoStack(new Missile(owner), 10));
 		this.ammo.add(new AmmoStack(new Cluster(owner), 10));
+
+		def_ammo = new ArrayList<AmmoStack>();
+		for(AmmoStack stack : ammo)
+			def_ammo.add(new AmmoStack(stack));
 		
 		if(!ammo.isEmpty())
 			currentAmmo = ammo.get(0).getAmmo();
@@ -34,14 +39,23 @@ public abstract class Weapon
 		return owner;
 	}
 	
+	public boolean isNoAmmo()
+	{
+		if(ammo.isEmpty())
+			return true;
+		return false;
+	}
+	
 	public String getName()
 	{
 		return NAME;
 	}
 	
 	public void setFullAmmo()
-	{		
-//		currentAmmo = ammo.get(0).getAmmo();
+	{
+		ammo.clear();
+		for(AmmoStack stack : def_ammo)
+			ammo.add(new AmmoStack(stack));
 	}
 	
 	public String getCurrentProjectileName()
@@ -124,6 +138,14 @@ public abstract class Weapon
 		{
 			currentAmmo = ammo.get(0).getAmmo();
 			return;
+		}
+		
+		if(currentAmmo == null)
+		{
+			if(next)
+				currentAmmo = ammo.get(0).getAmmo();
+			else
+				currentAmmo = ammo.get(ammo.size()-1).getAmmo();
 		}
 		
 		for(int i = 0; i < ammo.size(); i++)
