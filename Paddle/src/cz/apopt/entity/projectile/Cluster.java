@@ -141,10 +141,7 @@ public class Cluster implements Entity, CannonProjectile
 		eng.create();
 		
 		if(Sys.getTime() >= timeFired + SPLIT_TIME)
-		{
-			PaddleGame.log("SPLIT");
 			split(f_dx, f_dy, s_dx, s_dy, t_dx, t_dy);
-		}
 	}
 	
 	public void fire()

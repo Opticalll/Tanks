@@ -1,6 +1,7 @@
 package cz.apopt.paddleGame;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
@@ -70,25 +71,30 @@ public class PaddleGame implements Runnable
 	 */
 	private void startGame()
 	{
+		logT("Initializing display...");
 		initDisplay();
-		log("DISPLAY INITIALIZED");
+		logT("DONE!\n");
 		
+		logT("Initializing OpenGL...");
 		initGL();
-		log("OPENGL INITIALIZED");
+		logT("DONE!\n");
 		
+		logT("Initializing objects...");
 		initObj();
-		log("OBJECTS INITIALIZED");
+		logT("DONE!\n");
 		
+		logT("Loading sounds...");
 		loadSounds();
-		log("SOUNDS LOADED");
+		logT("DONE!\n");
 		
+		logT("Setting up listeners...");
 		initListeners();
-		log("LISTENERS INITIALIZED");
+		logT("DONE!\n");
 		
-		log("Entering menu loop");
+		logT("Entering menu loop");
 		menuLoop();
 		
-		log("Entering game loop");
+		logT("Entering game loop");
 		gameLoop();
 	}
 	
@@ -169,7 +175,12 @@ public class PaddleGame implements Runnable
 	 */
 	public void menuLoop()
 	{
-		OpSound.audioMap.get("MENU").getAudio().playAsMusic(1.0f, 0.5f, true);
+		boolean rand = getRandomBoolean();
+		
+		if(rand)
+			OpSound.audioMap.get("MENU").getAudio().playAsMusic(1.0f, 0.5f, true);
+		else
+			OpSound.audioMap.get("MENU2").getAudio().playAsMusic(1.0f, 0.5f, true);
 		
 		while(!menu.gameStart())
 		{
@@ -183,7 +194,10 @@ public class PaddleGame implements Runnable
 			Display.update();
 		}
 		
-		OpSound.audioMap.get("MENU").getAudio().stop();
+		if(rand)
+			OpSound.audioMap.get("MENU").getAudio().stop();
+		else
+			OpSound.audioMap.get("MENU2").getAudio().stop();
 	}
 	
 	/**
@@ -289,6 +303,7 @@ public class PaddleGame implements Runnable
 	private void loadSounds()
 	{
 		OpSound.addNewAudio("MENU", "/sounds/MenuSong.ogg");
+		OpSound.addNewAudio("MENU2", "/sounds/MenuSong2.ogg");
 		OpSound.addNewAudio("SHOT", "/sounds/Shot.ogg");
 		OpSound.addNewAudio("PORT", "/sounds/Teleport.ogg");
 		OpSound.addNewAudio("PICK", "/sounds/PickUp.ogg");
@@ -324,6 +339,11 @@ public class PaddleGame implements Runnable
 		System.out.println(s);
 	}
 	
+	public static void logT(String s)
+	{
+		System.out.println("[" + getTime() + "] - " + s);
+	}
+	
 	/**
 	 * Main method
 	 * 
@@ -357,6 +377,20 @@ public class PaddleGame implements Runnable
 	public static int getRandom(int min, int max)
 	{
 		return (min + (int)(Math.random() * ((max - min))));
+	}
+	
+	public static boolean getRandomBoolean()
+	{
+		Random r = new Random();
+		return r.nextBoolean();
+	}
+	
+	public static String getTime()
+	{
+		Calendar c = Calendar.getInstance();
+		String time = "" + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) + ":" + c.get(Calendar.MILLISECOND);
+		
+		return time;
 	}
 	
 	/**
