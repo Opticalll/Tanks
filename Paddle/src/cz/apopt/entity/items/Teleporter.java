@@ -68,7 +68,7 @@ public class Teleporter extends Item
 		{
 			Vector2f teleportLoc = PaddleGame.getRandomSpawnPoint();
 			owner.teleport(teleportLoc);
-			OpSound.soundMap.get("PORT").getSound().play(1.0f, 0.6f);
+			OpSound.audioMap.get("PORT").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
 		}
 	}
 	

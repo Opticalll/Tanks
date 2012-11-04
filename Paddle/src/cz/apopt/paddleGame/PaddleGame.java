@@ -15,7 +15,6 @@ import org.lwjgl.util.vector.Vector2f;
 import cz.apopt.entity.Block;
 import cz.apopt.entity.Entity;
 import cz.apopt.entity.Player;
-import cz.apopt.entity.Ui;
 import cz.apopt.entity.items.Item;
 import cz.apopt.entity.projectile.Projectile;
 import cz.apopt.etc.FpsCounter;
@@ -24,9 +23,10 @@ import cz.apopt.etc.Timer;
 import cz.apopt.event.LevelChangedEvent;
 import cz.apopt.listener.TimerListener;
 import cz.apopt.listener.WorldListener;
-import cz.apopt.menu.GameMenu;
-import cz.apopt.menu.MainMenu;
 import cz.apopt.pEngine.Pengine;
+import cz.apopt.ui.Ui;
+import cz.apopt.ui.menu.GameMenu;
+import cz.apopt.ui.menu.MainMenu;
 
 /**
  * 
@@ -169,7 +169,7 @@ public class PaddleGame implements Runnable
 	 */
 	public void menuLoop()
 	{
-		OpSound.soundMap.get("MENU").getSound().play(1.0f, 0.35f);
+		OpSound.audioMap.get("MENU").getAudio().playAsMusic(1.0f, 0.5f, true);
 		
 		while(!menu.gameStart())
 		{
@@ -183,7 +183,7 @@ public class PaddleGame implements Runnable
 			Display.update();
 		}
 		
-		OpSound.soundMap.get("MENU").stop();
+		OpSound.audioMap.get("MENU").getAudio().stop();
 	}
 	
 	/**
@@ -288,12 +288,12 @@ public class PaddleGame implements Runnable
 	 */
 	private void loadSounds()
 	{
-		OpSound.addNewSound("MENU", "/sounds/MenuSong.ogg", 5);
-		OpSound.addNewSound("SHOT", "/sounds/Shot.ogg", 5);
-		OpSound.addNewSound("PORT", "/sounds/Teleport.ogg", 5);
-		OpSound.addNewSound("PICK", "/sounds/PickUp.ogg", 5);
-		OpSound.addNewSound("EXPLOS", "/sounds/Explosion.ogg", 5);
-		OpSound.addNewSound("KILL", "/sounds/TankKilled.ogg", 5);
+		OpSound.addNewAudio("MENU", "/sounds/MenuSong.ogg");
+		OpSound.addNewAudio("SHOT", "/sounds/Shot.ogg");
+		OpSound.addNewAudio("PORT", "/sounds/Teleport.ogg");
+		OpSound.addNewAudio("PICK", "/sounds/PickUp.ogg");
+		OpSound.addNewAudio("EXPLOS", "/sounds/Explosion.ogg");
+		OpSound.addNewAudio("KILL", "/sounds/TankKilled.ogg");
 	}
 	
 	/**

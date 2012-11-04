@@ -4,20 +4,28 @@ import cz.apopt.entity.Tank;
 import cz.apopt.entity.projectile.CannonProjectile;
 import cz.apopt.entity.projectile.Projectile;
 import cz.apopt.etc.OpSound;
+import cz.apopt.paddleGame.PaddleGame;
 
 public class Cannon extends Weapon
 {	
+	private static final String NAME = "Cannon";
+	
 	public Cannon(Tank owner)
 	{
-		super(owner);
+		super(owner, NAME);
 	}
 
-	public void fire(Projectile p)
+	public void fire()
 	{
-		if(p instanceof CannonProjectile)
+		Projectile projectile = super.currentAmmo;
+		if(projectile instanceof CannonProjectile)
 		{
-			((CannonProjectile) p).fire();
-			OpSound.soundMap.get("SHOT").getSound().play(1.0f, 0.6f);
+			PaddleGame.log(projectile.getClass().getCanonicalName());
+
+			projectile.fire();
+			super.removeAmmo(projectile);
+			
+			OpSound.audioMap.get("SHOT").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
 		}
 	}
 }

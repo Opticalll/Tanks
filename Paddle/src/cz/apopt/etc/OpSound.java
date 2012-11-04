@@ -1,11 +1,11 @@
 package cz.apopt.etc;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.newdawn.slick.Music;
-import org.newdawn.slick.MusicListener;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.openal.Audio;
+import org.newdawn.slick.openal.AudioLoader;
 
 /**
  * Class for storing loaded sound effect.
@@ -16,8 +16,8 @@ import org.newdawn.slick.SlickException;
  */
 public class OpSound
 {
-	static public Map<String, OpSound> soundMap = new HashMap<String, OpSound>();
-	private Music sound;
+	public static Map<String, OpSound> audioMap = new HashMap<String, OpSound>();
+	private Audio audio;
 
 	/**
 	 * Private constructor.
@@ -26,13 +26,12 @@ public class OpSound
 	 * @param path Path to the sound.
 	 * @param volume Initial volume
 	 */
-	private OpSound(String path, int volume)
+	private OpSound(String path, boolean isMusic)
 	{
 		try
 		{
-			sound = new Music(this.getClass().getResource(path));
-			sound.setVolume((float) volume/100.0f);
-		} catch (SlickException e)
+			audio = AudioLoader.getAudio("OGG", this.getClass().getResourceAsStream(path));
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -45,109 +44,18 @@ public class OpSound
 	 * @param path Path to the sound effect.
 	 * @param volume Initial volume.
 	 */
-	public static void addNewSound(String name, String path, int volume)
+	public static void addNewAudio(String name, String path)
 	{
-		OpSound newSound = new OpSound(path, volume);
-		soundMap.put(name, newSound);
+		OpSound newSound = new OpSound(path, false);
+		audioMap.put(name, newSound);
 	}
 	
 	/**
 	 * 
-	 * @return Instance of Music class - the actual sound.
-	 */
-	public Music getSound()
+	 * @return Instance of Audio class - the actual sound.
+	 */	
+	public Audio getAudio()
 	{
-		return sound;
-	}
-	
-	/**
-	 * Adds music listener to particular sound.
-	 * 
-	 * @param lis The music listener.
-	 */
-	public void addMusicListener(MusicListener lis)
-	{
-		sound.addListener(lis);
-	}
-
-	/**
-	 * Removes music listener from particular sound.
-	 * 
-	 * @param lis The music listener to remove.
-	 */
-	public void removeMusicListener(MusicListener lis)
-	{
-		sound.removeListener(lis);
-	}
-
-	/**
-	 * Sets volume.
-	 * 
-	 * @param volume New volume.
-	 */
-	public void setVolume(int volume)
-	{
-		sound.setVolume((float) volume/100.0f);
-	}
-
-	/**
-	 * Call this method, if the sound should loop.
-	 */
-	public void loop()
-	{
-		sound.loop();
-	}
-
-	/**
-	 * Plays the sound.
-	 */
-	public void play()
-	{
-		sound.play();
-	}
-
-	/**
-	 * Pauses the sound.
-	 */
-	public void pause()
-	{
-		sound.pause();
-	}
-
-	/**
-	 * Stops the sound.
-	 */
-	public void stop()
-	{
-		sound.stop();
-	}
-
-	/**
-	 * Resumes the sound.
-	 */
-	public void resume()
-	{
-		sound.resume();
-	}
-
-	/**
-	 * 
-	 * @return True if sound is playing, false otherwise.
-	 */
-	public boolean isPlaying()
-	{
-		return sound.playing();
-	}
-
-	/**
-	 * Fades the sound.
-	 * 
-	 * @param fadeDuration Duration of fading.
-	 * @param endVolume Ending volume.
-	 * @param stopAfterFade Stop the sound after fading.
-	 */
-	public void fadeSound(float fadeDuration, int endVolume, boolean stopAfterFade)
-	{
-		sound.fade((int)fadeDuration*1000, endVolume/100, stopAfterFade);
+		return audio;
 	}
 }

@@ -1,4 +1,4 @@
-package cz.apopt.menu;
+package cz.apopt.ui.menu;
 
 import java.awt.Color;
 import java.awt.Font;

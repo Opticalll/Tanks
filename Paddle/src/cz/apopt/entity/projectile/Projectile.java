@@ -17,4 +17,5 @@ public interface Projectile
 	public void fire();
 	public void checkCollision();
 	public Tank getShooter();
+	public String getName();
 }

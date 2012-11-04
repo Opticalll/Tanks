@@ -19,6 +19,7 @@ import cz.apopt.paddleGame.PaddleGame;
 public class Cluster implements Entity, CannonProjectile
 {
 	public static final long SPLIT_TIME = 500L; // 500ms after launch
+	private static final String NAME = "Cluster";
 	
 	private final float WIDTH = 2.0f, HEIGHT = 4.0f;
 	
@@ -107,6 +108,11 @@ public class Cluster implements Entity, CannonProjectile
 		return shooter;
 	}
 	
+	public String getName()
+	{
+		return NAME;
+	}
+	
 	public void render()
 	{
 		GL11.glTranslatef(x, y, 0);
@@ -135,11 +141,16 @@ public class Cluster implements Entity, CannonProjectile
 		eng.create();
 		
 		if(Sys.getTime() >= timeFired + SPLIT_TIME)
+		{
+			PaddleGame.log("SPLIT");
 			split(f_dx, f_dy, s_dx, s_dy, t_dx, t_dy);
+		}
 	}
 	
 	public void fire()
 	{	
+		this.timeFired = Sys.getTime();
+		
 		switch(shooter.getFacing())
 		{
 			case NORTH:

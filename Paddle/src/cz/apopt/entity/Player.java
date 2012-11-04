@@ -13,11 +13,11 @@ import cz.apopt.paddleGame.PaddleGame;
 public class Player
 {
 	private int id;
+	private int lives = 5;
 	
 	private Tank tank;
 	private Controller controller;
 
-	int lives = 5;
 
 	/**
 	 * Constructor of Player class
@@ -44,6 +44,11 @@ public class Player
 	public String getName()
 	{
 		return new String("Player " + id);
+	}
+	
+	public int getLives()
+	{
+		return lives;
 	}
 	
 	/**

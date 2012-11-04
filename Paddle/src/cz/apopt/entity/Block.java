@@ -365,7 +365,7 @@ public class Block implements Entity, Collidable
 				{
 					Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
 					eng.create();
-					OpSound.soundMap.get("EXPLOS").getSound().play(1.0f, 0.6f);
+					OpSound.audioMap.get("EXPLOS").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
 //					PaddleGame.entities.remove(this);
 
 					this.settPath("/textures/blocks/grass.png");

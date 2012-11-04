@@ -142,7 +142,7 @@ public abstract class Item implements Entity, Collidable
 			if(item.intersects(tank))
 			{
 				onPick(t);
-				OpSound.soundMap.get("PICK").getSound().play(1.0f, 0.6f);
+				OpSound.audioMap.get("PICK").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
 				PaddleGame.entities.remove(this);
 				return true;
 			}

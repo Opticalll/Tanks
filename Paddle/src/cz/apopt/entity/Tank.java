@@ -9,7 +9,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import cz.apopt.entity.items.Item;
 import cz.apopt.entity.items.ItemStack;
-import cz.apopt.entity.projectile.Missile;
 import cz.apopt.entity.projectile.Projectile;
 import cz.apopt.entity.weapons.Cannon;
 import cz.apopt.entity.weapons.Weapon;
@@ -201,11 +200,6 @@ public class Tank implements Entity, Collidable, ControllerListener
 		this.currentItem = i;
 	}
 	
-	public void setFullAmmo()
-	{		
-		PaddleGame.log("Player " + player.getId() + " refilled ammo!");
-	}
-	
 	public void setSpeedBoost(int dur)
 	{
 		boostDuration = dur;
@@ -218,6 +212,11 @@ public class Tank implements Entity, Collidable, ControllerListener
 	public List<ItemStack> getItems()
 	{
 		return items;
+	}
+	
+	public Weapon getWeapon()
+	{
+		return weapon;
 	}
 	
 	public Player getPlayer()
@@ -479,7 +478,11 @@ public class Tank implements Entity, Collidable, ControllerListener
 		if(controller.fire)
 		{
 			controller.fire = false;
-			weapon.fire(new Missile(this));
+			if(weapon.canFire())
+			{
+				weapon.fire();
+			} else
+				PaddleGame.log("Can't fire");
 		}
 		
 		if(controller.useItem)
@@ -576,7 +579,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 				{
 					Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
 					eng.create();
-					OpSound.soundMap.get("KILL").getSound().play(1.0f, 0.6f);
+					OpSound.audioMap.get("KILL").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
 					PaddleGame.entities.remove(this);
 					controller.removeControllerListener(this);
 					
@@ -668,7 +671,10 @@ public class Tank implements Entity, Collidable, ControllerListener
 	@Override
 	public void onWeaponChanged(WeaponChangedEvent e)
 	{
-		PaddleGame.log("Weapon changed! " + e.getWeaponType());
+		if(e.getWeaponType() == WeaponChangedEvent.NEXT)
+			weapon.setAmmo(true);
+		else if(e.getWeaponType() == WeaponChangedEvent.PREVIOUS)
+			weapon.setAmmo(false);
 	}
 	
 	@Override

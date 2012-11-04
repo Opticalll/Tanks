@@ -18,6 +18,8 @@ import cz.apopt.paddleGame.PaddleGame;
  */
 public class Missile implements Entity, CannonProjectile
 {
+	private static final String NAME = "Missile";
+	
 	private final float WIDTH = 2.0f;
 	private final float HEIGHT = 4.0f;
 	private float x, y;
@@ -105,6 +107,11 @@ public class Missile implements Entity, CannonProjectile
 	public Tank getShooter()
 	{
 		return shooter;
+	}
+	
+	public String getName()
+	{
+		return NAME;
 	}
 	
 	public void render()

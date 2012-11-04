@@ -1,20 +1,16 @@
-package cz.apopt.entity;
+package cz.apopt.ui;
 
 import java.awt.Font;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import cz.apopt.entity.Player;
 import cz.apopt.entity.items.Item;
 import cz.apopt.etc.Color;
 import cz.apopt.etc.OpFont;
 
-/* TODO: Getting vsech hodnot z tanku a od playera by nemelo byt podle mne pokazdy kdyz je render.
- * Update hodnot v UI by mel byt v metode update(), a ta by mela byt volana jen po urcitym case - pouzili bysme ten samej Timer
- * jako na spawn itemu. Takze update by byl treba 1x za 200 - 500ms ... whatever 
- * Bullshit data musi byt aktualni a je to jen 5-6 hodnot opravdu to nic nezpomali, kdyz bys udelal timer tak ten by spis sam o sobe narocnejsi
- * na vykon.
- */
+
 public class Ui 
 {
 	private Player uiPlayer;
@@ -32,7 +28,7 @@ public class Ui
 		ammo = new OpFont(tankPartX, tankPartY + 12, "Ammo: ", font, java.awt.Color.WHITE);
 		currentItem = new OpFont(tankPartX, tankPartY + 24, "Current item: ", font, java.awt.Color.WHITE);
 		count = new OpFont(tankPartX, tankPartY + 36, "Count: ", font, java.awt.Color.WHITE);
-		lives = new OpFont(playerPartX, playerPartY, "Lives: " + uiPlayer.lives, font, java.awt.Color.WHITE);
+		lives = new OpFont(playerPartX, playerPartY, "Lives: " + uiPlayer.getLives(), font, java.awt.Color.WHITE);
 	}
 	
 	private void render_PlayerPart()
@@ -83,11 +79,13 @@ public class Ui
 		if(curItem == null) 
 			itemNull = true;
 		
-		lives.setText("Lives: " + uiPlayer.lives);
+		int ammoCount = uiPlayer.getTank().getWeapon().getCurrentAmmoCount();
+		
+		lives.setText("Lives: " + uiPlayer.getLives());
 		count.setText("Count: " + (itemNull ? "-" : uiPlayer.getTank().getCurrentItemCount()));
 		currentItem.setText("Current item: " + (itemNull ? "NONE" : uiPlayer.getTank().getCurrentItem().getName()));
-		weapon.setText("Weapon: " + "HOVNO");
-		ammo.setText("Ammo: " + "TAKY HOVNO");
+		weapon.setText("Weapon: " + uiPlayer.getTank().getWeapon().getCurrentProjectileName());
+		ammo.setText("Ammo: " + ((ammoCount == 0) ? "-" : uiPlayer.getTank().getWeapon().getCurrentAmmoCount()));
 	}
 
 	public float getX() {

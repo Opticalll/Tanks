@@ -36,7 +36,7 @@ public class AmmoPack extends Item
 	
 	public void onPick(Tank tank)
 	{
-		tank.setFullAmmo();
+		tank.getWeapon().setFullAmmo();
 	}
 	
 	public void use()

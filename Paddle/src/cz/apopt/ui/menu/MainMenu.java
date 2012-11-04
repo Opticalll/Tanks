@@ -1,4 +1,4 @@
-package cz.apopt.menu;
+package cz.apopt.ui.menu;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
