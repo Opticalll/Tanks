@@ -36,7 +36,9 @@ public class Grid
 		for(int i = 0; i < lines; i++)
 			for(int z = 0; z < columns; z++)
 				if(layout[i][z] != null)
-					blocks.add(layout[i][z]);
+				{
+					blocks.add(new Block(layout[i][z]));
+				}
 	}
 
 	/**
@@ -119,33 +121,13 @@ public class Grid
 				{
 						blockString = "";
 				}
+				else if(in.equals("</Tanks>\n"))
+				{
+						blockString = "";
+				}
 				else
 					blockString += in;
 			}
-
-//			
-//			while(cfs.hasNextLine())
-//			{
-//				Block newBlock = null;
-//				String cline = cfs.nextLine();
-//				String[] clineparts = cline.split("~");
-//				String[] sproperties = clineparts[3].split("¨");
-//				boolean[] bproperties = new boolean[3];
-//				
-//				for(int i = 0; i < sproperties.length; i++)
-//					bproperties[i] = Boolean.parseBoolean(sproperties[i]);
-//				
-//				if(Boolean.parseBoolean(clineparts[1])) // if texture
-//					newBlock = new Block(0, 0, tileWidth, tileHeight, clineparts[2], bproperties);
-//				else
-//				{
-//					String[] rgb = clineparts[2].split("¨");
-//					Color col = new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
-//					newBlock = new Block(0, 0, tileWidth, tileHeight, col, bproperties);
-//				}
-//				blockConfig.put(Integer.parseInt(clineparts[0]), newBlock);
-//			}
-
 
 			while(mfs.hasNextInt())
 			{
@@ -170,8 +152,6 @@ public class Grid
 
 			layout = new Block[lines][columns];
 
-//			tileWidth = (Display.getDisplayMode().getWidth() - PaddleGame.WALL_WIDTH) / columns;
-//			tileHeight = (Display.getDisplayMode().getHeight() - PaddleGame.WALL_WIDTH) / lines;
 			tileWidth = 20.0f;
 			tileHeight = 20.0f;
 			

@@ -91,7 +91,7 @@ public class Block implements Entity, Collidable
 		this.tPath = another.gettPath();
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
-		this.texture = another.getTexture();
+		this.texture = another.texture;
 		this.slow_boost = another.isSlow_boost();
 		this.slow_boostFactor = another.getSlow_boostFactor();
 	}
@@ -115,6 +115,10 @@ public class Block implements Entity, Collidable
 	
 	public void setBlock(Block another)
 	{
+		this.x = another.getX();
+		this.y = another.getY();
+		this.blockHeight = another.getBlockHeight();
+		this.blockWidth = another.getBlockWidth();
 		this.col = another.getCol();
 		this.isTextured = another.isTexture();
 		this.tPath = another.gettPath();
@@ -123,6 +127,18 @@ public class Block implements Entity, Collidable
 		this.deadly = another.isDeadly();
 		this.damageDealing = another.isDamageDealing();
 		this.dps = another.getDps();
+	}
+	
+	public void delete()
+	{
+		try
+		{
+			this.finalize();
+		} catch (Throwable e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean isDamageDealing() {
