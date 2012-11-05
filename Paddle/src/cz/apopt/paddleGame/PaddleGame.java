@@ -22,6 +22,7 @@ import cz.apopt.etc.FpsCounter;
 import cz.apopt.etc.OpSound;
 import cz.apopt.etc.Timer;
 import cz.apopt.event.LevelChangedEvent;
+import cz.apopt.lightEngine.LEngine;
 import cz.apopt.listener.TimerListener;
 import cz.apopt.listener.WorldListener;
 import cz.apopt.pEngine.Pengine;
@@ -40,6 +41,7 @@ public class PaddleGame implements Runnable
 {
 	public static final List<Entity> entities = new ArrayList<Entity>();
 	public static final List<Ui> ui = new ArrayList<Ui>();
+	public static LEngine lights;
 	public static MainMenu menu;
 	
 	public static final int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
@@ -146,14 +148,18 @@ public class PaddleGame implements Runnable
 					((Projectile) e).checkCollision();
 			}
 			
+			
+			Pengine.update();
+			lights.render();
+			itemSpawnTimer.update();
+			
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			for(int i = 0; i < ui.size(); i++)
 			{
 				ui.get(i).update();
 				ui.get(i).render();
 			}
 			
-			Pengine.update();
-			itemSpawnTimer.update();
 			
 			Display.sync(FPS);
 			Display.update();
@@ -258,6 +264,7 @@ public class PaddleGame implements Runnable
 	private static void initObj()
 	{		
 		menu = new MainMenu();
+		lights = new LEngine(PaddleGame.WINDOW_WIDTH, PaddleGame.WINDOW_HEIGHT);
 		
 		Grid g = new Grid();
 		g.setGrid(level);

@@ -109,7 +109,7 @@ public class PointLight implements Light
 	{
 		// TODO Auto-generated method stub
 		GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-		GL11.glColor4f(0f, 0f, 0f, 1f);
+		GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.6f);
 			GL11.glVertex2f(this.x, this.y);
 		GL11.glColor4f(0f, 0f, 0f, 0f);
 		for(int i = bAngle; i < eAngle + 1; i ++)

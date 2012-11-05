@@ -16,6 +16,7 @@ import cz.apopt.etc.Color;
 import cz.apopt.etc.OpSound;
 import cz.apopt.event.ItemChangedEvent;
 import cz.apopt.event.WeaponChangedEvent;
+import cz.apopt.lightEngine.PointLight;
 import cz.apopt.listener.ControllerListener;
 import cz.apopt.pEngine.ColorTransition;
 import cz.apopt.pEngine.PVector;
@@ -61,6 +62,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private Color color;
 	private final Controller controller;
 	private Vector2f locToPort;
+	private PointLight light;
 	
 	/**
 	 * 
@@ -80,6 +82,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 		facing = TankFacing.NORTH;
 		
 		weapon = new Cannon(this);
+		light = new PointLight(this.x, this.y, 150f);
+		PaddleGame.lights.addLight(light);
 		
 		controller.addControllerListener(this);
 		
@@ -555,6 +559,8 @@ public class Tank implements Entity, Collidable, ControllerListener
 		
 		x += dx;
 		y += dy;
+		light.setX(this.x + this.width/2);
+		light.setY(this.y + this.height/2);
 	}
 	
 	/**
@@ -581,6 +587,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 					eng.create();
 					OpSound.audioMap.get("KILL").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
 					PaddleGame.entities.remove(this);
+					PaddleGame.lights.removeLight(light);
 					controller.removeControllerListener(this);
 					
 					this.player.respawn(false);
