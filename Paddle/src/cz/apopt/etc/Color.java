@@ -9,7 +9,7 @@ import java.util.Random;
  */
 public class Color
 {
-	public float R, G, B;
+	public float R, G, B, A;
 	
 	/**
 	 * Constructor. Arguments in range between 0.0f and 1.0f
@@ -39,6 +39,24 @@ public class Color
 		this.B = b/256f;
 	}
 	
+	public Color(float r, float g, float b, float a)
+	{
+		// TODO Auto-generated constructor stub
+		this.R = r;
+		this.G = g;
+		this.B = b;
+		this.A = a;
+	}
+	
+	public Color(int r, int g, int b, int a)
+	{
+		// TODO Auto-generated constructor stub
+		this.R = r/256f;
+		this.G = g/256f;
+		this.B = b/256f;
+		this.A = a/256f;
+	}
+
 	/**
 	 * Method for random color with arguments in range between 0.0f - 1.0f
 	 * 
@@ -62,4 +80,5 @@ public class Color
 		
 		return new Color(r.nextInt(256), r.nextInt(256), r.nextInt(256));
 	}
+	
 }
