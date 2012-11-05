@@ -1,20 +1,20 @@
 package cz.opt.test;
 
 
-import java.awt.Font;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
-import org.newdawn.slick.font.effects.ColorEffect;
+
+import cz.opt.lEngine.PointLight;
 
 public class TestMain
 {	
 	UnicodeFont font;
+	PointLight po;
+	Block bl;
 
 	private TestMain()
 	{
@@ -42,17 +42,8 @@ public class TestMain
 
 			GL11.glPushMatrix();
 
-			GL11.glBegin(GL11.GL_QUADS);
-			GL11.glColor3f(0.1f, 0.55f, 0.5f);
-			GL11.glVertex2f(100, 100);
-			GL11.glVertex2f(300, 100);
-			GL11.glVertex2f(300, 300);
-			GL11.glVertex2f(100, 300);
-			GL11.glColor3f(1, 1, 1);
-			GL11.glEnd();
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			this.font.drawString(125, 125, "Hello World");
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			bl.render();
+			po.render();
 			GL11.glPopMatrix();	
 
 			Display.sync(60);
@@ -74,20 +65,9 @@ public class TestMain
 		GL11.glLoadIdentity();
 		GL11.glOrtho(0, Display.getDisplayMode().getWidth(), Display.getDisplayMode().getHeight(), 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-		this.font = new UnicodeFont(new Font("Times New Roman", Font.BOLD, 15));
-		this.font.addAsciiGlyphs();
-		this.font.addGlyphs(400, 600);
-		this.font.getEffects().add(new ColorEffect(java.awt.Color.RED));
-		try {
-			this.font.loadGlyphs();
-		} catch (SlickException e)
-		{
-			e.printStackTrace();
-		}
+		bl = new Block(200f, 200f, 400f);
+		po = new PointLight(300f, 300f, 100f);
 
 	}
 
