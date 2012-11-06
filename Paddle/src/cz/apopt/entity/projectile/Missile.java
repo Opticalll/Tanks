@@ -27,7 +27,10 @@ public class Missile implements Entity, CannonProjectile
 	private float dx, dy;
 	private float angle = 0.0f;
 
+	private float lockOnRange = 50;
+	
 	private Tank shooter;
+	private Tank target = null;
 	
 	public Missile(Tank tank)
 	{
@@ -114,6 +117,27 @@ public class Missile implements Entity, CannonProjectile
 		return NAME;
 	}
 	
+	private void lockOn()
+	{
+		for(Entity e : PaddleGame.entities)
+		{
+			if(e instanceof Tank)
+			{
+				Tank t = (Tank) e;
+				if(dx > 0 && t.getX() > x && (t.getY() >= y + lockOnRange/2 && t.getY() <= y - lockOnRange/2))
+					target = t;
+				else if(dx < 0 && t.getX() < x && (t.getY() >= y + lockOnRange/2 && t.getY() <= y - lockOnRange/2))
+					target = t;
+				else if(dy > 0 && t.getY() > y && (t.getX() >= x + lockOnRange/2 && t.getX() <= x - lockOnRange/2))
+						target = t;
+				else if(dy < 0 && t.getY() > y && (t.getX() >= x + lockOnRange/2 && t.getX() <= x - lockOnRange/2))
+					target = t;
+				else
+					target = null;
+			}
+		}
+	}
+	
 	public void render()
 	{
 		GL11.glTranslatef(x, y, 0);
@@ -131,11 +155,34 @@ public class Missile implements Entity, CannonProjectile
 	
 	public void update()
 	{
-		x += dx;
-		y += dy;
 		
 		if(x > Display.getDisplayMode().getWidth() || x < 0 || y > Display.getDisplayMode().getHeight() || y < 0)
 			PaddleGame.entities.remove(this);
+		
+		if(target == null)
+			lockOn();
+		else
+		{
+			if(target.getX() > x)
+				dx += speed/5;
+			if(target.getX() < x)
+				dx -= speed/5;
+			if(target.getY() < y)
+				dy -= speed/5;
+			if(target.getY() > y)
+				dy += speed/5;
+			if(dx > speed)
+				dx = speed;
+			if(dy > speed)
+				dy = speed;
+			if(dx < -speed)
+				dx = -speed;
+			if(dy < -speed)
+				dy = -speed;
+		}
+		
+		x += dx;
+		y += dy;
 		
 		Pengine eng = new Pengine(new PVector(x + WIDTH/2, y + HEIGHT/2), 2, 90, null);
 		eng.setVVector(new VVector(0.5f, 0.5f));

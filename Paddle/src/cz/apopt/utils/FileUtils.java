@@ -12,7 +12,7 @@ import cz.apopt.etc.Color;
 /**
  * FileUtil class for work with files in .jar
  * 
- * @author adam
+ * @author Adam & Optical
  */
 public class FileUtils
 {
