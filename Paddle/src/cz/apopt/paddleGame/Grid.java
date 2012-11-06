@@ -38,6 +38,7 @@ public class Grid
 				if(layout[i][z] != null)
 				{
 					blocks.add(new Block(layout[i][z]));
+					layout[i][z] = null;
 				}
 	}
 

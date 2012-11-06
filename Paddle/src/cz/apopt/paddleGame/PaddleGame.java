@@ -226,6 +226,7 @@ public class PaddleGame implements Runnable
 		//vole a pak se divis ze je na tom ui neco divnyho
 		// - ja jsem vul :D
 		PaddleGame.ui.clear();
+		System.gc();
 	}
 	
 	/**
