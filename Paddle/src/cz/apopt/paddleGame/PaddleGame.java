@@ -151,7 +151,7 @@ public class PaddleGame implements Runnable
 			
 			
 			Pengine.update();
-//			lights.render();
+			lights.render();
 			itemSpawnTimer.update();
 			
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 import cz.apopt.entity.Collidable;
 import cz.apopt.entity.Entity;
 import cz.apopt.entity.Tank;
+import cz.apopt.entity.TankFacing;
 import cz.apopt.pEngine.PVector;
 import cz.apopt.pEngine.Pengine;
 import cz.apopt.pEngine.VVector;
@@ -30,6 +31,7 @@ public class Missile implements Entity, CannonProjectile
 	private float lockOnRange = 50;
 	
 	private Tank shooter;
+	private TankFacing onFireFacing;
 	private Tank target = null;
 	
 	public Missile(Tank tank)
@@ -169,10 +171,13 @@ public class Missile implements Entity, CannonProjectile
 	{
 		
 		if(x > Display.getDisplayMode().getWidth() || x < 0 || y > Display.getDisplayMode().getHeight() || y < 0)
+		{
 			PaddleGame.entities.remove(this);
+			return;
+		}
 		//Guided missile engine you can transfer it some where else if you will revork missile
 		
-		switch(shooter.getFacing())
+		switch(onFireFacing)
 		{
 			case NORTH:
 				setDX(0.0f);
@@ -227,7 +232,8 @@ public class Missile implements Entity, CannonProjectile
 	
 	public void fire()
 	{	
-		switch(shooter.getFacing())
+		onFireFacing = shooter.getFacing();
+		switch(onFireFacing)
 		{
 			case NORTH:
 				setX(shooter.getX() + (shooter.getWidth()/2 - shooter.getGunWidth()/2));

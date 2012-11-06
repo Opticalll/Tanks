@@ -18,6 +18,7 @@ public class Pengine
 	public float count;
 	public float range;
 	public boolean transition;
+	public boolean makeLight = false;
 	public float time;
 	public float maxFade;
 	public float minFade;
@@ -47,6 +48,17 @@ public class Pengine
 		this.range = range;
 		this.ct = ct;
 		this.p_type = ParType.RANDOM;
+		finallConstruct();
+	}
+	
+	public Pengine(PVector vec, float c, float range, ColorTransition ct, boolean makeLight)
+	{
+		this.pVector = vec;
+		this.count = c;
+		this.range = range;
+		this.ct = ct;
+		this.p_type = ParType.RANDOM;
+		this.makeLight = makeLight;
 		finallConstruct();
 	}
 	

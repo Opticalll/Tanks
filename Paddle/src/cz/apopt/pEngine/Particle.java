@@ -2,7 +2,9 @@ package cz.apopt.pEngine;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import cz.apopt.lightEngine.PointLight;
 import cz.apopt.pEngine.enums.SpreadType;
+import cz.apopt.paddleGame.PaddleGame;
 
 public abstract class Particle
 {	
@@ -22,6 +24,7 @@ public abstract class Particle
 	
 	protected Pengine eng;
 	protected Color col;
+	private PointLight light;
 	
 	private boolean r_done = false, g_done = false, b_done = false;
 	
@@ -46,12 +49,23 @@ public abstract class Particle
 		
 		if(eng.transition)
 			col = (eng.ct.getFirst().copy());
+		if(eng.makeLight)
+		{
+			light = new PointLight(x, y, 15);
+			PaddleGame.lights.addLight(light);
+		}
 	}
 	
 	public final void update()
 	{
 		x += dx;
 		y += dy;
+		
+		if(eng.makeLight)
+		{
+			light.setX(x);
+			light.setY(y);
+		}
 		
 		if(System.nanoTime() >= launchTime+second*eng.time)
 			fadeFactor = Pengine.getRandom(eng.minFade, eng.maxFade);
@@ -71,8 +85,11 @@ public abstract class Particle
 		}
 		
 		if(alpha <= 0.001f)
+		{
 			Pengine.particles.remove(this);
-		
+			if(eng.makeLight)
+				PaddleGame.lights.removeLight(light);
+		}
 		if(eng.transition)
 			updateColor();
 	}

@@ -139,7 +139,6 @@ public class Block implements Entity, Collidable
 			this.finalize();
 		} catch (Throwable e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -382,7 +381,7 @@ public class Block implements Entity, Collidable
 				PaddleGame.entities.remove(p);
 				if(this.destroyable)
 				{
-					Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition());
+					Pengine eng = new Pengine(new PVector(x, y, blockWidth, blockHeight), 50, 50, ColorTransition.getRandomTransition(), true);
 					eng.create();
 					OpSound.audioMap.get("EXPLOS").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
 //					PaddleGame.entities.remove(this);

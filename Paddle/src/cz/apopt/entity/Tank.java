@@ -45,7 +45,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private long timeBoosted = 0;
 	private long boostDuration = 0;
 	private float maxHealth = 100;
-	private float health = maxHealth;
+	private float health = 50;
 
 	private Item currentItem = null;
 	private Block onBlock;
