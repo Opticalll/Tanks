@@ -278,14 +278,14 @@ public class PaddleGame implements Runnable
 		Ui ui = new Ui(pl);
 		ui.setX(0);
 		ui.setWidth(250);
-		ui.setHeight(75);
+		ui.setHeight(90);
 		ui.setY(WINDOW_HEIGHT - ui.getHeight());
 		PaddleGame.ui.add(ui);
 		
 		Player ppl = new Player(1);
 		Ui uii = new Ui(ppl);
 		uii.setWidth(250);
-		uii.setHeight(75);
+		uii.setHeight(90);
 		uii.setX(WINDOW_WIDTH - uii.getWidth());
 		uii.setY(WINDOW_HEIGHT - uii.getHeight());
 		PaddleGame.ui.add(uii);

@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
 import cz.apopt.entity.Player;
-import cz.apopt.entity.items.Item;
 import cz.apopt.etc.Color;
 import cz.apopt.etc.OpFont;
 
@@ -18,17 +17,18 @@ public class Ui
 	private Texture back_Texture;
 	private Font font;
 	private OpFont lives, weapon, ammo, currentItem, count;
-	private Color col = new Color(0, 40, 100);
+	private UiBar healthBar;
+	private Color col = new Color(0, 40, 100, 150);
 	
 	public Ui(Player player)
 	{
 		this.uiPlayer = player;
 		font = new Font("Arial", Font.BOLD, 12);
-		weapon = new OpFont(tankPartX, tankPartY, "Weapon: ", font, java.awt.Color.WHITE);
-		ammo = new OpFont(tankPartX, tankPartY + 12, "Ammo: ", font, java.awt.Color.WHITE);
-		currentItem = new OpFont(tankPartX, tankPartY + 24, "Current item: ", font, java.awt.Color.WHITE);
-		count = new OpFont(tankPartX, tankPartY + 36, "Count: ", font, java.awt.Color.WHITE);
-		lives = new OpFont(playerPartX, playerPartY, "Lives: " + uiPlayer.getLives(), font, java.awt.Color.WHITE);
+		weapon = new OpFont(0, 0, "Weapon: ", font, java.awt.Color.WHITE);
+		ammo = new OpFont(0, 0, "Ammo: ", font, java.awt.Color.WHITE);
+		currentItem = new OpFont(0, 0 , "Current item: ", font, java.awt.Color.WHITE);
+		count = new OpFont(0, 0, "Count: ", font, java.awt.Color.WHITE);
+		lives = new OpFont(0, 0, "Lives: " + uiPlayer.getLives(), font, java.awt.Color.WHITE);
 	}
 	
 	private void render_PlayerPart()
@@ -41,17 +41,27 @@ public class Ui
 		playerPartX = x;
 		playerPartY = y;
 		tankPartX = x;
-		tankPartY = y + 17;
+		tankPartY = y + 16;
 		
+
 		lives.setPos(playerPartX, playerPartY);
+		
+		tankPartY += 15;
 		weapon.setPos(tankPartX, tankPartY);
-		ammo.setPos(tankPartX, tankPartY + 12);
-		currentItem.setPos(tankPartX, tankPartY + 24);
-		count.setPos(tankPartX, tankPartY + 36);
+		
+		tankPartY += 12;
+		ammo.setPos(tankPartX, tankPartY);
+		tankPartY += 12;
+		currentItem.setPos(tankPartX, tankPartY);
+		tankPartY += 12;
+		count.setPos(tankPartX, tankPartY);
+		tankPartY = y + 16;
+		healthBar = new UiBar(tankPartX + 5, tankPartY, width - 10, 14, 3, uiPlayer.getTank().getMaxHealth());
 	}
 	
 	private void render_TankPart()
 	{
+		healthBar.render();
 		weapon.render();
 		ammo.render();
 		currentItem.render();
@@ -60,7 +70,7 @@ public class Ui
 	
 	public void render() 
 	{	
-		GL11.glColor4f(col.R, col.G, col.B, 0.3f);
+		GL11.glColor4f(col.R, col.G, col.B, col.A);
 		GL11.glBegin(GL11.GL_QUADS);		
 			GL11.glVertex2f(x, y);
 			GL11.glVertex2f(x + width, y);
@@ -73,19 +83,12 @@ public class Ui
 
 	public void update() 
 	{
-		Item curItem = uiPlayer.getTank().getCurrentItem();
-		boolean itemNull = false;	
-		
-		if(curItem == null) 
-			itemNull = true;
-		
-		int ammoCount = uiPlayer.getTank().getWeapon().getCurrentAmmoCount();
-		
 		lives.setText("Lives: " + uiPlayer.getLives());
-		count.setText("Count: " + (itemNull ? "-" : uiPlayer.getTank().getCurrentItemCount()));
-		currentItem.setText("Current item: " + (itemNull ? "NONE" : uiPlayer.getTank().getCurrentItem().getName()));
+		count.setText("Count: " + (uiPlayer.getTank().getCurrentItem() == null ? "-" : uiPlayer.getTank().getCurrentItemCount()));
+		currentItem.setText("Current item: " + (uiPlayer.getTank().getCurrentItem() == null ? "NONE" : uiPlayer.getTank().getCurrentItem().getName()));
 		weapon.setText("Weapon: " + uiPlayer.getTank().getWeapon().getCurrentProjectileName());
-		ammo.setText("Ammo: " + ((ammoCount == 0) ? "-" : uiPlayer.getTank().getWeapon().getCurrentAmmoCount()));
+		ammo.setText("Ammo: " + ((uiPlayer.getTank().getWeapon().getCurrentAmmoCount() == 0) ? "-" : uiPlayer.getTank().getWeapon().getCurrentAmmoCount()));
+		healthBar.setCurHealth(uiPlayer.getTank().getHealth());
 	}
 
 	public float getX() {

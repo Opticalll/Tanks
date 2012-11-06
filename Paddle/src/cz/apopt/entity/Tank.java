@@ -44,7 +44,9 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private float tpAngle = 0.0f;
 	private long timeBoosted = 0;
 	private long boostDuration = 0;
-	
+	private float maxHealth = 100;
+	private float health = maxHealth;
+
 	private Item currentItem = null;
 	private Block onBlock;
 	
@@ -108,6 +110,17 @@ public class Tank implements Entity, Collidable, ControllerListener
 	public void setX(float x)
 	{
 		this.x = x;
+	}
+	
+	
+	public float getMaxHealth()
+	{
+		return maxHealth;
+	}
+
+	public float getHealth()
+	{
+		return health;
 	}
 	
 	/**
