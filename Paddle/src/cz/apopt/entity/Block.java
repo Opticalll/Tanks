@@ -59,6 +59,7 @@ public class Block implements Entity, Collidable
 		this.tPath = textPath;
 		this.isTextured = true;
 		this.texture = loadTexture(textPath, "PNG");
+		PaddleGame.blocks.addBlock(this);
 	}
 
 	/**
@@ -78,6 +79,7 @@ public class Block implements Entity, Collidable
 		this.blockHeight = blockHeight;
 		this.col = col;
 		this.isTextured = false;
+		PaddleGame.blocks.addBlock(this);
 	}
 	
 	public Block(Block another)
@@ -94,6 +96,7 @@ public class Block implements Entity, Collidable
 		this.texture = another.texture;
 		this.slow_boost = another.isSlow_boost();
 		this.slow_boostFactor = another.getSlow_boostFactor();
+		PaddleGame.blocks.addBlock(this);
 	}
 	
 	public Block(Map<String, String> conf)

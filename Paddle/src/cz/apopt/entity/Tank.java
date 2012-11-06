@@ -46,6 +46,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private long boostDuration = 0;
 	
 	private Item currentItem = null;
+	private Block onBlock;
 	
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
@@ -547,6 +548,9 @@ public class Tank implements Entity, Collidable, ControllerListener
 				break;
 		}
 		
+		onBlock = PaddleGame.blocks.getBlockOn(x + this.width/2, y + this.height/2);
+		blockEffect();
+		
 		for(int i = 0; i < PaddleGame.entities.size(); i++)
 		{
 			Entity e = PaddleGame.entities.get(i);
@@ -561,6 +565,17 @@ public class Tank implements Entity, Collidable, ControllerListener
 		y += dy;
 		light.setX(this.x + this.width/2);
 		light.setY(this.y + this.height/2);
+	}
+	
+	private void blockEffect()
+	{
+		if(onBlock != null)
+		{
+			if(onBlock.isDeadly());
+			if(onBlock.isSlow_boost());
+			if(onBlock.isDamageDealing());
+		}
+//		 PaddleGame.logT((x + width/2) + " : " + (y + height/2) + "---- Block ----" + (onBlock.getX() + onBlock.getBlockWidth()/2) + " : " + (onBlock.getY() + onBlock.getBlockHeight()/2));
 	}
 	
 	/**

@@ -18,6 +18,7 @@ import cz.apopt.entity.Entity;
 import cz.apopt.entity.Player;
 import cz.apopt.entity.items.Item;
 import cz.apopt.entity.projectile.Projectile;
+import cz.apopt.etc.BlockList;
 import cz.apopt.etc.FpsCounter;
 import cz.apopt.etc.OpSound;
 import cz.apopt.etc.Timer;
@@ -39,13 +40,13 @@ import cz.apopt.ui.menu.MainMenu;
  */
 public class PaddleGame implements Runnable
 {
-	public static final List<Entity> entities = new ArrayList<Entity>();
-	public static final List<Ui> ui = new ArrayList<Ui>();
+	public static List<Entity> entities = new ArrayList<Entity>();
+	public static List<Ui> ui = new ArrayList<Ui>();
+	public static BlockList blocks = new BlockList();
 	public static LEngine lights;
 	public static MainMenu menu;
 	
 	public static final int WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
-	public static final int WALL_WIDTH = 10;
 	public static final int FPS = 40;
 	
 	private static int level = Controller.DEFAULT_LEVEL;
