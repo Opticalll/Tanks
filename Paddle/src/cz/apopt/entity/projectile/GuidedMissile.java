@@ -16,7 +16,7 @@ import cz.apopt.paddleGame.PaddleGame;
 public class GuidedMissile implements Entity, RocketProjectile
 {
 
-	float x,y,vx = 0f,vy = 0f,angle,speed = 8f, width = 5.0f, height = 5.0f, lockOnRange, vangle, targetangle;
+	float x,y,vx = 0f,vy = 0f,angle,speed = 8f, width = 5.0f, height = 5.0f, lockOnRange, vangle = 4, targetangle;
 	Tank target = null;
 	Tank shooter;
 	
@@ -117,8 +117,8 @@ public class GuidedMissile implements Entity, RocketProjectile
 				angle -=vangle;
 		}
 //		angle++;
-		vx = (float) Math.sin(Math.toRadians(angle)) * speed;
-		vy = (float) Math.cos(Math.toRadians(angle)) * speed;
+		vx = (float) Math.cos(Math.toRadians(90 - angle)) * speed;
+		vy = (float) -(Math.sin(Math.toRadians(90 - angle)) * speed);
 		
 		PaddleGame.log("sin: " + Math.sin(angle) +"vx :" + vx + " cos:  " +  Math.cos(angle) +"  vy: " + vy);
 		
@@ -190,9 +190,9 @@ public class GuidedMissile implements Entity, RocketProjectile
 	@Override
 	public void fire()
 	{
-		angle = shooter.getAngleFromFacing() + 180;
-		this.x = shooter.getX();
-		this.y = shooter.getY();
+		angle = shooter.getAngleFromFacing();
+		this.x = shooter.getX() + shooter.getWidth()/2;
+		this.y = shooter.getY() + shooter.getHeight()/2;
 		PaddleGame.entities.add(this);
 	}
 
