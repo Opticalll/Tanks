@@ -48,6 +48,11 @@ public class Cluster implements Entity, CannonProjectile
 		timeFired = Sys.getTime();
 	}
 	
+	public Projectile getInstance()
+	{
+		return new Cluster(shooter);
+	}
+	
 	public float getX()
 	{
 		return x;

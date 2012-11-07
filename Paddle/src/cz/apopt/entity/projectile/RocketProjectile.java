@@ -1,6 +1,6 @@
 package cz.apopt.entity.projectile;
 
-public interface CannonProjectile extends Projectile
+public interface RocketProjectile extends Projectile
 {
 	public void fire();
 }

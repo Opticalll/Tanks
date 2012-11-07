@@ -1,15 +1,15 @@
 package cz.apopt.entity.weapons;
 
 import cz.apopt.entity.Tank;
-import cz.apopt.entity.projectile.CannonProjectile;
 import cz.apopt.entity.projectile.Projectile;
+import cz.apopt.entity.projectile.RocketProjectile;
 import cz.apopt.etc.OpSound;
 
-public class Cannon extends Weapon
-{	
+public class RocketLauncher extends Weapon
+{
 	private static final String NAME = "Cannon";
 	
-	public Cannon(Tank owner)
+	public RocketLauncher(Tank owner)
 	{
 		super(owner, NAME);
 	}
@@ -17,7 +17,7 @@ public class Cannon extends Weapon
 	public void fire()
 	{
 		Projectile projectile = super.currentAmmo.getInstance();
-		if(projectile instanceof CannonProjectile)
+		if(projectile instanceof RocketProjectile)
 		{	
 			projectile.fire();
 			super.removeAmmo(projectile);

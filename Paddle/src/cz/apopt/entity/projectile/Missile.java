@@ -54,6 +54,11 @@ public class Missile implements Entity, CannonProjectile
 		this.dy = dy;
 	}
 	
+	public Projectile getInstance()
+	{
+		return new Missile(shooter);
+	}
+	
 	public float getX()
 	{
 		return x;

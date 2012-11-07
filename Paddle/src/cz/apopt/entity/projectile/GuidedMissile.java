@@ -13,7 +13,7 @@ import cz.apopt.pEngine.Pengine;
 import cz.apopt.pEngine.VVector;
 import cz.apopt.paddleGame.PaddleGame;
 
-public class GuidedMissile implements Entity, CannonProjectile
+public class GuidedMissile implements Entity, RocketProjectile
 {
 
 	float x,y,vx = 0f,vy = 0f,angle,speed = 8f, width = 5.0f, height = 5.0f, lockOnRange, vangle, targetangle;
@@ -31,6 +31,11 @@ public class GuidedMissile implements Entity, CannonProjectile
 		this.y = y;
 		this.shooter = tank;
 		this.angle = 0;
+	}
+	
+	public Projectile getInstance()
+	{
+		return new GuidedMissile(shooter);
 	}
 	
 	@Override
