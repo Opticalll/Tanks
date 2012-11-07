@@ -14,6 +14,7 @@ public interface Projectile
 	public float getY();
 	public float getWidth();
 	public float getHeight();
+	public float getDamage();
 	public void fire();
 	public void checkCollision();
 	public Tank getShooter();

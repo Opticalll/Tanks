@@ -28,6 +28,7 @@ public class Cluster implements Entity, CannonProjectile
 	private float f_dx = 0f, f_dy = 0f;
 	private float s_dx = 0f, s_dy = 0f;
 	private float t_dx = 0f, t_dy = 0f;
+	private float minDmg = 30.0f, maxDmg = 40.0f;
 	private float angle = 0.0f;
 	private float speed = 10.0f;
 	private long timeFired;
@@ -91,6 +92,11 @@ public class Cluster implements Entity, CannonProjectile
 	public void setDY(float dy)
 	{
 		this.dy = dy;
+	}
+	
+	public float getDamage()
+	{
+		return PaddleGame.getRandom(minDmg, maxDmg);
 	}
 	
 	public float getWidth()

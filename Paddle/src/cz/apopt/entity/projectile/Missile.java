@@ -26,13 +26,11 @@ public class Missile implements Entity, CannonProjectile
 	private float x, y;
 	private float speed = 15.0f;
 	private float dx, dy;
+	private float minDmg = 15.0f, maxDmg = 35.0f;
 	private float angle = 0.0f;
-
-	private float lockOnRange = 50;
 	
 	private Tank shooter;
 	private TankFacing onFireFacing;
-	private Tank target = null;
 	
 	public Missile(Tank tank)
 	{
@@ -99,6 +97,11 @@ public class Missile implements Entity, CannonProjectile
 		this.dy = dy;
 	}
 	
+	public float getDamage()
+	{
+		return PaddleGame.getRandom(minDmg, maxDmg);
+	}
+	
 	public float getWidth()
 	{
 		return WIDTH;
@@ -147,7 +150,6 @@ public class Missile implements Entity, CannonProjectile
 			PaddleGame.entities.remove(this);
 			return;
 		}
-		//Guided missile engine you can transfer it some where else if you will rework missile
 		
 		x += dx;
 		y += dy;
@@ -194,7 +196,7 @@ public class Missile implements Entity, CannonProjectile
 				setAngle(270.0f);
 				break;
 		}
-		this.target = null;
+		
 		PaddleGame.entities.add(this);
 	}
 	

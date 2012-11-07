@@ -16,7 +16,8 @@ import cz.apopt.paddleGame.PaddleGame;
 public class GuidedMissile implements Entity, RocketProjectile
 {
 
-	float x,y,vx = 0f,vy = 0f,angle,speed = 8f, width = 5.0f, height = 5.0f, lockOnRange, vangle = 4, targetangle;
+	private float x,y,vx = 0f,vy = 0f,angle,speed = 8f, width = 5.0f, height = 5.0f, lockOnRange, vangle = 4, targetangle;
+	private float minDmg = 35.0f, maxDmg = 50.0f;
 	Tank target = null;
 	Tank shooter;
 	
@@ -145,6 +146,11 @@ public class GuidedMissile implements Entity, RocketProjectile
 		return y;
 	}
 
+	public float getDamage()
+	{
+		return PaddleGame.getRandom(minDmg, maxDmg);
+	}
+	
 	@Override
 	public float getWidth()
 	{

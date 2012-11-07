@@ -151,7 +151,8 @@ public class PaddleGame implements Runnable
 			
 			
 			Pengine.update();
-//			lights.render();
+			if(Controller.lightsOn)
+				lights.render();
 			itemSpawnTimer.update();
 			
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -419,7 +420,7 @@ public class PaddleGame implements Runnable
 			if (e instanceof Block)
 			{
 				Block b = (Block) e;
-				if (!b.isSolid())
+				if (b.isSpawnable())
 					potSpawns.add(b);
 			}
 		}

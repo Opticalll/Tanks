@@ -26,7 +26,7 @@ public class Controller
 	private static final int MAX_LEVEL = 1;
 	private static final long FIRE_DELAY = 500 * 1000000;
 	private static int level = DEFAULT_LEVEL;
-	private static boolean homeDown = false, endDown = false;
+	private static boolean homeDown = false, endDown = false, lightKey_down = false;
 	private long lastTime = 0;
 	
 	public boolean left = false;
@@ -35,6 +35,7 @@ public class Controller
 	public boolean down = false;
 	public boolean build = false;
 	public boolean useItem = false;
+	public static boolean lightsOn = false;
 	public volatile boolean fire = false;
 	
 	private boolean next_p = false;
@@ -254,12 +255,21 @@ public class Controller
 		} else if(Keyboard.isKeyDown(Keyboard.KEY_P))
 		{
 			game.invokeGameMenu();
+		} else if(Keyboard.isKeyDown(Keyboard.KEY_L))
+		{
+			if(!lightKey_down)
+			{
+				lightKey_down = true;
+				lightsOn = !lightsOn;
+			}
 		}
 		
 		if(!Keyboard.isKeyDown(Keyboard.KEY_HOME))
 			homeDown = false;
 		if(!Keyboard.isKeyDown(Keyboard.KEY_END))
 			endDown = false;
+		if(!Keyboard.isKeyDown(Keyboard.KEY_L))
+			lightKey_down = false;
 	}
 	
 //	private static int getMaxLevel()

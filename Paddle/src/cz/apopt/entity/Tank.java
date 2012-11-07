@@ -53,6 +53,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
 	private boolean teleporting = false;
+//	private boolean wasHit = false; // TODO: (Adam) wasHit
 	private boolean boosted = false;
 	private boolean solid = true;
 	private boolean destroyable = true;
@@ -401,6 +402,19 @@ public class Tank implements Entity, Collidable, ControllerListener
 	 */
 	public void update()
 	{
+		if(health <= 0.0f)
+		{
+			Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
+			eng.create();
+			OpSound.audioMap.get("KILL").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
+			PaddleGame.entities.remove(this);
+			PaddleGame.lights.removeLight(light);
+			controller.removeControllerListener(this);
+		
+			this.player.respawn(false);
+			return;
+		}
+		
 		if(teleporting)
 		{
 			if(scale <= 0.0f)
@@ -605,9 +619,20 @@ public class Tank implements Entity, Collidable, ControllerListener
 	{
 		if(onBlock != null)
 		{
-			if(onBlock.isDeadly());
-			if(onBlock.isSlow_boost());
-			if(onBlock.isDamageDealing());
+//			PaddleGame.log("blockEffect");
+//			if(onBlock.isDeadly());
+			if(onBlock.isSlow_boost())
+			{
+				this.speed = DEF_SPEED * onBlock.getSlow_boostFactor();
+				updateSpeed();
+			} else
+			{
+				this.speed = DEF_SPEED;
+				updateSpeed();
+			}
+			
+			if(onBlock.isDamageDealing())
+				this.health -= onBlock.getDamagePerFrame();
 		}
 //		 PaddleGame.logT((x + width/2) + " : " + (y + height/2) + "---- Block ----" + (onBlock.getX() + onBlock.getBlockWidth()/2) + " : " + (onBlock.getY() + onBlock.getBlockHeight()/2));
 	}
@@ -632,14 +657,9 @@ public class Tank implements Entity, Collidable, ControllerListener
 				
 				if(destroyable)
 				{
-					Pengine eng = new Pengine(new PVector(x + width/2, y + height/2), 100, 100, ColorTransition.getRandomTransition());
-					eng.create();
-					OpSound.audioMap.get("KILL").getAudio().playAsSoundEffect(1.0f, 1.0f, false);
-					PaddleGame.entities.remove(this);
-					PaddleGame.lights.removeLight(light);
-					controller.removeControllerListener(this);
-					
-					this.player.respawn(false);
+					float damage = m.getDamage();
+					this.health -= damage;
+					PaddleGame.log("HIT = " + damage);
 				}
 				return true;
 			}

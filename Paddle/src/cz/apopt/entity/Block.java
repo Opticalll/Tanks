@@ -29,6 +29,7 @@ public class Block implements Entity, Collidable
 	// Properties
 	private boolean solid;
 	private boolean destroyable;
+	private boolean spawnable;
 	private boolean slow_boost;
 	private float slow_boostFactor;
 	private boolean damageDealing;
@@ -93,9 +94,12 @@ public class Block implements Entity, Collidable
 		this.tPath = another.gettPath();
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
+		this.spawnable = another.isSpawnable();
+		this.damageDealing = another.isDamageDealing();
 		this.texture = another.texture;
 		this.slow_boost = another.isSlow_boost();
 		this.slow_boostFactor = another.getSlow_boostFactor();
+		this.dps = another.getDps();
 		PaddleGame.blocks.addBlock(this);
 	}
 	
@@ -105,11 +109,12 @@ public class Block implements Entity, Collidable
 		this.col = new Color(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
 		this.isTextured = Boolean.parseBoolean(conf.get("isTexture"));
 		this.destroyable = Boolean.parseBoolean(conf.get("destroyable"));
+		this.spawnable = Boolean.parseBoolean(conf.get("spawnable"));
 		this.tPath = conf.get("texture");
 		this.solid = Boolean.parseBoolean(conf.get("solid"));
 		this.slow_boost = Boolean.parseBoolean(conf.get("slow_boost"));
 		this.slow_boostFactor = Float.parseFloat(conf.get("slow_boostFactor"));
-		this.damageDealing = Boolean.parseBoolean(conf.get("damageDealing"));
+		this.damageDealing = Boolean.parseBoolean(conf.get("dealingDamage"));
 		this.dps = Float.parseFloat(conf.get("dps"));
 		this.deadly = Boolean.parseBoolean(conf.get("deadly"));
 		if(this.isTextured)
@@ -127,8 +132,11 @@ public class Block implements Entity, Collidable
 		this.tPath = another.gettPath();
 		this.solid = another.isSolid();
 		this.destroyable = another.isDestroyable();
+		this.spawnable = another.isSpawnable();
 		this.deadly = another.isDeadly();
 		this.damageDealing = another.isDamageDealing();
+		this.slow_boost = another.isSlow_boost();
+		this.slow_boostFactor = another.getSlow_boostFactor();
 		this.dps = another.getDps();
 	}
 	
@@ -168,6 +176,11 @@ public class Block implements Entity, Collidable
 		return deadly;
 	}
 
+	public boolean isSpawnable()
+	{
+		return spawnable;
+	}
+	
 	public void setDeadly(boolean deadly) {
 		this.deadly = deadly;
 	}
