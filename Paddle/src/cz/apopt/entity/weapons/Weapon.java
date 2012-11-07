@@ -6,6 +6,7 @@ import java.util.List;
 import cz.apopt.entity.Tank;
 import cz.apopt.entity.projectile.AmmoStack;
 import cz.apopt.entity.projectile.Cluster;
+import cz.apopt.entity.projectile.GuidedMissile;
 import cz.apopt.entity.projectile.Missile;
 import cz.apopt.entity.projectile.Projectile;
 
@@ -25,6 +26,7 @@ public abstract class Weapon
 		this.ammo = new ArrayList<AmmoStack>();				
 		this.ammo.add(new AmmoStack(new Missile(owner), 10));
 		this.ammo.add(new AmmoStack(new Cluster(owner), 10));
+		this.ammo.add(new AmmoStack(new GuidedMissile(owner), 10));
 
 		def_ammo = new ArrayList<AmmoStack>();
 		for(AmmoStack stack : ammo)

@@ -45,7 +45,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 	private long timeBoosted = 0;
 	private long boostDuration = 0;
 	private float maxHealth = 100;
-	private float health = 50;
+	private float health = maxHealth;
 
 	private Item currentItem = null;
 	private Block onBlock;
@@ -296,6 +296,27 @@ public class Tank implements Entity, Collidable, ControllerListener
 	public TankFacing getFacing()
 	{
 		return facing;
+	}
+	
+	public float getAngleFromFacing()
+	{
+		float angle = 0;
+		switch(facing)
+		{
+			case NORTH:
+				angle = 0.0f;
+				break;
+			case EAST:
+				angle = 90.0f;
+				break;
+			case SOUTH:
+				angle = 180.0f;
+				break;
+			case WEST:
+				angle = 270.0f;
+				break;
+		}
+		return angle;
 	}
 	
 	/**

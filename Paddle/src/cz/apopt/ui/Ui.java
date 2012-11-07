@@ -18,7 +18,7 @@ public class Ui
 	private Font font;
 	private OpFont lives, weapon, ammo, currentItem, count;
 	private UiBar healthBar;
-	private Color col = new Color(0, 40, 100, 150);
+	private Color col = new Color(0, 40, 100, 85);
 	
 	public Ui(Player player)
 	{

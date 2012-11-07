@@ -24,7 +24,7 @@ public class Missile implements Entity, CannonProjectile
 	private final float WIDTH = 2.0f;
 	private final float HEIGHT = 4.0f;
 	private float x, y;
-	private float speed = 5.0f;
+	private float speed = 15.0f;
 	private float dx, dy;
 	private float angle = 0.0f;
 
@@ -119,39 +119,6 @@ public class Missile implements Entity, CannonProjectile
 		return NAME;
 	}
 	
-	private void lockOn()
-	{
-		for(Entity e : PaddleGame.entities)
-		{
-			if(e instanceof Tank)
-			{
-				
-				Tank t = (Tank) e;
-				if(t != shooter)
-				{
-					if(dx > 0 && t.getX() > x && (t.getY() <= y + lockOnRange && t.getY() >= y - lockOnRange))
-						target = t;
-					else if(dx < 0 && t.getX() < x && (t.getY() <= y + lockOnRange && t.getY() >= y - lockOnRange))
-						target = t;
-					else if(dy > 0 && t.getY() > y && (t.getX() <= x + lockOnRange && t.getX() >= x - lockOnRange))
-						target = t;
-					else if(dy < 0 && t.getY() > y && (t.getX() <= x + lockOnRange && t.getX() >= x - lockOnRange))
-						target = t;
-					else
-						target = null;
-				}
-				else
-					target = null;
-				if(target != null)
-				{
-					PaddleGame.logT("Target Locked on X: " + target.getX() + " Y: " + target.getY() + "\n Missile Cord X: " + x + " Y: " + y);
-					break;
-				}
-				
-			}
-		}
-	}
-	
 	public void render()
 	{
 		GL11.glTranslatef(x + WIDTH/2, y + HEIGHT/2, 0);
@@ -175,49 +142,7 @@ public class Missile implements Entity, CannonProjectile
 			PaddleGame.entities.remove(this);
 			return;
 		}
-		//Guided missile engine you can transfer it some where else if you will revork missile
-		
-		switch(onFireFacing)
-		{
-			case NORTH:
-				setDX(0.0f);
-				setDY(-speed);
-				break;
-			case EAST:
-				setDX(speed);
-				setDY(0.0f);
-				break;
-			case SOUTH:
-				setDX(0.0f);
-				setDY(speed);
-				break;
-			case WEST:
-				setDX(-speed);
-				setDY(0.0f);
-				break;
-		}
-		
-		if(target == null)
-			lockOn();
-		else
-		{
-			if(target.getX() > x)
-				dx += speed/10;
-			if(target.getX() < x)
-				dx -= speed/10;
-			if(target.getY() < y)
-				dy -= speed/10;
-			if(target.getY() > y)
-				dy += speed/10;
-			if(dx > speed)
-				dx = speed;
-			if(dy > speed)
-				dy = speed;
-			if(dx < -speed)
-				dx = -speed;
-			if(dy < -speed)
-				dy = -speed;
-		}
+		//Guided missile engine you can transfer it some where else if you will rework missile
 		
 		x += dx;
 		y += dy;

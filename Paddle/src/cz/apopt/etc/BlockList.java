@@ -10,7 +10,7 @@ import cz.apopt.entity.Block;
 public class BlockList
 {
 	boolean changed = false;
-	List<Block> blockList = new ArrayList<Block>();
+	public List<Block> blockList = new ArrayList<Block>();
 	
 	public void update()
 	{
