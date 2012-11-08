@@ -627,7 +627,10 @@ public class Tank implements Entity, Collidable, ControllerListener
 				updateSpeed();
 			} else
 			{
-				this.speed = DEF_SPEED;
+				if(!boosted)
+					this.speed = DEF_SPEED;
+				else
+					this.speed = DEF_SPEED * 2;
 				updateSpeed();
 			}
 			
