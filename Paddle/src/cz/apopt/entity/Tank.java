@@ -42,21 +42,25 @@ public class Tank implements Entity, Collidable, ControllerListener
 	public float speed = DEF_SPEED;
 	private float angle = 0.0f;
 	private float tpAngle = 0.0f;
-	private long timeBoosted = 0;
-	private long boostDuration = 0;
+	private long timeBoosted = 0L;
+	private long boostDuration = 0L;
+	private long timeHit = 0L;
 	private float maxHealth = 100;
 	private float health = maxHealth;
 
+	
 	private Item currentItem = null;
 	private Block onBlock;
 	
 	private boolean left = false, right = false, up = false, down = false;
 	private boolean moving = false;
 	private boolean teleporting = false;
-//	private boolean wasHit = false; // TODO: (Adam) wasHit
+	private boolean wasHit = false;
 	private boolean boosted = false;
 	private boolean solid = true;
 	private boolean destroyable = true;
+	
+	private boolean colorChange = false;
 	
 	private List<ItemStack> items;
 	
@@ -80,7 +84,14 @@ public class Tank implements Entity, Collidable, ControllerListener
 		this.y = y;
 		this.controller = controller;
 		this.player = player;
-		this.color = Color.getRandomColorF();
+		this.color = null;
+		
+		if(controller.getID() == 1)
+			this.color = new Color(0.1f, 0.1f, 0.1f);
+		else
+			this.color = new Color(0.0f, 0.0f, 0.65f);
+			
+		
 		this.items = new ArrayList<ItemStack>();
 		
 		facing = TankFacing.NORTH;
@@ -122,6 +133,11 @@ public class Tank implements Entity, Collidable, ControllerListener
 	public float getHealth()
 	{
 		return health;
+	}
+	
+	public void setHealth(float health)
+	{
+		this.health = health;
 	}
 	
 	/**
@@ -449,6 +465,36 @@ public class Tank implements Entity, Collidable, ControllerListener
 			}
 		}
 		
+		if(wasHit)
+		{
+			wasHit = false;
+			colorChange = true;
+			this.color.R = 1.0f;
+			this.color.G = 0.0f;
+			this.color.B = 0.0f;
+			this.light.flash();
+			this.timeHit = System.currentTimeMillis();
+		}
+		
+		if(colorChange)
+		{
+			if(System.currentTimeMillis() >= timeHit + PointLight.FLASH_DURATION)
+			{
+				if(controller.getID() == 1)
+				{
+					this.color.R = 0.1f;
+					this.color.G = 0.1f;
+					this.color.B = 0.1f;
+				} else
+				{
+					this.color.R = 0.0f;
+					this.color.G = 0.0f;
+					this.color.B = 0.65f;
+				}
+				colorChange = false;
+			}
+		}
+		
 		controller.checkInput();
 		
 		if(!teleporting)
@@ -639,7 +685,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 		}
 //		 PaddleGame.logT((x + width/2) + " : " + (y + height/2) + "---- Block ----" + (onBlock.getX() + onBlock.getBlockWidth()/2) + " : " + (onBlock.getY() + onBlock.getBlockHeight()/2));
 	}
-	
+
 	/**
 	 * Method for collision check
 	 * 
@@ -662,6 +708,7 @@ public class Tank implements Entity, Collidable, ControllerListener
 				{
 					float damage = m.getDamage();
 					this.health -= damage;
+					this.wasHit = true;
 					PaddleGame.log("HIT = " + damage);
 				}
 				return true;

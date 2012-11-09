@@ -41,7 +41,10 @@ public class LEngine
 		clearAlphaChannel();
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		for(Light l : lightList)
+		{
 			l.render();
+			l.update();
+		}
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_DST_ALPHA);
 		GL11.glColor4f(0f, 0f, 0f, 1f);
 		GL11.glBegin(GL11.GL_QUADS);		

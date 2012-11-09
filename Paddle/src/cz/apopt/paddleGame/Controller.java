@@ -23,6 +23,8 @@ public class Controller
 	public static final int DEFAULT_LEVEL = 1;
 	private final int UP, DOWN, RIGHT, LEFT, FIRE, NEXT_W, PREV_W, BUILD, PREV_I, NEXT_I, USE_I;
 	
+	private int id;
+	
 	private static final int MAX_LEVEL = 1;
 	private static final long FIRE_DELAY = 500 * 1000000;
 	private static int level = DEFAULT_LEVEL;
@@ -52,7 +54,9 @@ public class Controller
 	 * @param id Controller ID
 	 */
 	public Controller(int id)
-	{		
+	{	
+		this.id = id;
+		
 		if(id == 1)
 		{
 			UP = Keyboard.KEY_UP;
@@ -85,6 +89,11 @@ public class Controller
 		}
 		
 		controllerListeners = new ArrayList<ControllerListener>();
+	}
+	
+	public int getID()
+	{
+		return id;
 	}
 	
 	/**

@@ -19,6 +19,7 @@ public abstract class Item implements Entity, Collidable
 	public static final int AMMO_PACK = 0;
 	public static final int SPEED_BOOST = 1;
 	public static final int TELEPORT = 2;
+	public static final int REPAIR_KIT = 3;
 	
 	protected float x = 100, y = 100;
 	protected float width = 13f;
@@ -97,7 +98,7 @@ public abstract class Item implements Entity, Collidable
 		Vector2f spawn = PaddleGame.getRandomSpawnPoint();
 		Item toSpawn = null;
 		
-		int rand = PaddleGame.getRandom(0, 3);
+		int rand = PaddleGame.getRandom(0, 4);
 		
 		switch(rand)
 		{
@@ -109,6 +110,10 @@ public abstract class Item implements Entity, Collidable
 				break;
 			case TELEPORT:
 				toSpawn = new Teleporter(spawn.x, spawn.y);
+				break;
+			case REPAIR_KIT:
+				toSpawn = new RepairKit(spawn.x, spawn.y);
+				break;
 		}
 		
 		if(toSpawn != null)
